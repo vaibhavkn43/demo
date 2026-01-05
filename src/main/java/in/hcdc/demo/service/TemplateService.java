@@ -16,16 +16,16 @@ public class TemplateService {
     public List<Category> getDashboardCategories() {
 
         Category wedding = new Category();
-        wedding.setKey("wedding");
-        wedding.setTitle("Wedding Cards");
+        wedding.setName("biodata");
+        wedding.setTitle("Wedding Biodata");
         wedding.setTemplates(List.of(
-                new Template("w1", "/images/templates/wedding/1.png"),
+                new Template("w1", "/images/templates/wedding/bio1.png"),
                 new Template("w2", "/images/templates/wedding/2.png"),
                 new Template("w3", "/images/templates/wedding/3.png")
         ));
 
         Category birthday = new Category();
-        birthday.setKey("birthday");
+        birthday.setName("birthday");
         birthday.setTitle("Birthday Cards");
         birthday.setTemplates(List.of(
                 new Template("b1", "/images/templates/birthday/1.png"),
@@ -36,11 +36,24 @@ public class TemplateService {
         return List.of(wedding, birthday);
     }
 
-    public Category getCategoryByKey(String key) {
+    public Category getCategoryByName(String key) {
 
         return getDashboardCategories()
                 .stream()
-                .filter(cat -> cat.getKey().equalsIgnoreCase(key))
+                .filter(cat -> cat.getName().equalsIgnoreCase(key))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Template getTemplateById(String categoryName, String templateId) {
+        Category category = getCategoryByName(categoryName);
+        if (category == null) {
+            return null;
+        }
+
+        return category.getTemplates()
+                .stream()
+                .filter(t -> t.getId().equals(templateId))
                 .findFirst()
                 .orElse(null);
     }

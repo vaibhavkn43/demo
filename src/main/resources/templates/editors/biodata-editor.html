@@ -1,0 +1,98 @@
+<section>
+    <h2 class="mb-4">Customize Template</h2>
+
+    <div class="row">
+        <!-- Preview -->
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <img th:src="${template.thumbnail}"
+                     class="img-fluid"
+                     alt="Template Preview">
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div class="col-12 col-md-6">
+            <form th:action="@{/editor/biodata/preview}"
+                  th:object="${form}"
+                  method="post">
+
+                <div class="mb-3">
+                    <label class="form-label">नाव</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{name}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">जन्म तारीख</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{birthDate}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">जन्म वेळ</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{birthTime}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">जन्म स्थळ</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{birthPlace}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">धर्म</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{religion}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">जात</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{caste}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">उंची</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{height}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">शिक्षण</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{education}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">पत्ता</label>
+                    <textarea class="form-control"
+                              rows="2"
+                              th:field="*{address}"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">मोबाईल नंबर</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{mobile}">
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success w-100">
+                    Generate Preview
+                </button>
+
+            </form>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,14 @@
+<section>
+    <h2>Preview</h2>
+
+    <div class="card shadow-sm p-3">
+        <img th:src="${imagePath}"
+             class="img-fluid"
+             alt="Biodata Preview">
+    </div>
+
+    <div class="mt-3">
+        <a th:href="${imagePath}" download
+           class="btn btn-primary">Download Image</a>
+    </div>
+</section>

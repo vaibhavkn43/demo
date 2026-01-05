@@ -26,7 +26,7 @@ public class TemplateController {
     public String viewCategoryTemplates(@PathVariable String categoryKey,
             Model model) {
 
-        Category category = templateService.getCategoryByKey(categoryKey);
+        Category category = templateService.getCategoryByName(categoryKey);
 
         if (category == null) {
             return "redirect:/dashboard";

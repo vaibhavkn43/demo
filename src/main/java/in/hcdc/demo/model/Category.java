@@ -18,7 +18,7 @@ import lombok.ToString;
 @ToString
 public class Category {
     
-    private String key;        // wedding, birthday
-    private String title;      // Wedding Cards
+    private String name;        // biodata, birthday , invitation
+    private String title;      // Wedding biodata, birthday wishes, etc
     private List<Template> templates;
 }
