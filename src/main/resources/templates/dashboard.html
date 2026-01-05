@@ -1,0 +1,27 @@
+<section>
+    <h2 class="mb-4">Dashboard</h2>
+
+    <div th:each="category : ${categories}" class="mb-5">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 th:text="${category.title}"></h4>
+            <a th:href="@{'/templates/' + ${category.key}}"
+               class="btn btn-sm btn-outline-primary">
+                View More
+            </a>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-4 col-md-3"
+                 th:each="tpl : ${category.templates}">
+                <div class="card shadow-sm">
+                    <img th:src="${tpl.thumbnail}"
+                         class="card-img-top"
+                         alt="template">
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>

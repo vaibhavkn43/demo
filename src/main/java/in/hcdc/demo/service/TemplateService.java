@@ -1,0 +1,48 @@
+package in.hcdc.demo.service;
+
+import in.hcdc.demo.model.Category;
+import in.hcdc.demo.model.Template;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ *
+ * @author Vaibhav
+ */
+@Service
+public class TemplateService {
+
+    public List<Category> getDashboardCategories() {
+
+        Category wedding = new Category();
+        wedding.setKey("wedding");
+        wedding.setTitle("Wedding Cards");
+        wedding.setTemplates(List.of(
+                new Template("w1", "/images/templates/wedding/1.png"),
+                new Template("w2", "/images/templates/wedding/2.png"),
+                new Template("w3", "/images/templates/wedding/3.png")
+        ));
+
+        Category birthday = new Category();
+        birthday.setKey("birthday");
+        birthday.setTitle("Birthday Cards");
+        birthday.setTemplates(List.of(
+                new Template("b1", "/images/templates/birthday/1.png"),
+                new Template("b2", "/images/templates/birthday/2.png"),
+                new Template("b3", "/images/templates/birthday/3.png")
+        ));
+
+        return List.of(wedding, birthday);
+    }
+
+    public Category getCategoryByKey(String key) {
+
+        return getDashboardCategories()
+                .stream()
+                .filter(cat -> cat.getKey().equalsIgnoreCase(key))
+                .findFirst()
+                .orElse(null);
+    }
+
+}
