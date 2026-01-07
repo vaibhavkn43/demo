@@ -2,52 +2,47 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title th:text="${pageTitle} ?: 'Template Maker'">Template Maker</title>
+        <title th:text="#{app.title}">Template Maker</title>
 
-        <!-- Bootstrap CSS (CDN is fine) -->
         <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
         <link rel="stylesheet" th:href="@{/css/style.css}">
     </head>
+
     <body class="bg-light">
 
-        <!-- Header -->
         <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
             <div class="container">
 
-                <!-- Logo / Brand -->
                 <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
                     <span class="brand-logo me-2">🧾</span>
-                    <span class="brand-text">Marathi Biodata Maker</span>
+                    <span th:text="#{app.title}">Marathi Biodata Maker</span>
                 </a>
 
-                <!-- Mobile Toggle -->
                 <button class="navbar-toggler" type="button"
                         data-bs-toggle="collapse"
                         data-bs-target="#mainNavbar">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <!-- Nav Links -->
                 <div class="collapse navbar-collapse" id="mainNavbar">
                     <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/">Home</a>
+                            <a class="nav-link" href="/" th:text="#{nav.home}">Home</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/dashboard">Templates</a>
+                            <a class="nav-link" href="/dashboard" th:text="#{nav.templates}">Templates</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/how-it-works">How It Works</a>
+                            <a class="nav-link" href="/how-it-works" th:text="#{nav.how}">How It Works</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="/contact">Contact</a>
+                            <a class="nav-link" href="/contact" th:text="#{nav.contact}">Contact</a>
                         </li>
 
-                        <!-- Language Switch -->
                         <li class="nav-item">
                             <select class="form-select form-select-sm"
                                     onchange="changeLanguage(this.value)">
@@ -55,23 +50,23 @@
                                 <option value="en" th:selected="${#locale.language == 'en'}">English</option>
                             </select>
                         </li>
+
                     </ul>
                 </div>
             </div>
         </nav>
 
-        <!-- Main Content -->
         <main class="container my-4">
             <div th:replace="~{${content}}"></div>
         </main>
 
-        <!-- Footer -->
         <footer class="text-center text-muted py-3">
             © 2026 Template Maker
         </footer>
+
         <script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
         <script src="https://www.google.com/inputtools/js/inputtools.js"></script>
         <script th:src="@{/js/base.js}" defer></script>
-
+        <script th:src="@{/js/transliteration.js}" defer></script>
     </body>
 </html>

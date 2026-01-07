@@ -1,44 +1,75 @@
 <section>
 
-    <!-- Page Title -->
-    <h2 class="mb-4"
-        th:text="#{dashboard.title}">
-        Dashboard
+    <!-- Main Title (User-facing, not technical) -->
+    <h2 class="mb-3 fw-bold"
+        th:text="#{dashboard.mainTitle}">
+        Marriage Biodata Templates
     </h2>
+
+    <!-- HOW IT WORKS -->
+    <div class="border rounded p-3 mb-4 bg-white">
+        <strong th:text="#{dashboard.how.title}">
+            Create in 3 Easy Steps
+        </strong>
+        <ol class="mb-0 mt-2">
+            <li th:text="#{dashboard.how.step1}">Choose Template</li>
+            <li th:text="#{dashboard.how.step2}">Fill Details</li>
+            <li th:text="#{dashboard.how.step3}">Download</li>
+        </ol>
+    </div>
 
     <!-- Categories -->
     <div th:each="category : ${categories}"
          class="mb-5">
 
-        <!-- Category Title -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 th:text="${#messages.msg(category.titleKey)}">
+        <!-- Category Header -->
+        <div class="mb-2">
+            <h4 class="fw-semibold"
+                th:text="${#messages.msg(category.titleKey)}">
                 Category
             </h4>
+
+            <p class="text-muted mb-3"
+               th:if="${category.name == 'biodata'}"
+               th:text="#{dashboard.biodata.desc}">
+                Ready-to-use biodata templates for marriage
+            </p>
         </div>
 
-        <!-- Templates Grid -->
+        <!-- Templates -->
         <div class="row g-3">
             <div class="col-6 col-md-3"
                  th:each="tpl : ${category.dashboardTemplates}">
 
                 <div class="card shadow-sm h-100">
 
-                    <!-- Template Thumbnail -->
                     <img th:src="${tpl.thumbnail}"
                          class="card-img-top"
-                         th:alt="#{template.thumbnail.alt}"
-                         alt="Template thumbnail">
+                         th:alt="#{template.thumbnail.alt}">
 
-                    <!-- Action -->
                     <div class="card-body text-center p-2">
-                        <a th:href="@{'/editor/' + ${category.name} + '/' + ${tpl.id}}"
+
+                        <a th:if="${category.name == 'biodata'}"
+                           th:href="@{'/editor/' + ${category.name} + '/' + ${tpl.id}}"
                            class="btn btn-sm btn-primary w-100"
                            th:text="#{button.useTemplate}">
                             Use Template
                         </a>
-                    </div>
 
+                        <button th:if="${category.name != 'biodata'}"
+                                class="btn btn-sm btn-outline-secondary w-100"
+                                disabled
+                                th:text="#{label.comingSoon}">
+                            Coming Soon
+                        </button>
+
+                        <small class="text-muted d-block mt-1"
+                               th:if="${category.name == 'biodata'}"
+                               th:text="#{dashboard.quickHint}">
+                            Takes 2 minutes
+                        </small>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,4 +85,19 @@
         </div>
 
     </div>
+
+    <!-- TRUST SECTION -->
+    <div class="border rounded p-3 bg-white">
+        <h5 class="fw-semibold mb-2"
+            th:text="#{dashboard.trust.title}">
+            Why use this?
+        </h5>
+        <ul class="mb-0">
+            <li th:text="#{dashboard.trust.point1}">Printable HD quality</li>
+            <li th:text="#{dashboard.trust.point2}">Proper Marathi font support</li>
+            <li th:text="#{dashboard.trust.point3}">No design skills required</li>
+            <li th:text="#{dashboard.trust.point4}">Mobile & computer friendly</li>
+        </ul>
+    </div>
+
 </section>

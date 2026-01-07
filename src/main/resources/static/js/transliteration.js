@@ -56,12 +56,13 @@ function showSuggestions(list) {
 
     container.innerHTML = "";
 
-    if (!list.length) {
+    if (!list || !list.length) {
         hideSuggestions();
         return;
     }
 
-    list.forEach(word => {
+    // limit to 6 suggestions
+    list.slice(0, 6).forEach(word => {
         const div = document.createElement("div");
         div.className = "suggestion-item";
         div.textContent = word;
@@ -71,6 +72,7 @@ function showSuggestions(list) {
 
     box.classList.remove("d-none");
 }
+
 
 function hideSuggestions() {
     document.getElementById("suggestionBox").classList.add("d-none");
