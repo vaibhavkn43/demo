@@ -1,26 +1,56 @@
 <section>
-    <h2 class="mb-4">Dashboard</h2>
 
-    <div th:each="category : ${categories}" class="mb-5">
+    <!-- Page Title -->
+    <h2 class="mb-4"
+        th:text="#{dashboard.title}">
+        Dashboard
+    </h2>
 
+    <!-- Categories -->
+    <div th:each="category : ${categories}"
+         class="mb-5">
+
+        <!-- Category Title -->
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 th:text="${category.title}"></h4>
-            <a th:href="@{'/templates/' + ${category.name}}"
-               class="btn btn-sm btn-outline-primary">
-                View More
-            </a>
+            <h4 th:text="${#messages.msg(category.titleKey)}">
+                Category
+            </h4>
         </div>
 
+        <!-- Templates Grid -->
         <div class="row g-3">
-            <div class="col-4 col-md-3"
-                 th:each="tpl : ${category.templates}">
-                <div class="card shadow-sm">
+            <div class="col-6 col-md-3"
+                 th:each="tpl : ${category.dashboardTemplates}">
+
+                <div class="card shadow-sm h-100">
+
+                    <!-- Template Thumbnail -->
                     <img th:src="${tpl.thumbnail}"
                          class="card-img-top"
-                         alt="template">
-                </div>
+                         th:alt="#{template.thumbnail.alt}"
+                         alt="Template thumbnail">
 
+                    <!-- Action -->
+                    <div class="card-body text-center p-2">
+                        <a th:href="@{'/editor/' + ${category.name} + '/' + ${tpl.id}}"
+                           class="btn btn-sm btn-primary w-100"
+                           th:text="#{button.useTemplate}">
+                            Use Template
+                        </a>
+                    </div>
+
+                </div>
             </div>
+        </div>
+
+        <!-- Load More -->
+        <div class="text-center mt-3"
+             th:if="${category.templates.size() > 4}">
+            <a th:href="@{'/templates/' + ${category.name}}"
+               class="btn btn-outline-primary btn-sm"
+               th:text="#{button.loadMore}">
+                Load More
+            </a>
         </div>
 
     </div>

@@ -1,6 +1,7 @@
 package in.hcdc.demo.service;
 
 import in.hcdc.demo.model.BiodataRequest;
+import in.hcdc.demo.model.TemplateLayout;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -9,6 +10,10 @@ import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+
 /**
  *
  * @author vaibhav
@@ -16,56 +21,90 @@ import java.nio.file.Path;
 @Service
 public class BiodataImageService {
 
-    public String generateBiodataImage(BiodataRequest data) throws Exception {
+    @Value("${app.generated.dir}")
+    private String generatedDir;
 
-        InputStream is = getClass()
-                .getClassLoader()
+    private final TemplateLayoutService layoutService;
+
+    public BiodataImageService(TemplateLayoutService layoutService) {
+        this.layoutService = layoutService;
+    }
+
+    public String generateBiodataImage(BiodataRequest data,
+            String templateId) throws Exception {
+
+        // 1️⃣ ensure output directory exists
+        Path outputDir = Paths.get(generatedDir);
+        Files.createDirectories(outputDir);
+
+        // 2️⃣ load base template image
+        InputStream is = getClass().getClassLoader()
                 .getResourceAsStream(
-                        "static/images/templates/wedding/biodata.png");
+                        "static/images/templates/biodata/" + templateId + ".png"
+                );
+
+        if (is == null) {
+            throw new IllegalStateException("Template image not found");
+        }
 
         BufferedImage template = ImageIO.read(is);
-
         Graphics2D g = template.createGraphics();
+
         g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
                 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        g.setFont(new Font("Mangal", Font.PLAIN, 32));
-        g.setColor(new Color(60, 0, 0));
+        // 3️⃣ load layout JSON
+        TemplateLayout layout = layoutService.load("biodata", templateId);
 
-        int x = 300;
-        int y = 650;
-        int gap = 48;
+        System.out.println(
+                getClass().getClassLoader().getResource("fonts/mangal.ttf")
+        );
 
-        y = drawLine(g, "नाव : ", data.getName(), x, y, gap);
-        y = drawLine(g, "जन्म तारीख : ", data.getBirthDate(), x, y, gap);
-        y = drawLine(g, "जन्म स्थळ : ", data.getBirthPlace(), x, y, gap);
-        y = drawLine(g, "जन्म वेळ : ", data.getBirthTime(), x, y, gap);
-        y = drawLine(g, "धर्म : ", data.getReligion(), x, y, gap);
-        y = drawLine(g, "जात : ", data.getCaste(), x, y, gap);
-        y = drawLine(g, "उंची : ", data.getHeight(), x, y, gap);
-        y = drawLine(g, "शिक्षण : ", data.getEducation(), x, y, gap);
-        y = drawLine(g, "पत्ता : ", data.getAddress(), x, y, gap);
-        y = drawLine(g, "मोबाईल : ", data.getMobile(), x, y, gap);
+        // 4️⃣ load font from layout
+        InputStream fontStream
+                = getClass().getClassLoader()
+                        .getResourceAsStream("fonts/mangal.ttf");
+
+        if (fontStream == null) {
+            throw new IllegalStateException("Font not found in classpath: fonts/mangal.ttf");
+        }
+
+        Font font = Font.createFont(Font.TRUETYPE_FONT, fontStream)
+                .deriveFont((float) layout.getFont().getSize());
+
+        g.setFont(font);
+        g.setColor(Color.decode(layout.getFont().getColor()));
+
+        // 5️⃣ map form data
+        Map<String, String> dataMap = Map.of(
+                "name", data.getName(),
+                "birthDate", data.getBirthDate(),
+                "birthPlace", data.getBirthPlace(),
+                "birthTime", data.getBirthTime(),
+                "religion", data.getReligion(),
+                "caste", data.getCaste(),
+                "height", data.getHeight(),
+                "education", data.getEducation(),
+                "address", data.getAddress(),
+                "mobile", data.getMobile()
+        );
+
+        // 6️⃣ draw text using layout
+        layout.getFields().forEach((field, pos) -> {
+            String value = dataMap.get(field);
+            if (value != null && !value.isBlank()) {
+                g.drawString(value, pos.getX(), pos.getY());
+            }
+        });
 
         g.dispose();
 
+        // 7️⃣ write output
         String fileName = "biodata-" + System.currentTimeMillis() + ".png";
-        Path output = Path.of(
-                "src/main/resources/static/generated/",
-                fileName
-        );
+        Path outputFile = outputDir.resolve(fileName);
 
-        ImageIO.write(template, "png", output.toFile());
+        ImageIO.write(template, "png", outputFile.toFile());
 
         return "/generated/" + fileName;
-    }
-
-    private int drawLine(Graphics2D g, String label, String value,
-                         int x, int y, int gap) {
-        if (value == null || value.isBlank()) {
-            return y;
-        }
-        g.drawString(label + value, x, y);
-        return y + gap;
     }
 }

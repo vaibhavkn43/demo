@@ -1,28 +1,32 @@
 <section>
+    <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 th:text="${category.title}">Category</h2>
-        <a href="/dashboard" class="btn btn-sm btn-secondary">
+        <h2 th:text="${#messages.msg(category.titleKey)}">
+            Category
+        </h2>
+
+        <a th:href="@{/dashboard}"
+           class="btn btn-sm btn-secondary"
+           th:text="#{button.back}">
             ← Back
         </a>
     </div>
-
+    <!-- Templates Grid -->
     <div class="row g-3">
-        <div class="col-4 col-md-3"
+        <div class="col-6 col-md-3"
              th:each="tpl : ${category.templates}">
-
             <div class="card shadow-sm h-100">
                 <img th:src="${tpl.thumbnail}"
                      class="card-img-top"
                      alt="template">
-
                 <div class="card-body text-center">
                     <a th:href="@{'/editor/' + ${category.name} + '/' + ${tpl.id}}"
-                       class="btn btn-sm btn-primary w-100">
+                       class="btn btn-sm btn-primary w-100"
+                       th:text="#{button.useTemplate}">
                         Use Template
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
 </section>

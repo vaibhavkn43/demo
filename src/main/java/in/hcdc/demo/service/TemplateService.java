@@ -13,36 +13,18 @@ import java.util.List;
 @Service
 public class TemplateService {
 
+    private final TemplateConfigService templateConfigService;
+
+    public TemplateService(TemplateConfigService configService) {
+        this.templateConfigService = configService;
+    }
+
     public List<Category> getDashboardCategories() {
-
-        Category wedding = new Category();
-        wedding.setName("biodata");
-        wedding.setTitle("Wedding Biodata");
-        wedding.setTemplates(List.of(
-                new Template("w1", "/images/templates/wedding/bio1.png"),
-                new Template("w2", "/images/templates/wedding/2.png"),
-                new Template("w3", "/images/templates/wedding/3.png")
-        ));
-
-        Category birthday = new Category();
-        birthday.setName("birthday");
-        birthday.setTitle("Birthday Cards");
-        birthday.setTemplates(List.of(
-                new Template("b1", "/images/templates/birthday/1.png"),
-                new Template("b2", "/images/templates/birthday/2.png"),
-                new Template("b3", "/images/templates/birthday/3.png")
-        ));
-
-        return List.of(wedding, birthday);
+        return templateConfigService.getCategories();
     }
 
     public Category getCategoryByName(String key) {
-
-        return getDashboardCategories()
-                .stream()
-                .filter(cat -> cat.getName().equalsIgnoreCase(key))
-                .findFirst()
-                .orElse(null);
+        return templateConfigService.getCategoryByName(key);
     }
 
     public Template getTemplateById(String categoryName, String templateId) {
@@ -57,5 +39,4 @@ public class TemplateService {
                 .findFirst()
                 .orElse(null);
     }
-
 }

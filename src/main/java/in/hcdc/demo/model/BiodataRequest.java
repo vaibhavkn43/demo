@@ -15,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class BiodataRequest {
+public class BiodataRequest implements TemplateForm {
     
     private String name;
     private String birthDate;

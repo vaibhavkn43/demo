@@ -1,0 +1,34 @@
+/* 
+    Created on : Jan 7, 2026, 9:56:36 AM
+    Author     : Vaibhav
+*/
+
+.suggestion-box {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+}
+
+.suggestion-item:first-child {
+    font-weight: 600;
+}
+
+.suggestion-title {
+    font-weight: 600;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+}
+
+.suggestion-item {
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background: #ff4d6d;
+    color: #fff;
+}

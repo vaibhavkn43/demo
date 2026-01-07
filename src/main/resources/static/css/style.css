@@ -3,3 +3,25 @@
     Author     : Vaibhav
 */
 
+.brand-logo {
+    font-size: 1.4rem;
+}
+
+.brand-text {
+    font-size: 1.1rem;
+    color: #222;
+}
+
+.navbar .nav-link {
+    font-weight: 500;
+    color: #444;
+}
+
+.navbar .nav-link:hover {
+    color: #0d6efd;
+}
+
+.ui-language-select {
+    min-width: 90px;
+    cursor: pointer;
+}

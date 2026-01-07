@@ -17,8 +17,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Category {
-    
-    private String name;        // biodata, birthday , invitation
-    private String title;      // Wedding biodata, birthday wishes, etc
+
+    private String name;        // biodata, birthday
+    private String titleKey;    // category.wedding, category.birthday
     private List<Template> templates;
+
+    public List<Template> getDashboardTemplates() {
+        return templates.size() > 4 ? templates.subList(0, 4) : templates;
+    }
 }
+
