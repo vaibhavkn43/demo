@@ -17,9 +17,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FontConfig {
+public class CustomFieldsLayout {
 
-    String family;
-    int size;
-    String color;
+    private int startX;
+    private int startY;
+    private int maxWidth;
+    private int lineHeight;
 }

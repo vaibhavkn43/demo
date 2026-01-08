@@ -1,5 +1,7 @@
 package in.hcdc.demo.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class BiodataRequest implements TemplateForm {
+public class BiodataRequest extends TemplateForm {
     
     private String name;
     private String birthDate;

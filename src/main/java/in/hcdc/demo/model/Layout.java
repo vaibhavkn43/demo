@@ -1,7 +1,9 @@
 package in.hcdc.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,9 +19,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FontConfig {
+public class Layout {
 
-    String family;
-    int size;
-    String color;
+    private List<Section> sections;
+    private CustomFieldsLayout customFields;
+    private FontConfig font;
 }

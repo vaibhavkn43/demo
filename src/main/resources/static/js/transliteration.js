@@ -1,6 +1,7 @@
 let marathiEnabled = true;
 let activeInput = null;
 let activeWordRange = null;
+let activeSuggestion = null;
 
 document.getElementById("marathiToggle").addEventListener("change", e => {
     marathiEnabled = e.target.checked;
@@ -9,14 +10,18 @@ document.getElementById("marathiToggle").addEventListener("change", e => {
 
 document.querySelectorAll(".ime-marathi").forEach(input => {
 
+    // KEYUP → fetch suggestions
     input.addEventListener("keyup", async e => {
         if (!marathiEnabled)
+            return;
+
+        // ignore space / enter here (handled in keydown)
+        if (e.key === " " || e.key === "Enter")
             return;
 
         const cursor = input.selectionStart;
         const text = input.value;
 
-        // find current word
         const left = text.slice(0, cursor);
         const match = left.match(/([a-zA-Z]+)$/);
 
@@ -35,7 +40,20 @@ document.querySelectorAll(".ime-marathi").forEach(input => {
         const suggestions = await fetchSuggestions(word);
         showSuggestions(suggestions);
     });
+
+    // KEYDOWN → accept suggestion with space / enter
+    input.addEventListener("keydown", e => {
+        if (!marathiEnabled || !activeSuggestion)
+            return;
+
+        if (e.key === " " || e.key === "Enter") {
+            e.preventDefault();
+            replaceWord(activeSuggestion + " ");
+            activeSuggestion = null;
+        }
+    });
 });
+
 
 async function fetchSuggestions(word) {
     const url =
@@ -44,7 +62,7 @@ async function fetchSuggestions(word) {
     try {
         const res = await fetch(url);
         const data = await res.json();
-        return data?.[1]?.[0]?.[1] || [];
+        return data?.[1]?.[0]?.[1] || []; // Optional Chaining (?.) used because if data[1][0][1] can fail if data is not proper return undefined then undefined || []
     } catch {
         return [];
     }
@@ -55,17 +73,23 @@ function showSuggestions(list) {
     const container = document.getElementById("suggestionList");
 
     container.innerHTML = "";
+    activeSuggestion = null;
 
     if (!list || !list.length) {
         hideSuggestions();
         return;
     }
 
-    // limit to 6 suggestions
-    list.slice(0, 6).forEach(word => {
+    list.slice(0, 6).forEach((word, index) => {
         const div = document.createElement("div");
         div.className = "suggestion-item";
         div.textContent = word;
+
+        if (index === 0) {
+            div.classList.add("active");   // highlight first
+            activeSuggestion = word;
+        }
+
         div.onclick = () => replaceWord(word);
         container.appendChild(div);
     });
@@ -85,9 +109,56 @@ function replaceWord(selected) {
     const {start, end} = activeWordRange;
     const text = activeInput.value;
 
-    activeInput.value =
+    const newText =
             text.slice(0, start) + selected + text.slice(end);
+
+    activeInput.value = newText;
+
+    // move cursor to end of inserted word
+    const cursorPos = start + selected.length;
+    activeInput.setSelectionRange(cursorPos, cursorPos);
 
     activeInput.focus();
     hideSuggestions();
 }
+
+
+
+let customIndex = 0;
+
+function addCustomField() {
+    const container = document.getElementById("customFields");
+
+    const row = document.createElement("div");
+    row.className = "row g-2 mb-2 align-items-center";
+
+    row.innerHTML = `
+        <div class="col-5">
+            <input type="text"
+                   class="form-control ime-marathi"
+                   name="customFields[${customIndex}].label"
+                   placeholder="माहिती नाव"
+                   autocomplete="off">
+        </div>
+
+        <div class="col-6">
+            <input type="text"
+                   class="form-control ime-marathi"
+                   name="customFields[${customIndex}].value"
+                   placeholder="माहिती"
+                   autocomplete="off">
+        </div>
+
+        <div class="col-1 text-end">
+            <button type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    onclick="this.closest('.row').remove()">
+                ✕
+            </button>
+        </div>
+    `;
+
+    container.appendChild(row);
+    customIndex++;
+}
+

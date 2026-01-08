@@ -24,8 +24,9 @@
 
     <div class="row">
 
-        <!-- FORM -->
+        <!-- ================= LEFT : FORM ================= -->
         <div class="col-md-8">
+
             <form th:action="@{'/editor/' + ${categoryName} + '/preview'}"
                   th:object="${form}"
                   method="post">
@@ -34,83 +35,176 @@
                        name="templateId"
                        th:value="${template.id}">
 
-                <!-- Personal Details -->
-                <h5 class="mb-3" th:text="#{editor.section.personal}">
-                    Personal Details
-                </h5>
+                <div class="accordion" id="biodataAccordion">
 
-                <div class="mb-3">
-                    <label class="form-label"
-                           th:text="#{editor.form.name}">Name</label>
-                    <input type="text"
-                           class="form-control ime-marathi"
-                           th:field="*{name}">
-                </div>
+                    <!-- Personal Details -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#personalSection"
+                                    th:text="#{editor.section.personal}">
+                                Personal Details
+                            </button>
+                        </h2>
+                        <div id="personalSection"
+                             class="accordion-collapse collapse show">
+                            <div class="accordion-body">
 
-                <div class="mb-3">
-                    <label class="form-label"
-                           th:text="#{editor.form.birthPlace}">Birth Place</label>
-                    <input type="text"
-                           class="form-control ime-marathi"
-                           th:field="*{birthPlace}">
-                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           th:text="#{editor.form.name}">
+                                        Name
+                                    </label>
+                                    <input type="text"
+                                           autocomplete="off"
+                                           class="form-control ime-marathi"
+                                           th:field="*{name}">
+                                </div>
 
-                <div class="mb-3">
-                    <label class="form-label"
-                           th:text="#{editor.form.religion}">Religion</label>
-                    <input type="text"
-                           class="form-control ime-marathi"
-                           th:field="*{religion}">
-                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           th:text="#{editor.form.birthPlace}">
+                                        Birth Place
+                                    </label>
+                                    <input type="text"
+                                           autocomplete="off"
+                                           class="form-control ime-marathi"
+                                           th:field="*{birthPlace}">
+                                </div>
 
-                <div class="mb-3">
-                    <label class="form-label"
-                           th:text="#{editor.form.caste}">Caste</label>
-                    <input type="text"
-                           class="form-control ime-marathi"
-                           th:field="*{caste}">
-                </div>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           th:text="#{editor.form.religion}">
+                                        Religion
+                                    </label>
+                                    <input type="text"
+                                           autocomplete="off"
+                                           class="form-control ime-marathi"
+                                           th:field="*{religion}">
+                                </div>
 
-                <!-- Education & Address -->
-                <h5 class="mt-4 mb-3"
-                    th:text="#{editor.section.education}">
-                    Education & Address
-                </h5>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           th:text="#{editor.form.caste}">
+                                        Caste
+                                    </label>
+                                    <input type="text"
+                                           autocomplete="off"
+                                           class="form-control ime-marathi"
+                                           th:field="*{caste}">
+                                </div>
 
-                <div class="mb-3">
-                    <label class="form-label"
-                           th:text="#{editor.form.education}">Education</label>
-                    <input type="text"
-                           class="form-control ime-marathi"
-                           th:field="*{education}">
-                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label"
-                           th:text="#{editor.form.address}">Address</label>
-                    <textarea class="form-control ime-marathi"
-                              rows="2"
-                              th:field="*{address}">
-                    </textarea>
-                </div>
+                    <!-- Education & Address -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#educationSection"
+                                    th:text="#{editor.section.education}">
+                                Education & Address
+                            </button>
+                        </h2>
+                        <div id="educationSection"
+                             class="accordion-collapse collapse">
+                            <div class="accordion-body">
 
-                <!-- Contact -->
-                <h5 class="mt-4 mb-3"
-                    th:text="#{editor.section.contact}">
-                    Contact Details
-                </h5>
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           th:text="#{editor.form.education}">
+                                        Education
+                                    </label>
+                                    <input type="text"
+                                           autocomplete="off"
+                                           class="form-control ime-marathi"
+                                           th:field="*{education}">
+                                </div>
 
-                <div class="mb-4">
-                    <label class="form-label"
-                           th:text="#{editor.form.mobile}">Mobile</label>
-                    <input type="text"
-                           class="form-control"
-                           th:field="*{mobile}">
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           th:text="#{editor.form.address}">
+                                        Address
+                                    </label>
+                                    <textarea class="form-control ime-marathi"
+                                              rows="2"
+                                              autocomplete="off"
+                                              th:field="*{address}">
+                                    </textarea>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Details -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#contactSection"
+                                    th:text="#{editor.section.contact}">
+                                Contact Details
+                            </button>
+                        </h2>
+                        <div id="contactSection"
+                             class="accordion-collapse collapse">
+                            <div class="accordion-body">
+
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           th:text="#{editor.form.mobile}">
+                                        Mobile Number
+                                    </label>
+                                    <input type="text"
+                                           class="form-control"
+                                           autocomplete="off"
+                                           th:field="*{mobile}">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Fields -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#customSection"
+                                    th:text="#{editor.section.custom}">
+                                Other Information (Custom)
+                            </button>
+                        </h2>
+                        <div id="customSection"
+                             class="accordion-collapse collapse">
+                            <div class="accordion-body">
+
+                                <div id="customFields"></div>
+
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-primary mt-2"
+                                        th:text="#{editor.custom.add}"
+                                        onclick="addCustomField()">
+                                    + Add New Field
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Submit -->
                 <button type="submit"
-                        class="btn btn-success w-100"
+                        class="btn btn-success w-100 mt-4"
                         th:text="#{editor.form.submit}">
                     Generate Biodata
                 </button>
@@ -118,7 +212,7 @@
             </form>
         </div>
 
-        <!-- RIGHT SIDE SUGGESTION PANEL -->
+        <!-- ================= RIGHT : SUGGESTIONS ================= -->
         <div class="col-md-4">
 
             <div id="suggestionBox"
@@ -131,13 +225,16 @@
 
                 <div id="suggestionList"
                      class="suggestion-list">
-                    <!-- Suggestions will be injected here -->
+                    <!-- suggestions injected by JS -->
                 </div>
+
                 <div class="form-text mt-2"
                      th:text="#{suggestions.hint}">
-                    Click on a word to replace current typing
+                    Click a word to replace your current typing
                 </div>
+
             </div>
         </div>
+
     </div>
 </section>

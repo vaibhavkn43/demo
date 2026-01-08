@@ -4,6 +4,6 @@ package in.hcdc.demo.model;
  *
  * @author Vaibhav
  */
-public class BirthdayRequest implements TemplateForm{
+public class BirthdayRequest extends TemplateForm{
     
 }

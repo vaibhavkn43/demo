@@ -25,3 +25,58 @@
     min-width: 90px;
     cursor: pointer;
 }
+
+/* Suggestion panel container */
+.suggestion-box {
+    position: sticky;
+    top: 90px;
+    max-height: 420px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Scroll area */
+.suggestion-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 6px;
+    padding-right: 4px;
+}
+
+/* Individual suggestion */
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 8px 10px;
+    margin-bottom: 6px;
+
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+
+    cursor: pointer;          /* 🔴 IMPORTANT */
+    user-select: none;        /* 🔴 IMPORTANT */
+
+    font-size: 0.95rem;
+    transition: all 0.15s ease;
+}
+
+/* Hover effect */
+.suggestion-item:hover {
+    background-color: #eef6ff;
+    border-color: #0d6efd;
+}
+
+/* Right arrow indicator */
+.suggestion-item::after {
+    content: "→";
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+.suggestion-item.active {
+    background-color: #ff4d6d;
+    color: #fff;
+    font-weight: 600;
+}

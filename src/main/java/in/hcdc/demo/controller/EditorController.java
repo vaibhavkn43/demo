@@ -4,18 +4,24 @@ import in.hcdc.demo.model.BiodataRequest;
 import in.hcdc.demo.model.Template;
 import in.hcdc.demo.model.TemplateForm;
 import in.hcdc.demo.model.TemplateFormFactory;
+import in.hcdc.demo.service.BiodataImageRendererService;
 import in.hcdc.demo.service.TemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import in.hcdc.demo.service.BiodataImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -26,15 +32,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class EditorController {
 
     private final TemplateService templateService;
-    private final BiodataImageService biodataImageService;
     private final TemplateFormFactory formFactory;
+    private final BiodataImageRendererService biodataImageRendererService;
 
     public EditorController(TemplateService templateService,
-            BiodataImageService biodataImageService,
-            TemplateFormFactory formFactory) {
+            TemplateFormFactory formFactory, BiodataImageRendererService biodataImageRendererService) {
         this.templateService = templateService;
-        this.biodataImageService = biodataImageService;
         this.formFactory = formFactory;
+        this.biodataImageRendererService = biodataImageRendererService;
     }
 
     // OPEN EDITOR (biodata / birthday / invitation)
@@ -58,34 +63,94 @@ public class EditorController {
     }
 
     @PostMapping("/{categoryName}/preview")
-    public String preview(@PathVariable String categoryName,
+    public String preview(
+            @PathVariable String categoryName,
             @RequestParam String templateId,
             HttpServletRequest request,
-            Model model) throws Exception {
+            Model model) {
 
+        // 1️⃣ Create correct form dynamically
         TemplateForm form = formFactory.getForm(categoryName);
 
-        ServletRequestDataBinder binder
-                = new ServletRequestDataBinder(form);
+        // 2️⃣ Bind request parameters (including custom fields)
+        ServletRequestDataBinder binder = new ServletRequestDataBinder(form);
         binder.bind(request);
 
-        String imageUrl;
+        // 3️⃣ Generate image using renderer
+        String imagePath;
 
         switch (categoryName) {
-            case "biodata" ->
-                imageUrl = biodataImageService.generateBiodataImage(
-                        (BiodataRequest) form, templateId
+            case "biodata" -> {
+                imagePath = biodataImageRendererService.renderBiodata(
+                        (BiodataRequest) form,
+                        templateId
                 );
+            }
             default ->
                 throw new IllegalArgumentException(
                         "Unsupported category: " + categoryName
                 );
         }
 
-        model.addAttribute("imagePath", imageUrl);
-        model.addAttribute("content", "preview/" + categoryName + "-preview");
+        // 4️⃣ Send image to preview
+        model.addAttribute("imagePath", imagePath);
+        model.addAttribute("categoryName", categoryName);
+        model.addAttribute("templateId", templateId);
 
+        model.addAttribute("content", "preview/image-preview");
         return "layout/base";
     }
 
+//    @PostMapping("/{categoryName}/preview")
+//    public String preview(
+//            @PathVariable String categoryName,
+//            @RequestParam String templateId,
+//            HttpServletRequest request,
+//            Model model) {
+//
+//        // 1️⃣ Create correct form dynamically
+//        TemplateForm form = formFactory.getForm(categoryName);
+//
+//        // 2️⃣ Bind request parameters
+//        ServletRequestDataBinder binder = new ServletRequestDataBinder(form);
+//        binder.bind(request);
+//
+//        // 3️⃣ Pass everything to view
+//        model.addAttribute("form", form);
+//        model.addAttribute("templateId", templateId);
+//        model.addAttribute("categoryName", categoryName);
+//
+//        model.addAttribute("content", "preview/" + categoryName + "-preview");
+//        return "layout/base";
+//    }
+//    @PostMapping("/{categoryName}/preview")
+//    public String preview(@PathVariable String categoryName,
+//            @RequestParam String templateId,
+//            HttpServletRequest request,
+//            Model model) throws Exception {
+//
+//        TemplateForm form = formFactory.getForm(categoryName);
+//
+//        ServletRequestDataBinder binder
+//                = new ServletRequestDataBinder(form);
+//        binder.bind(request);
+//
+//        String imageUrl;
+//
+//        switch (categoryName) {
+//            case "biodata" ->
+//                imageUrl = biodataImageService.generateBiodataImage(
+//                        (BiodataRequest) form, templateId
+//                );
+//            default ->
+//                throw new IllegalArgumentException(
+//                        "Unsupported category: " + categoryName
+//                );
+//        }
+//
+//        model.addAttribute("imagePath", imageUrl);
+//        model.addAttribute("content", "preview/" + categoryName + "-preview");
+//
+//        return "layout/base";
+//    }
 }

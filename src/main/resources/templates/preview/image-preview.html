@@ -1,0 +1,27 @@
+<section class="text-center">
+
+    <h2 class="mb-3 fw-bold">
+        Preview
+    </h2>
+
+    <div class="card shadow-sm p-3 d-inline-block">
+        <img th:src="${imagePath}"
+             class="img-fluid"
+             alt="Generated Preview">
+    </div>
+
+    <div class="mt-4 d-flex justify-content-center gap-2">
+
+        <a th:href="@{'/editor/' + ${categoryName} + '/' + ${templateId}}"
+           class="btn btn-outline-secondary">
+            ← Edit
+        </a>
+
+        <a th:href="${imagePath}"
+           download
+           class="btn btn-success">
+            Download Image
+        </a>
+    </div>
+
+</section>
