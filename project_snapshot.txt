@@ -1,6 +1,6 @@
 =============================== 
 PROJECT SNAPSHOT 
-Generated on Thu 01/08/2026 14:22:03.03 
+Generated on Thu 01/08/2026 17:16:37.99 
 =============================== 
  
  
@@ -113,6 +113,49 @@ public class DemoApplication {
 }
  
 -------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\config\AppStorageConfig.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.config;
+
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+/**
+ *
+ * @author Vaibhav
+ */
+public class AppStorageConfig {
+
+    public static final Path BASE_DIR =
+            Paths.get(System.getProperty("user.home"), ".templateMaker");
+
+    public static final Path IMAGE_DIR = BASE_DIR.resolve("images");
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\config\StorageInitializer.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.config;
+
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.nio.file.Files;
+/**
+ *
+ * @author Vaibhav
+ */
+@Component
+public class StorageInitializer {
+    
+    @PostConstruct
+    public void init() throws IOException {
+        Files.createDirectories(AppStorageConfig.IMAGE_DIR);
+    }
+}
+ 
+-------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\config\WebMvcConfig.java" 
 -------------------------------------------------- 
 package in.hcdc.demo.config;
@@ -211,18 +254,24 @@ import in.hcdc.demo.model.BiodataRequest;
 import in.hcdc.demo.model.Template;
 import in.hcdc.demo.model.TemplateForm;
 import in.hcdc.demo.model.TemplateFormFactory;
+import in.hcdc.demo.service.BiodataImageRendererService;
 import in.hcdc.demo.service.TemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import in.hcdc.demo.service.BiodataImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  *
@@ -233,15 +282,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class EditorController {
 
     private final TemplateService templateService;
-    private final BiodataImageService biodataImageService;
     private final TemplateFormFactory formFactory;
+    private final BiodataImageRendererService biodataImageRendererService;
 
     public EditorController(TemplateService templateService,
-            BiodataImageService biodataImageService,
-            TemplateFormFactory formFactory) {
+            TemplateFormFactory formFactory, BiodataImageRendererService biodataImageRendererService) {
         this.templateService = templateService;
-        this.biodataImageService = biodataImageService;
         this.formFactory = formFactory;
+        this.biodataImageRendererService = biodataImageRendererService;
     }
 
     // OPEN EDITOR (biodata / birthday / invitation)
@@ -274,19 +322,57 @@ public class EditorController {
         // 1️⃣ Create correct form dynamically
         TemplateForm form = formFactory.getForm(categoryName);
 
-        // 2️⃣ Bind request parameters
+        // 2️⃣ Bind request parameters (including custom fields)
         ServletRequestDataBinder binder = new ServletRequestDataBinder(form);
         binder.bind(request);
 
-        // 3️⃣ Pass everything to view
-        model.addAttribute("form", form);
-        model.addAttribute("templateId", templateId);
-        model.addAttribute("categoryName", categoryName);
+        // 3️⃣ Generate image using renderer
+        String imagePath;
 
-        model.addAttribute("content", "preview/" + categoryName + "-preview");
+        switch (categoryName) {
+            case "biodata" -> {
+                imagePath = biodataImageRendererService.renderBiodata(
+                        (BiodataRequest) form,
+                        templateId
+                );
+            }
+            default ->
+                throw new IllegalArgumentException(
+                        "Unsupported category: " + categoryName
+                );
+        }
+
+        // 4️⃣ Send image to preview
+        model.addAttribute("imagePath", imagePath);
+        model.addAttribute("categoryName", categoryName);
+        model.addAttribute("templateId", templateId);
+
+        model.addAttribute("content", "preview/image-preview");
         return "layout/base";
     }
 
+//    @PostMapping("/{categoryName}/preview")
+//    public String preview(
+//            @PathVariable String categoryName,
+//            @RequestParam String templateId,
+//            HttpServletRequest request,
+//            Model model) {
+//
+//        // 1️⃣ Create correct form dynamically
+//        TemplateForm form = formFactory.getForm(categoryName);
+//
+//        // 2️⃣ Bind request parameters
+//        ServletRequestDataBinder binder = new ServletRequestDataBinder(form);
+//        binder.bind(request);
+//
+//        // 3️⃣ Pass everything to view
+//        model.addAttribute("form", form);
+//        model.addAttribute("templateId", templateId);
+//        model.addAttribute("categoryName", categoryName);
+//
+//        model.addAttribute("content", "preview/" + categoryName + "-preview");
+//        return "layout/base";
+//    }
 //    @PostMapping("/{categoryName}/preview")
 //    public String preview(@PathVariable String categoryName,
 //            @RequestParam String templateId,
@@ -317,6 +403,52 @@ public class EditorController {
 //
 //        return "layout/base";
 //    }
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\controller\ImageController.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.controller;
+
+
+import in.hcdc.demo.config.AppStorageConfig;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+/**
+ *
+ * @author Vaibhav
+ */
+@Controller
+public class ImageController {
+
+   private static final Path IMAGE_DIR = AppStorageConfig.IMAGE_DIR;
+
+
+    @GetMapping("/images/{fileName}")
+    public ResponseEntity<Resource> serveImage(
+            @PathVariable String fileName) throws MalformedURLException {
+
+        Path imagePath = IMAGE_DIR.resolve(fileName);
+
+        Resource resource = new UrlResource(imagePath.toUri());
+
+        if (!resource.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(resource);
+    }
 }
  
 -------------------------------------------------- 
@@ -504,10 +636,11 @@ public class CustomField {
 }
  
 -------------------------------------------------- 
-FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\FontConfig.java" 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\CustomFieldsLayout.java" 
 -------------------------------------------------- 
 package in.hcdc.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -523,11 +656,73 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CustomFieldsLayout {
+
+    private int startX;
+    private int startY;
+    private int maxWidth;
+    private int lineHeight;
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\FontConfig.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ *
+ * @author Vaibhav
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FontConfig {
 
-    private String name;
-    private int size;
-    private String color;
+    String family;
+    int size;
+    String color;
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\Layout.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ *
+ * @author Vaibhav
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Layout {
+
+    private List<Section> sections;
+    private CustomFieldsLayout customFields;
+    private FontConfig font;
 }
  
 -------------------------------------------------- 
@@ -554,6 +749,41 @@ public class Position {
 
     private int x;
     private int y;
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\Section.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ *
+ * @author Vaibhav
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Section {
+
+    private String key;
+    private String title;
+    private int startX;
+    private int startY;
+    private int maxWidth;
+    private int lineHeight;
+    private List<String> fields;
+    private int sectionGap = 20; // DEFAULT GAP
 }
  
 -------------------------------------------------- 
@@ -664,116 +894,271 @@ public class TemplateLayout {
 }
  
 -------------------------------------------------- 
-FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\service\BiodataImageService.java" 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\TemplateRenderer.java" 
 -------------------------------------------------- 
-package in.hcdc.demo.service;
-
-import in.hcdc.demo.model.BiodataRequest;
-import in.hcdc.demo.model.TemplateLayout;
-import org.springframework.stereotype.Service;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
+package in.hcdc.demo.model;
 
 /**
  *
- * @author vaibhav
+ * @author Vaibhav
+ */
+public interface TemplateRenderer<T extends TemplateForm> {
+    String render(T form, String templateId);
+}
+
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\service\BiodataImageRendererService.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import in.hcdc.demo.config.AppStorageConfig;
+import in.hcdc.demo.model.BiodataRequest;
+import in.hcdc.demo.model.CustomField;
+import in.hcdc.demo.model.Layout;
+import in.hcdc.demo.model.Section;
+import in.hcdc.demo.model.TemplateRenderer;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.imageio.ImageIO;
+import org.springframework.stereotype.Service;
+
+/**
+ *
+ * @author Vaibhav This service does everything:
+ *
+ * Load PNG
+ *
+ * Load layout.json
+ *
+ * Auto-flow sections
+ *
+ * Wrap text
+ *
+ * Render custom fields
+ *
+ * save image
  */
 @Service
-public class BiodataImageService {
+public class BiodataImageRendererService {
 
-    @Value("${app.generated.dir}")
-    private String generatedDir;
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    private final TemplateLayoutService layoutService;
+    public String renderBiodata(BiodataRequest form, String templateId) {
+        try {
 
-    public BiodataImageService(TemplateLayoutService layoutService) {
-        this.layoutService = layoutService;
+            /* =====================================================
+               STEP 1: Load PNG template
+               ===================================================== */
+            BufferedImage canvas = ImageIO.read(
+                    getClass().getResourceAsStream(
+                            "/templates-assets/biodata/" + templateId + ".png"
+                    )
+            );
+
+            /* =====================================================
+               STEP 2: Load layout.json
+               ===================================================== */
+            Layout layout = mapper.readValue(
+                    getClass().getResourceAsStream(
+                            "/templates-assets/biodata/" + templateId + "-layout.json"
+                    ),
+                    Layout.class
+            );
+
+            /* =====================================================
+               STEP 3: Create Graphics2D
+               ===================================================== */
+            Graphics2D g = canvas.createGraphics();
+            g.setRenderingHint(
+                    RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+            );
+
+            // Load font
+            Font font = new Font(layout.getFont().getFamily(), Font.PLAIN, layout.getFont().getSize());
+            g.setFont(font);
+            g.setColor(Color.decode(layout.getFont().getColor()));
+            FontMetrics fm = g.getFontMetrics();
+
+            /* =====================================================
+               STEP 4: Render SECTIONS (auto-flow)
+               ===================================================== */
+int flowY = layout.getStartY();
+
+for (Section section : layout.getSections()) {
+
+    List<Map.Entry<String, String>> values =
+            extractSectionValues(section, form);
+
+    if (values.isEmpty()) {
+        continue;
     }
 
-    public String generateBiodataImage(BiodataRequest data,
-            String templateId) throws Exception {
+    int currentY = flowY;
 
-        // 1️⃣ ensure output directory exists
-        Path outputDir = Paths.get(generatedDir);
-        Files.createDirectories(outputDir);
+    // title
+    g.drawString(section.getTitle(), section.getStartX(), currentY);
+    currentY += section.getLineHeight();
 
-        // 2️⃣ load base template image
-        InputStream is = getClass().getClassLoader()
-                .getResourceAsStream(
-                        "static/images/templates/biodata/" + templateId + ".png"
+    for (Map.Entry<String, String> entry : values) {
+        currentY += drawWrappedText(
+                g,
+                entry.getKey() + " : " + entry.getValue(),
+                section.getStartX(),
+                currentY,
+                section.getMaxWidth(),
+                section.getLineHeight(),
+                fm
+        );
+    }
+
+    flowY = currentY + section.getSectionGap();
+}
+
+
+            /* =====================================================
+               STEP 5: Render CUSTOM FIELDS
+               ===================================================== */
+            int y = layout.getCustomFields().getStartY();
+
+            for (CustomField cf : form.getCustomFields()) {
+                if (isEmpty(cf.getLabel()) || isEmpty(cf.getValue())) {
+                    continue;
+                }
+
+                y += drawWrappedText(
+                        g,
+                        cf.getLabel() + " : " + cf.getValue(),
+                        layout.getCustomFields().getStartX(),
+                        y,
+                        layout.getCustomFields().getMaxWidth(),
+                        layout.getCustomFields().getLineHeight(),
+                        fm
                 );
-
-        if (is == null) {
-            throw new IllegalStateException("Template image not found");
-        }
-
-        BufferedImage template = ImageIO.read(is);
-        Graphics2D g = template.createGraphics();
-
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-        // 3️⃣ load layout JSON
-        TemplateLayout layout = layoutService.load("biodata", templateId);
-
-        System.out.println(
-                getClass().getClassLoader().getResource("fonts/mangal.ttf")
-        );
-
-        // 4️⃣ load font from layout
-        InputStream fontStream
-                = getClass().getClassLoader()
-                        .getResourceAsStream("fonts/mangal.ttf");
-
-        if (fontStream == null) {
-            throw new IllegalStateException("Font not found in classpath: fonts/mangal.ttf");
-        }
-
-        Font font = Font.createFont(Font.TRUETYPE_FONT, fontStream)
-                .deriveFont((float) layout.getFont().getSize());
-
-        g.setFont(font);
-        g.setColor(Color.decode(layout.getFont().getColor()));
-
-        // 5️⃣ map form data
-        Map<String, String> dataMap = Map.of(
-                "name", data.getName(),
-                "birthDate", data.getBirthDate(),
-                "birthPlace", data.getBirthPlace(),
-                "birthTime", data.getBirthTime(),
-                "religion", data.getReligion(),
-                "caste", data.getCaste(),
-                "height", data.getHeight(),
-                "education", data.getEducation(),
-                "address", data.getAddress(),
-                "mobile", data.getMobile()
-        );
-
-        // 6️⃣ draw text using layout
-        layout.getFields().forEach((field, pos) -> {
-            String value = dataMap.get(field);
-            if (value != null && !value.isBlank()) {
-                g.drawString(value, pos.getX(), pos.getY());
             }
-        });
 
-        g.dispose();
+            g.dispose();
 
-        // 7️⃣ write output
-        String fileName = "biodata-" + System.currentTimeMillis() + ".png";
-        Path outputFile = outputDir.resolve(fileName);
+            /* =====================================================
+               STEP 6: Save Image
+               ===================================================== */
+            Path outputPath = AppStorageConfig.IMAGE_DIR
+                    .resolve("biodata-" + System.currentTimeMillis() + ".png");
 
-        ImageIO.write(template, "png", outputFile.toFile());
+            ImageIO.write(canvas, "png", outputPath.toFile());
 
-        return "/generated/" + fileName;
+            return "/images/" + outputPath.getFileName();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to render biodata image", e);
+        }
+    }
+
+    /* =====================================================
+       Helper: Extract section values using reflection
+       ===================================================== */
+    private List<Map.Entry<String, String>> extractSectionValues(
+            Section section, BiodataRequest form) {
+
+        List<Map.Entry<String, String>> list = new ArrayList<>();
+
+        for (String fieldName : section.getFields()) {
+            try {
+                Field field = BiodataRequest.class.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                Object value = field.get(form);
+
+                if (value != null && !value.toString().isBlank()) {
+                    list.add(Map.entry(resolveLabel(fieldName), value.toString()));
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return list;
+    }
+
+    /* =====================================================
+       Helper: Draw wrapped text and return Y consumed
+       ===================================================== */
+    private int drawWrappedText(
+            Graphics2D g,
+            String text,
+            int x,
+            int y,
+            int maxWidth,
+            int lineHeight,
+            FontMetrics fm) {
+
+        List<String> lines = wrapText(text, fm, maxWidth);
+        int startY = y;
+
+        for (String line : lines) {
+            g.drawString(line, x, y);
+            y += lineHeight;
+        }
+
+        return y - startY;
+    }
+
+    /* =====================================================
+       Helper: Word wrapping
+       ===================================================== */
+    private List<String> wrapText(
+            String text, FontMetrics fm, int maxWidth) {
+
+        List<String> lines = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+
+        for (String word : text.split(" ")) {
+            String test = current.length() == 0
+                    ? word
+                    : current + " " + word;
+
+            if (fm.stringWidth(test) > maxWidth) {
+                lines.add(current.toString());
+                current = new StringBuilder(word);
+            } else {
+                current = new StringBuilder(test);
+            }
+        }
+
+        if (!current.isEmpty()) {
+            lines.add(current.toString());
+        }
+
+        return lines;
+    }
+
+    private boolean isEmpty(String s) {
+        return s == null || s.isBlank();
+    }
+
+    private String resolveLabel(String fieldName) {
+        // Later you can map this via messages.properties
+        return switch (fieldName) {
+            case "name" ->
+                "नाव";
+            case "birthDate" ->
+                "जन्म तारीख";
+            case "birthPlace" ->
+                "जन्म स्थळ";
+            case "education" ->
+                "शिक्षण";
+            default ->
+                fieldName;
+        };
     }
 }
  
@@ -1435,29 +1820,6 @@ function addCustomField() {
 
  
 -------------------------------------------------- 
-FILE: "D:\My_Workspace\demo\src\main\resources\template-layouts\biodata-layouts\biodata-bio1.json" 
--------------------------------------------------- 
-{
-  "font": {
-    "name": "mangal.ttf",
-    "size": 32,
-    "color": "#3C0000"
-  },
-  "fields": {
-    "name":        { "x": 300, "y": 650 },
-    "birthDate":  { "x": 300, "y": 698 },
-    "birthPlace": { "x": 300, "y": 746 },
-    "birthTime":  { "x": 300, "y": 794 },
-    "religion":   { "x": 300, "y": 842 },
-    "caste":      { "x": 300, "y": 890 },
-    "height":     { "x": 300, "y": 938 },
-    "education":  { "x": 300, "y": 986 },
-    "address":    { "x": 300, "y": 1034 },
-    "mobile":     { "x": 300, "y": 1082 }
-  }
-}
- 
--------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\resources\templates\category-templates.html" 
 -------------------------------------------------- 
 <section>
@@ -2033,6 +2395,118 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates\preview\biodata-preview
 -------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\resources\templates\preview\birthday-preview.html" 
 -------------------------------------------------- 
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\resources\templates\preview\image-preview.html" 
+-------------------------------------------------- 
+<section class="text-center">
+
+    <h2 class="mb-3 fw-bold">
+        Preview
+    </h2>
+
+    <div class="card shadow-sm p-3 d-inline-block">
+        <img th:src="${imagePath}"
+             class="img-fluid"
+             alt="Generated Preview">
+    </div>
+
+    <div class="mt-4 d-flex justify-content-center gap-2">
+
+        <a th:href="@{'/editor/' + ${categoryName} + '/' + ${templateId}}"
+           class="btn btn-outline-secondary">
+            ← Edit
+        </a>
+
+        <a th:href="${imagePath}"
+           download
+           class="btn btn-success">
+            Download Image
+        </a>
+    </div>
+
+</section>
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1-layout.json" 
+-------------------------------------------------- 
+{
+  "templateId": "bio1",
+
+  "canvas": {
+    "width": 1240,
+    "height": 1754
+  },
+
+  "font": {
+    "family": "NotoSerifDevanagari",
+    "size": 30,
+    "color": "#5A1E1E",
+    "labelWeight": "BOLD",
+    "valueWeight": "NORMAL"
+  },
+
+  "label": {
+    "suffix": " : ",
+    "gap": 12
+  },
+
+  "sections": [
+    {
+      "key": "personal",
+      "title": "वैयक्तिक माहिती",
+      "startX": 160,
+      "startY": 360,
+      "maxWidth": 900,
+      "lineHeight": 42,
+      "fields": [
+        "name",
+        "birthDate",
+        "birthPlace",
+        "birthTime",
+        "religion",
+        "caste",
+        "height",
+        "education"
+      ]
+    },
+
+    {
+      "key": "family",
+      "title": "कौटुंबिक माहिती",
+      "startX": 160,
+      "startY": 760,
+      "maxWidth": 900,
+      "lineHeight": 42,
+      "fields": [
+        "fatherName",
+        "motherName",
+        "brother",
+        "sister"
+      ]
+    },
+
+    {
+      "key": "contact",
+      "title": "संपर्क",
+      "startX": 160,
+      "startY": 1120,
+      "maxWidth": 900,
+      "lineHeight": 42,
+      "fields": [
+        "address",
+        "mobile"
+      ]
+    }
+  ],
+
+  "customFields": {
+    "startX": 160,
+    "startY": 1380,
+    "maxWidth": 900,
+    "lineHeight": 42
+  }
+}
  
 -------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\resources\templates-config\templates.json" 

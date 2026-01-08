@@ -44,6 +44,7 @@ public class BiodataImageRendererService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public String renderBiodata(BiodataRequest form, String templateId) {
+
         try {
 
             /* =====================================================
@@ -74,32 +75,34 @@ public class BiodataImageRendererService {
                     RenderingHints.VALUE_TEXT_ANTIALIAS_ON
             );
 
-            // Load font
-            Font font = new Font(layout.getFont().getFamily(), Font.PLAIN, layout.getFont().getSize());
+            Font font = new Font(
+                    layout.getFont().getFamily(),
+                    Font.PLAIN,
+                    layout.getFont().getSize()
+            );
             g.setFont(font);
             g.setColor(Color.decode(layout.getFont().getColor()));
             FontMetrics fm = g.getFontMetrics();
 
             /* =====================================================
-               STEP 4: Render SECTIONS (auto-flow)
+               STEP 4: Render SECTIONS (FLOW BASED)
                ===================================================== */
+            int currentY = layout.getSections().get(0).getStartY();
+
             for (Section section : layout.getSections()) {
 
-                // collect non-empty fields
-                List<Map.Entry<String, String>> values
-                        = extractSectionValues(section, form);
+                List<Map.Entry<String, String>> values =
+                        extractSectionValues(section, form);
 
                 if (values.isEmpty()) {
-                    continue; // skip entire section
+                    continue;
                 }
 
-                int currentY = section.getStartY();
-
-                // draw section title
+                // section title
                 g.drawString(section.getTitle(), section.getStartX(), currentY);
                 currentY += section.getLineHeight();
 
-                // draw each field
+                // section fields
                 for (Map.Entry<String, String> entry : values) {
                     currentY += drawWrappedText(
                             g,
@@ -111,23 +114,25 @@ public class BiodataImageRendererService {
                             fm
                     );
                 }
+
+                // gap after each section
+                currentY += section.getSectionGap();
             }
 
             /* =====================================================
-               STEP 5: Render CUSTOM FIELDS
+               STEP 5: Render CUSTOM FIELDS (CONTINUE FLOW)
                ===================================================== */
-            int y = layout.getCustomFields().getStartY();
-
             for (CustomField cf : form.getCustomFields()) {
+
                 if (isEmpty(cf.getLabel()) || isEmpty(cf.getValue())) {
                     continue;
                 }
 
-                y += drawWrappedText(
+                currentY += drawWrappedText(
                         g,
                         cf.getLabel() + " : " + cf.getValue(),
                         layout.getCustomFields().getStartX(),
-                        y,
+                        currentY,
                         layout.getCustomFields().getMaxWidth(),
                         layout.getCustomFields().getLineHeight(),
                         fm
@@ -152,7 +157,7 @@ public class BiodataImageRendererService {
     }
 
     /* =====================================================
-       Helper: Extract section values using reflection
+       Extract section values using reflection
        ===================================================== */
     private List<Map.Entry<String, String>> extractSectionValues(
             Section section, BiodataRequest form) {
@@ -175,7 +180,7 @@ public class BiodataImageRendererService {
     }
 
     /* =====================================================
-       Helper: Draw wrapped text and return Y consumed
+       Draw wrapped text
        ===================================================== */
     private int drawWrappedText(
             Graphics2D g,
@@ -198,10 +203,9 @@ public class BiodataImageRendererService {
     }
 
     /* =====================================================
-       Helper: Word wrapping
+       Word wrapping
        ===================================================== */
-    private List<String> wrapText(
-            String text, FontMetrics fm, int maxWidth) {
+    private List<String> wrapText(String text, FontMetrics fm, int maxWidth) {
 
         List<String> lines = new ArrayList<>();
         StringBuilder current = new StringBuilder();
@@ -231,18 +235,15 @@ public class BiodataImageRendererService {
     }
 
     private String resolveLabel(String fieldName) {
-        // Later you can map this via messages.properties
         return switch (fieldName) {
-            case "name" ->
-                "नाव";
-            case "birthDate" ->
-                "जन्म तारीख";
-            case "birthPlace" ->
-                "जन्म स्थळ";
-            case "education" ->
-                "शिक्षण";
-            default ->
-                fieldName;
+            case "name" -> "नाव";
+            case "birthDate" -> "जन्म तारीख";
+            case "birthPlace" -> "जन्म स्थळ";
+            case "education" -> "शिक्षण";
+            case "address" -> "पत्ता";
+            case "religion" -> "धर्म";
+            default -> fieldName;
         };
     }
 }
+

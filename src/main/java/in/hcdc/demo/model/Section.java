@@ -1,6 +1,7 @@
 package in.hcdc.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,4 +28,6 @@ public class Section {
     private int maxWidth;
     private int lineHeight;
     private List<String> fields;
+    @JsonProperty(defaultValue = "20")
+    private int sectionGap = 20; // DEFAULT GAP
 }
