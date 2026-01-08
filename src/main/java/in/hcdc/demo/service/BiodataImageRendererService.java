@@ -43,6 +43,10 @@ public class BiodataImageRendererService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    // ⭐ CHANGE: Typography paddings
+    private static final int LABEL_PADDING = 20;
+    private static final int COLON_PADDING = 15;
+
     public String renderBiodata(BiodataRequest form, String templateId) {
 
         try {
@@ -75,11 +79,26 @@ public class BiodataImageRendererService {
                     RenderingHints.VALUE_TEXT_ANTIALIAS_ON
             );
 
-            Font font = new Font(
-                    layout.getFont().getFamily(),
-                    Font.PLAIN,
-                    layout.getFont().getSize()
-            );
+            // ⭐ CHANGE: Better Marathi font with fallback
+            Font font;
+            try {
+                font = Font.createFont(
+                        Font.TRUETYPE_FONT,
+                        getClass().getResourceAsStream(
+                                "/fonts/NotoSerifDevanagari-Regular.ttf"
+                        )
+                ).deriveFont(Font.PLAIN, layout.getFont().getSize());
+            } catch (Exception e) {
+                try {
+                    font = Font.createFont(
+                            Font.TRUETYPE_FONT,
+                            getClass().getResourceAsStream("/fonts/Mangal.ttf")
+                    ).deriveFont(Font.PLAIN, layout.getFont().getSize());
+                } catch (Exception ex) {
+                    font = new Font("Serif", Font.PLAIN, layout.getFont().getSize());
+                }
+            }
+
             g.setFont(font);
             g.setColor(Color.decode(layout.getFont().getColor()));
             FontMetrics fm = g.getFontMetrics();
@@ -91,8 +110,8 @@ public class BiodataImageRendererService {
 
             for (Section section : layout.getSections()) {
 
-                List<Map.Entry<String, String>> values =
-                        extractSectionValues(section, form);
+                List<Map.Entry<String, String>> values
+                        = extractSectionValues(section, form);
 
                 if (values.isEmpty()) {
                     continue;
@@ -103,14 +122,37 @@ public class BiodataImageRendererService {
                 currentY += section.getLineHeight();
 
                 // section fields
+                // ⭐ CHANGE: Calculate max label width for this section
+                int maxLabelWidth = 0;
                 for (Map.Entry<String, String> entry : values) {
-                    currentY += drawWrappedText(
+                    maxLabelWidth = Math.max(
+                            maxLabelWidth,
+                            fm.stringWidth(entry.getKey())
+                    );
+                }
+
+// ⭐ CHANGE: Define column positions
+                int labelX = section.getStartX();
+                int colonX = labelX + maxLabelWidth + LABEL_PADDING;
+                int valueX = colonX + COLON_PADDING;
+
+// ⭐ CHANGE: Draw each row (label | colon | value)
+                for (Map.Entry<String, String> entry : values) {
+
+                    // Label
+                    g.drawString(entry.getKey(), labelX, currentY);
+
+                    // Colon (aligned vertically!)
+                    g.drawString(":", colonX, currentY);
+
+                    // Value (wrapped under same column)
+                    currentY += drawWrappedValue(
                             g,
-                            entry.getKey() + " : " + entry.getValue(),
-                            section.getStartX(),
+                            entry.getValue(),
+                            valueX,
                             currentY,
-                            section.getMaxWidth(),
-                            section.getLineHeight(),
+                            section.getMaxWidth() - (valueX - labelX),
+                            (int) (section.getLineHeight() * 1.1), // ⭐ better Marathi spacing
                             fm
                     );
                 }
@@ -230,20 +272,47 @@ public class BiodataImageRendererService {
         return lines;
     }
 
+    // ⭐ CHANGE: Wrap ONLY value text (not label/colon)
+    private int drawWrappedValue(
+            Graphics2D g,
+            String text,
+            int x,
+            int y,
+            int maxWidth,
+            int lineHeight,
+            FontMetrics fm) {
+
+        List<String> lines = wrapText(text, fm, maxWidth);
+        int startY = y;
+
+        for (String line : lines) {
+            g.drawString(line, x, y);
+            y += lineHeight;
+        }
+
+        return y - startY;
+    }
+
     private boolean isEmpty(String s) {
         return s == null || s.isBlank();
     }
 
     private String resolveLabel(String fieldName) {
         return switch (fieldName) {
-            case "name" -> "नाव";
-            case "birthDate" -> "जन्म तारीख";
-            case "birthPlace" -> "जन्म स्थळ";
-            case "education" -> "शिक्षण";
-            case "address" -> "पत्ता";
-            case "religion" -> "धर्म";
-            default -> fieldName;
+            case "name" ->
+                "नाव";
+            case "birthDate" ->
+                "जन्म तारीख";
+            case "birthPlace" ->
+                "जन्म स्थळ";
+            case "education" ->
+                "शिक्षण";
+            case "address" ->
+                "पत्ता";
+            case "religion" ->
+                "धर्म";
+            default ->
+                fieldName;
         };
     }
 }
-
