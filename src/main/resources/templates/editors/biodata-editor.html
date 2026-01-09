@@ -22,6 +22,11 @@
                   method="post">
 
                 <input type="hidden" name="templateId" th:value="${template.id}"/>
+                <div class="form-text mb-3">
+                    <span class="required-star">*</span>
+                    <span th:text="#{form.required.note}"></span>
+                </div>
+
 
                 <div class="accordion" id="biodataAccordion">
 
@@ -36,17 +41,29 @@
                         <div id="personalSection" class="accordion-collapse collapse show">
                             <div class="accordion-body">
 
-                                <label class="form-label" th:text="#{editor.form.name}"></label>
+                                <label class="form-label">
+                                    <span th:text="#{editor.form.name}"></span>
+                                    <span class="required-star">*</span>
+                                </label>
+
                                 <input class="form-control mb-2 ime-marathi"
                                        th:field="*{name}"
                                        th:placeholder="#{editor.placeholder.name}"/>
 
-                                <label class="form-label" th:text="#{editor.form.religion}"></label>
+                                <label class="form-label">
+                                    <span th:text="#{editor.form.religion}"></span>
+                                    <span class="required-star">*</span>
+                                </label>
+
                                 <input class="form-control mb-2 ime-marathi"
                                        th:field="*{religion}"
                                        th:placeholder="#{editor.placeholder.religion}"/>
 
-                                <label class="form-label" th:text="#{editor.form.caste}"></label>
+                                <label class="form-label">
+                                    <span th:text="#{editor.form.caste}"></span>
+                                    <span class="required-star">*</span>
+                                </label>
+
                                 <input class="form-control mb-2 ime-marathi"
                                        th:field="*{caste}"
                                        th:placeholder="#{editor.placeholder.caste}"/>
@@ -75,7 +92,11 @@
                         <div id="birthSection" class="accordion-collapse collapse">
                             <div class="accordion-body">
 
-                                <label class="form-label" th:text="#{editor.form.birthDate}"></label>
+                                <label class="form-label">
+                                    <span th:text="#{editor.form.birthDate}"></span>
+                                    <span class="required-star">*</span>
+                                </label>
+
                                 <input type="date" class="form-control mb-2"
                                        th:field="*{birthDate}"/>
 
@@ -164,9 +185,14 @@
                                 </select>
 
                                 <label class="form-label" th:text="#{editor.form.complexion}"></label>
-                                <input class="form-control ime-marathi"
-                                       th:field="*{complexion}"
-                                       th:placeholder="#{editor.placeholder.complexion}"/>
+                                <select class="form-select mb-2" th:field="*{complexion}">
+                                    <option value="" th:text="#{dropdown.select}"></option>
+                                    <option th:value="#{dropdown.complexion.fair}"  th:text="#{dropdown.complexion.fair}"></option>
+                                    <option th:value="#{dropdown.complexion.wheatish}"  th:text="#{dropdown.complexion.wheatish}"></option>
+                                    <option th:value="#{dropdown.complexion.dark}"   th:text="#{dropdown.complexion.dark}"></option>
+                                    <option th:value="#{dropdown.complexion.veryFair}"   th:text="#{dropdown.complexion.veryFair}"></option>
+                                </select>
+
                             </div>
                         </div>
                     </div>
@@ -182,7 +208,11 @@
                         <div id="educationSection" class="accordion-collapse collapse">
                             <div class="accordion-body">
 
-                                <label class="form-label" th:text="#{editor.form.education}"></label>
+                                <label class="form-label">
+                                    <span th:text="#{editor.form.education}"></span>
+                                    <span class="required-star">*</span>
+                                </label>
+
                                 <input class="form-control mb-2 ime-marathi"
                                        th:field="*{education}"
                                        th:placeholder="#{editor.placeholder.education}"/>
@@ -206,7 +236,10 @@
                         <div id="familySection" class="accordion-collapse collapse">
                             <div class="accordion-body">
 
-                                <label class="form-label" th:text="#{editor.form.fatherName}"></label>
+                                <label class="form-label">
+                                    <span th:text="#{editor.form.fatherName}"></span>
+                                </label>
+
                                 <input class="form-control mb-2 ime-marathi"
                                        th:field="*{fatherName}"
                                        th:placeholder="#{editor.placeholder.fatherName}"/>
@@ -235,12 +268,20 @@
                         <div id="contactSection" class="accordion-collapse collapse">
                             <div class="accordion-body">
 
-                                <label class="form-label" th:text="#{editor.form.mobile}"></label>
+                                <label class="form-label">
+                                    <span th:text="#{editor.form.mobile}"></span>
+                                    <span class="required-star">*</span>
+                                </label>
+
                                 <input class="form-control mb-2"
                                        th:field="*{mobile}"
                                        th:placeholder="#{editor.placeholder.mobile}"/>
 
-                                <label class="form-label" th:text="#{editor.form.address}"></label>
+                                <label class="form-label">
+                                    <span th:text="#{editor.form.address}"></span>
+                                    <span class="required-star">*</span>
+                                </label>
+
                                 <textarea class="form-control ime-marathi"
                                           rows="2"
                                           th:field="*{address}"
@@ -280,6 +321,40 @@
                     <ul class="mt-2 mb-0" id="validationList"></ul>
                 </div>
 
+                <!-- ================= Validation Messages (i18n bridge for JS) ================= -->
+                <div id="validationMessages" class="d-none">
+
+                    <span data-msg-key="validation.required.name"
+                          th:text="#{validation.required.name}"></span>
+
+                    <span data-msg-key="validation.required.birth"
+                          th:text="#{validation.required.birth}"></span>
+
+                    <span data-msg-key="validation.required.birthPlace"
+                          th:text="#{validation.required.birthPlace}"></span>
+
+                    <span data-msg-key="validation.required.religion"
+                          th:text="#{validation.required.religion}"></span>
+
+                    <span data-msg-key="validation.required.caste"
+                          th:text="#{validation.required.caste}"></span>
+
+                    <span data-msg-key="validation.required.height"
+                          th:text="#{validation.required.height}"></span>
+
+                    <span data-msg-key="validation.required.education"
+                          th:text="#{validation.required.education}"></span>
+
+                    <span data-msg-key="validation.required.profession"
+                          th:text="#{validation.required.profession}"></span>
+
+                    <span data-msg-key="validation.required.mobile"
+                          th:text="#{validation.required.mobile}"></span>
+
+                    <span data-msg-key="validation.required.address"
+                          th:text="#{validation.required.address}"></span>
+
+                </div>
                 <!-- Submit -->
                 <button type="submit"
                         class="btn btn-success w-100 mt-4"
