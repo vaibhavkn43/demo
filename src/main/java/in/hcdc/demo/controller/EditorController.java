@@ -5,6 +5,7 @@ import in.hcdc.demo.model.Template;
 import in.hcdc.demo.model.TemplateForm;
 import in.hcdc.demo.model.TemplateFormFactory;
 import in.hcdc.demo.service.BiodataImageRendererService;
+import in.hcdc.demo.service.BiodataValidationService;
 import in.hcdc.demo.service.TemplateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,12 +35,16 @@ public class EditorController {
     private final TemplateService templateService;
     private final TemplateFormFactory formFactory;
     private final BiodataImageRendererService biodataImageRendererService;
+    private final BiodataValidationService validationService;
 
     public EditorController(TemplateService templateService,
-            TemplateFormFactory formFactory, BiodataImageRendererService biodataImageRendererService) {
+            TemplateFormFactory formFactory,
+            BiodataImageRendererService biodataImageRendererService,
+            BiodataValidationService validationService) {
         this.templateService = templateService;
         this.formFactory = formFactory;
         this.biodataImageRendererService = biodataImageRendererService;
+        this.validationService = validationService;
     }
 
     // OPEN EDITOR (biodata / birthday / invitation)
@@ -69,35 +74,34 @@ public class EditorController {
             HttpServletRequest request,
             Model model) {
 
-        // 1️⃣ Create correct form dynamically
         TemplateForm form = formFactory.getForm(categoryName);
 
-        // 2️⃣ Bind request parameters (including custom fields)
         ServletRequestDataBinder binder = new ServletRequestDataBinder(form);
         binder.bind(request);
 
-        // 3️⃣ Generate image using renderer
-        String imagePath;
+        if ("biodata".equals(categoryName)) {
 
-        switch (categoryName) {
-            case "biodata" -> {
-                imagePath = biodataImageRendererService.renderBiodata(
-                        (BiodataRequest) form,
-                        templateId
-                );
+            BiodataRequest biodata = (BiodataRequest) form;
+
+            var validation = validationService.validate(biodata);
+
+            if (!validation.isValid()) {
+
+                model.addAttribute("validationErrors", validation.getMissingKeys());
+                model.addAttribute("content", "validation/minimum-validation");
+                return "layout/base";
             }
-            default ->
-                throw new IllegalArgumentException(
-                        "Unsupported category: " + categoryName
-                );
+
+            String imagePath = biodataImageRendererService
+                    .renderBiodata(biodata, templateId);
+
+            model.addAttribute("imagePath", imagePath);
         }
 
-        // 4️⃣ Send image to preview
-        model.addAttribute("imagePath", imagePath);
         model.addAttribute("categoryName", categoryName);
         model.addAttribute("templateId", templateId);
-
         model.addAttribute("content", "preview/image-preview");
+
         return "layout/base";
     }
 

@@ -1,0 +1,184 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jan 11, 2026, 11:32:31 AM
+    Author     : vaibh
+*/
+
+/* ===============================
+   Editor Layout
+================================ */
+.editor-page {
+    max-width: 1400px;
+    margin: auto;
+}
+
+/* ===============================
+   Page Title
+================================ */
+.editor-page h2 {
+    font-size: 1.8rem;
+    letter-spacing: 0.3px;
+}
+
+/* ===============================
+   Accordion Styling
+================================ */
+.accordion-item {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 1px solid #e5e5e5;
+}
+
+.accordion-button {
+    font-weight: 600;
+    background: #f8f9fa;
+    color: #333;
+}
+
+.accordion-button:not(.collapsed) {
+    background: #e7f1ff;
+    color: #0d6efd;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+/* ===============================
+   Accordion Body
+================================ */
+.accordion-body {
+    background: #ffffff;
+    padding: 1.2rem;
+}
+
+/* ===============================
+   Form Labels
+================================ */
+.form-label {
+    font-weight: 500;
+    margin-top: 6px;
+}
+
+/* Required Star */
+.required-star {
+    color: #dc3545;
+    margin-left: 4px;
+    font-weight: 700;
+}
+
+/* ===============================
+   Inputs
+================================ */
+.form-control,
+.form-select {
+    border-radius: 6px;
+    border-color: #ddd;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.15rem rgba(13,110,253,.15);
+}
+
+/* ===============================
+   Section Spacing
+================================ */
+.accordion-body > label:first-child {
+    margin-top: 0;
+}
+
+/* ===============================
+   Validation Box
+================================ */
+#validationBox {
+    border-left: 5px solid #ffc107;
+}
+
+/* ===============================
+   Right Suggestion Panel
+================================ */
+.suggestion-box {
+    position: sticky;
+    top: 90px;
+    background: #fdfdfd;
+}
+
+/* ===============================
+   Submit Button
+================================ */
+button[type="submit"] {
+    font-size: 1.1rem;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* ===============================
+   Mobile Adjustments
+================================ */
+@media (max-width: 768px) {
+    .editor-page {
+        padding: 0 10px;
+    }
+}
+.form-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+.accordion-button::before {
+    content: "▸";
+    margin-right: 8px;
+    transition: transform 0.2s ease;
+}
+
+.accordion-button:not(.collapsed)::before {
+    transform: rotate(90deg);
+}
+/* ===============================
+   Editor Wrapper Fix
+================================ */
+.editor-wrapper {
+    width: 100%;
+    padding: 24px 16px;
+}
+
+/* Center content but allow wide screens */
+.editor-wrapper > .row {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Prevent left-sticking at zoom-out */
+.editor-wrapper .row {
+    justify-content: center;
+}
+
+/* ===============================
+   Column behavior
+================================ */
+.editor-wrapper .col-md-8 {
+    max-width: 760px;
+}
+
+.editor-wrapper .col-md-4 {
+    max-width: 380px;
+}
+
+/* ===============================
+   Accordion width consistency
+================================ */
+.accordion {
+    width: 100%;
+}
+
+/* ===============================
+   Footer spacing fix
+================================ */
+footer {
+    margin-top: 40px;
+}

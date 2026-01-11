@@ -1,71 +1,136 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <title th:text="#{app.title}">Template Maker</title>
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{app.title}">Template Maker</title>
 
-        <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-        <link rel="stylesheet" th:href="@{/css/style.css}">
-    </head>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
 
-    <body class="bg-light">
+<body>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-            <div class="container">
+<!-- =========================
+     NAVBAR
+========================= -->
+<nav class="navbar navbar-expand-lg bg-white sticky-top border-bottom">
+    <div class="container">
 
-                <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
-                    <span class="brand-logo me-2">🧾</span>
-                    <span th:text="#{app.title}">Marathi Biodata Maker</span>
-                </a>
+        <!-- BRAND -->
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <span class="brand-logo me-2">🧾</span>
+            <span th:text="#{app.title}">Marathi Biodata Maker</span>
+        </a>
 
-                <button class="navbar-toggler" type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#mainNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <!-- TOGGLER -->
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-                <div class="collapse navbar-collapse" id="mainNavbar">
-                    <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+        <!-- NAV LINKS -->
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav ms-auto align-items-center gap-3">
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/" th:text="#{nav.home}">Home</a>
-                        </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/" th:text="#{nav.home}">Home</a>
+                </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dashboard" th:text="#{nav.templates}">Templates</a>
-                        </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/templates/biodata" th:text="#{nav.templates}">
+                        Templates
+                    </a>
+                </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/how-it-works" th:text="#{nav.how}">How It Works</a>
-                        </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/how-it-works" th:text="#{nav.how}">
+                        How It Works
+                    </a>
+                </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/contact" th:text="#{nav.contact}">Contact</a>
-                        </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact" th:text="#{nav.contact}">
+                        Contact
+                    </a>
+                </li>
 
-                        <li class="nav-item">
-                            <select class="form-select form-select-sm"
-                                    onchange="changeLanguage(this.value)">
-                                <option value="mr" th:selected="${#locale.language == 'mr'}">मराठी</option>
-                                <option value="en" th:selected="${#locale.language == 'en'}">English</option>
-                            </select>
-                        </li>
+                <!-- LANGUAGE -->
+                <li class="nav-item">
+                    <select class="language-select"
+                            onchange="changeLanguage(this.value)">
+                        <option value="mr" th:selected="${#locale.language == 'mr'}">मराठी</option>
+                        <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+                    </select>
+                </li>
 
-                    </ul>
-                </div>
+            </ul>
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- =========================
+     MAIN (FULL WIDTH)
+========================= -->
+<main class="main-wrapper">
+    <div th:replace="~{${content}}"></div>
+</main>
+
+<!-- =========================
+     FOOTER
+========================= -->
+<footer class="footer">
+    <div class="container main-container">
+
+        <div class="row">
+
+            <div class="col-md-4 mb-4">
+                <h5 th:text="#{footer.brand}">Biodata Maker</h5>
+                <p class="footer-desc"
+                   th:text="#{footer.desc}">
+                    Create beautiful marriage biodata in just a few minutes.
+                </p>
             </div>
-        </nav>
 
-        <main class="container my-4">
-            <div th:replace="~{${content}}"></div>
-        </main>
+            <div class="col-md-4 mb-4">
+                <h5 th:text="#{footer.links.title}">Quick Links</h5>
+                <ul>
+                    <li><a href="/" th:text="#{footer.links.home}">Home</a></li>
+                    <li><a href="/templates/biodata" th:text="#{footer.links.templates}">Templates</a></li>
+                    <li><a href="/how-it-works" th:text="#{footer.links.how}">How It Works</a></li>
+                    <li><a href="/contact" th:text="#{footer.links.contact}">Contact</a></li>
+                </ul>
+            </div>
 
-        <footer class="text-center text-muted py-3">
-            © 2026 Template Maker
-        </footer>
+            <div class="col-md-4 mb-4">
+                <h5 th:text="#{footer.legal.title}">Legal</h5>
+                <ul>
+                    <li><a href="/privacy-policy" th:text="#{footer.legal.privacy}">Privacy Policy</a></li>
+                    <li><a href="/terms" th:text="#{footer.legal.terms}">Terms & Conditions</a></li>
+                </ul>
+            </div>
 
-        <script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
-        <script th:src="@{/js/base.js}" defer></script>
-        <script th:src="@{/js/transliteration.js}" defer></script>
-    </body>
+        </div>
+
+        <div class="footer-bottom">
+            <span th:text="#{footer.copyright}">
+                © 2026 Biodata Maker. All rights reserved.
+            </span>
+        </div>
+
+    </div>
+</footer>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
+<script th:src="@{/js/base.js}" defer></script>
+<script th:src="@{/js/transliteration.js}" defer></script>
+
+</body>
 </html>

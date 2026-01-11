@@ -1,0 +1,108 @@
+/* =========================
+   ROOT + RESET
+========================= */
+
+:root {
+  --primary: #8B1D1D;       /* Maroon */
+  --secondary: #E58E26;     /* Saffron */
+  --accent: #1E6F78;        /* Teal */
+  --bg-soft: #FFF6EC;       /* Ivory */
+  --text-main: #2E2E2E;
+  --text-muted: #6B6B6B;
+  --border-light: #E6D9CF;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text-main);
+  background: #ffffff;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+
+h1 {
+  font-size: 38px;
+  line-height: 1.3;
+}
+
+h2 {
+  font-size: 28px;
+  line-height: 1.35;
+}
+
+h3, h4 {
+  line-height: 1.4;
+}
+
+p {
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-primary {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  padding: 10px 22px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.btn-primary:hover {
+  background: #155e66;
+}
+
+.btn-outline {
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+  padding: 10px 22px;
+  border-radius: 6px;
+}
+
+.btn-outline:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+  background: var(--primary);
+  color: #fff;
+  padding: 40px 0 20px; /* reduced height */
+}
+
+.footer h5 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.footer a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.footer a:hover {
+  color: var(--secondary);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.2);
+  margin-top: 24px;
+  padding-top: 12px;
+  text-align: center;
+  font-size: 13px;
+}

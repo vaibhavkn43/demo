@@ -1,0 +1,26 @@
+package in.hcdc.demo.util;
+
+import java.util.ArrayList;
+import java.util.List;
+/**
+ *
+ * @author vaibhav
+ */
+public class ValidationResult {
+    
+     private boolean valid = true;
+    private List<String> missingKeys = new ArrayList<>();
+
+    public void addMissing(String messageKey) {
+        valid = false;
+        missingKeys.add(messageKey);
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public List<String> getMissingKeys() {
+        return missingKeys;
+    }
+}

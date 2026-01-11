@@ -18,8 +18,11 @@ import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.imageio.ImageIO;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -43,9 +46,15 @@ public class BiodataImageRendererService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    private final MessageSource messageSource;
+
     // ⭐ CHANGE: Typography paddings
     private static final int LABEL_PADDING = 20;
     private static final int COLON_PADDING = 15;
+
+    public BiodataImageRendererService(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     public String renderBiodata(BiodataRequest form, String templateId) {
 
@@ -56,7 +65,7 @@ public class BiodataImageRendererService {
                ===================================================== */
             BufferedImage canvas = ImageIO.read(
                     getClass().getResourceAsStream(
-                            "/templates-assets/biodata/" + templateId + ".png"
+                            "/templates-assets/biodata/"+templateId + File.separator + templateId + ".png"
                     )
             );
 
@@ -65,7 +74,7 @@ public class BiodataImageRendererService {
                ===================================================== */
             Layout layout = mapper.readValue(
                     getClass().getResourceAsStream(
-                            "/templates-assets/biodata/" + templateId + "-layout.json"
+                            "/templates-assets/biodata/"+templateId + File.separator + templateId + "-layout.json"
                     ),
                     Layout.class
             );
@@ -298,21 +307,15 @@ public class BiodataImageRendererService {
     }
 
     private String resolveLabel(String fieldName) {
-        return switch (fieldName) {
-            case "name" ->
-                "नाव";
-            case "birthDate" ->
-                "जन्म तारीख";
-            case "birthPlace" ->
-                "जन्म स्थळ";
-            case "education" ->
-                "शिक्षण";
-            case "address" ->
-                "पत्ता";
-            case "religion" ->
-                "धर्म";
-            default ->
-                fieldName;
-        };
+        Locale locale = LocaleContextHolder.getLocale();
+        String key = "editor.form." + fieldName;
+
+        try {
+            return messageSource.getMessage(key, null, locale);
+        } catch (Exception e) {
+            // fallback: show field name if key missing
+            return fieldName;
+        }
     }
+
 }

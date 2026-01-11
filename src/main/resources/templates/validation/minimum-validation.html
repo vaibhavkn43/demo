@@ -1,0 +1,15 @@
+<div class="validation-box">
+    <h3 th:text="#{validation.minimum.title}"></h3>
+    <p th:text="#{validation.minimum.message}"></p>
+
+    <strong th:text="#{validation.minimum.required}"></strong>
+
+    <ul>
+        <li th:each="key : ${validationErrors}"
+            th:text="#{${key}}"></li>
+    </ul>
+
+    <a href="javascript:history.back()" class="btn btn-primary">
+        Go Back
+    </a>
+</div>
