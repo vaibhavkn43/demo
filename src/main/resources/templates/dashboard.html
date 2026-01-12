@@ -7,18 +7,18 @@
 
             <!-- LEFT CONTENT -->
             <div class="col-md-6">
-                <h1>२ मिनिटांत सुंदर विवाह बायोडाटा तयार करा</h1>
-                <p>विवाहासाठी तयार बायोडाटा टेम्पलेट्स</p>
+                <h1 th:text="#{home.hero.title}"></h1>
+                <p th:text="#{home.hero.subtitle}"></p>
 
-                <a href="/templates/biodata" class="btn btn-primary mb-3">
-                    बायोडाटा तयार करा
+
+                <a href="/templates/biodata" th:text="#{home.hero.cta.primary}" class="btn btn-primary mb-3">
+                    
                 </a>
 
-                <!-- TRUST POINTS -->
                 <ul class="hero-points">
-                    <li>✔ PDF डाउनलोड</li>
-                    <li>✔ प्रिंट रेडी बायोडाटा</li>
-                    <li>✔ कोणतेही लॉगिन नाही</li>
+                    <li th:text="#{home.hero.point.pdf}"></li>
+                    <li th:text="#{home.hero.point.print}"></li>
+                    <li th:text="#{home.hero.point.nologin}"></li>
                 </ul>
             </div>
 

@@ -21,3 +21,6 @@ function changeLanguage(lang) {
     url.searchParams.set('lang', lang);
     window.location.href = url.toString();
 }
+function closeSuggestions() {
+    document.getElementById("suggestionBox").classList.add("d-none");
+}
