@@ -58,6 +58,7 @@ public class BiodataImageRendererService {
 
     public String renderBiodata(BiodataRequest form, String templateId) {
 
+        System.out.println("form::"+form);
         try {
 
             /* =====================================================

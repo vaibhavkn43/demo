@@ -65,7 +65,8 @@ public class BiodataRequest extends TemplateForm {
     private String fatherOccupation;
     private String motherName;
     private String motherOccupation;
-    private String siblings;
+    private String brothers;
+    private String sisters;
 
     // ======================
     // Address & Contact

@@ -38,7 +38,6 @@
         "education"
       ]
     },
-
     {
       "key": "family",
       "title": "कौटुंबिक माहिती",
@@ -49,11 +48,10 @@
       "fields": [
         "fatherName",
         "motherName",
-        "brother",
-        "sister"
+        "brothers",
+        "sisters"
       ]
     },
-
     {
       "key": "contact",
       "title": "संपर्क",

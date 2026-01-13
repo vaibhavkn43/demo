@@ -1,13 +1,15 @@
 /* =====================================================
    BIODATA EDITOR – FINAL POLISHED CSS
    Author: Vaibhav
+   Purpose: Clean, responsive, sticky editor layout
 ===================================================== */
 
-/* ===============================
-   Page Wrapper
-================================ */
+
+/* =====================================================
+   PAGE WRAPPER
+===================================================== */
 .editor-page {
-    max-width: 100%;
+    max-width: 1120px;          /* 760 form + gap + 360 suggestions */
     margin: 0 auto;
 }
 
@@ -16,39 +18,42 @@
     letter-spacing: 0.3px;
 }
 
-/* ===============================
-   GRID LAYOUT (KEY FIX)
-================================ */
+
+/* =====================================================
+   EDITOR GRID LAYOUT
+===================================================== */
 .editor-grid {
     display: flex;
-    justify-content: center;
     gap: 32px;
-    align-items: flex-start;
+    align-items: stretch;      /* Ensures sticky works correctly */
 }
 
-/* Left Form Column */
+/* Left : Form Column */
 .editor-grid .col-md-8 {
     width: 100%;
     max-width: 760px;
 }
 
-/* Right Suggestion Column */
+/* Right : Suggestion Column */
 .editor-grid .col-md-4 {
     width: 100%;
     max-width: 360px;
+    display: flex;
+    flex-direction: column;    /* Required for sticky behavior */
 }
 
-/* ===============================
-   ACCORDION
-================================ */
+
+/* =====================================================
+   ACCORDION STYLES
+===================================================== */
 .accordion {
     width: 100%;
 }
 
 .accordion-item {
+    border: 1px solid #e5e5e5;
     border-radius: 8px;
     margin-bottom: 14px;
-    border: 1px solid #e5e5e5;
     overflow: hidden;
 }
 
@@ -67,6 +72,7 @@
     box-shadow: none;
 }
 
+/* Custom arrow */
 .accordion-button::before {
     content: "▸";
     margin-right: 8px;
@@ -82,9 +88,10 @@
     padding: 1.2rem;
 }
 
-/* ===============================
+
+/* =====================================================
    FORM ELEMENTS
-================================ */
+===================================================== */
 .form-label {
     font-weight: 500;
     margin-top: 6px;
@@ -99,7 +106,7 @@
 .form-control:focus,
 .form-select:focus {
     border-color: #0d6efd;
-    box-shadow: 0 0 0 0.15rem rgba(13,110,253,.15);
+    box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
 }
 
 .form-text {
@@ -113,48 +120,44 @@
     font-weight: 600;
 }
 
-/* ===============================
+
+/* =====================================================
    VALIDATION
-================================ */
+===================================================== */
 #validationBox {
     border-left: 5px solid #ffc107;
 }
 
-/* ===============================
-   SUGGESTION PANEL
-================================ */
 
-/* ===============================
-   FIXED Suggestion Panel (FINAL)
-================================ */
+/* =====================================================
+   SUGGESTION PANEL (STICKY)
+===================================================== */
 .suggestion-box {
-    position: fixed;
-    top: 88px;                 /* below navbar */
-    right: calc(50% - 600px);  /* aligns with editor */
+    position: sticky;
+    top: 88px;                         /* Below navbar */
 
     width: 360px;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 120px);   /* Prevent footer overlap */
 
     background: #f9fafb;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
-
     padding: 14px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 
     display: flex;
     flex-direction: column;
-    z-index: 100;
 }
 
-
-
+/* Suggestion list scroll */
 .suggestion-list {
     max-height: 280px;
     overflow-y: auto;
     margin-top: 6px;
 }
 
+/* Individual suggestion item */
 .suggestion-item {
     background: #ffffff;
     border: 1px solid #e5e7eb;
@@ -188,39 +191,39 @@
 
 .suggestion-item.active {
     background-color: #ff4d6d;
-    color: #fff;
+    color: #ffffff;
     font-weight: 600;
 }
 
-/* ===============================
+
+/* =====================================================
    SUBMIT BUTTON
-================================ */
+===================================================== */
 button[type="submit"] {
     font-size: 1.1rem;
     padding: 10px;
     border-radius: 8px;
 }
 
-/* ===============================
+
+/* =====================================================
    FOOTER SPACING
-================================ */
+===================================================== */
 footer {
     margin-top: 40px;
 }
-.editor-grid,
-.editor-grid * {
-    overflow: visible !important;
-}
 
-/* ===============================
+
+/* =====================================================
    MOBILE BEHAVIOR
-================================ */
+===================================================== */
 @media (max-width: 768px) {
 
     .editor-grid {
         flex-direction: column;
     }
 
+    /* Hide suggestions on mobile */
     .editor-grid .col-md-4 {
         display: none;
     }
@@ -229,6 +232,11 @@ footer {
         padding: 0 12px;
     }
 }
+
+
+/* =====================================================
+   MARATHI TOGGLE
+===================================================== */
 .marathi-toggle {
     background: #f8f9fa;
     padding: 10px 12px;
