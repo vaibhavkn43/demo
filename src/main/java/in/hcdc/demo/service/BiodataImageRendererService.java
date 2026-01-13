@@ -7,6 +7,7 @@ import in.hcdc.demo.model.CustomField;
 import in.hcdc.demo.model.Layout;
 import in.hcdc.demo.model.Section;
 import in.hcdc.demo.model.TemplateRenderer;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -49,8 +50,8 @@ public class BiodataImageRendererService {
     private final MessageSource messageSource;
 
     // ⭐ CHANGE: Typography paddings
-    private static final int LABEL_PADDING = 20;
-    private static final int COLON_PADDING = 15;
+    private static final int LABEL_PADDING = 15;
+    private static final int COLON_PADDING = 30;
 
     public BiodataImageRendererService(MessageSource messageSource) {
         this.messageSource = messageSource;
@@ -58,7 +59,6 @@ public class BiodataImageRendererService {
 
     public String renderBiodata(BiodataRequest form, String templateId) {
 
-        System.out.println("form::"+form);
         try {
 
             /* =====================================================
@@ -66,7 +66,7 @@ public class BiodataImageRendererService {
                ===================================================== */
             BufferedImage canvas = ImageIO.read(
                     getClass().getResourceAsStream(
-                            "/templates-assets/biodata/"+templateId + File.separator + templateId + ".png"
+                            "/templates-assets/biodata/" + templateId + File.separator + templateId + ".png"
                     )
             );
 
@@ -75,7 +75,7 @@ public class BiodataImageRendererService {
                ===================================================== */
             Layout layout = mapper.readValue(
                     getClass().getResourceAsStream(
-                            "/templates-assets/biodata/"+templateId + File.separator + templateId + "-layout.json"
+                            "/templates-assets/biodata/" + templateId + File.separator + templateId + "-layout.json"
                     ),
                     Layout.class
             );
@@ -168,7 +168,11 @@ public class BiodataImageRendererService {
                 }
 
                 // gap after each section
-                currentY += section.getSectionGap();
+                currentY += Math.max(
+                        section.getSectionGap(),
+                        (int) (section.getLineHeight() * 0.8)
+                );
+
             }
 
             /* =====================================================
@@ -190,7 +194,9 @@ public class BiodataImageRendererService {
                         fm
                 );
             }
-
+            if (currentY < canvas.getHeight() * 0.75) {
+                drawWatermark(g, canvas);
+            }
             g.dispose();
 
             /* =====================================================
@@ -319,4 +325,14 @@ public class BiodataImageRendererService {
         }
     }
 
+    private void drawWatermark(Graphics2D g, BufferedImage canvas) {
+        g.setComposite(AlphaComposite.getInstance(
+                AlphaComposite.SRC_OVER, 0.04f
+        ));
+        g.setColor(new Color(180, 160, 120));
+
+        g.setFont(g.getFont().deriveFont(Font.BOLD, 120f));
+        g.drawString("शुभ विवाह", canvas.getWidth() / 2 - 260, canvas.getHeight() / 2);
+        g.setComposite(AlphaComposite.SrcOver);
+    }
 }
