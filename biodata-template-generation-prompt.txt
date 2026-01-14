@@ -1,6 +1,6 @@
 Refine the previously generated traditional Marathi wedding biodata background.
 
-Canvas size: A4 portrait, 1240x1754 px, 300 DPI.
+Canvas size: A4 portrait, 1080x1528 px, 300 DPI.
 
 Keep:
 - Same off-white handmade paper texture
@@ -27,3 +27,8 @@ Rules:
 - Print-ready, elegant, traditional
 
 This design will be used as a dynamic biodata template where god image and mantra text are added later programmatically.
+
+
+-------
+Modify this tell him exact H*W==> 1080x1528
+

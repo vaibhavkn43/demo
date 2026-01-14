@@ -2,13 +2,13 @@
   "templateId": "bio2",
 
   "canvas": {
-    "width": 1240,
-    "height": 1754
+    "width": 1080,
+    "height": 1528
   },
 
   "font": {
     "family": "NotoSerifDevanagari",
-    "size": 30,
+    "size": 28,
     "color": "#5A1E1E",
     "labelWeight": "BOLD",
     "valueWeight": "NORMAL"
@@ -16,17 +16,17 @@
 
   "label": {
     "suffix": " : ",
-    "gap": 12
+    "gap": 14
   },
 
   "sections": [
     {
       "key": "personal",
       "title": "वैयक्तिक माहिती",
-      "startX": 160,
-      "startY": 360,
-      "maxWidth": 900,
-      "lineHeight": 42,
+      "startX": 140,
+      "startY": 340,
+      "maxWidth": 800,
+      "lineHeight": 38,
       "fields": [
         "name",
         "birthDate",
@@ -35,32 +35,33 @@
         "religion",
         "caste",
         "height",
-        "education"
+        "education",
+        "occupation"
       ]
     },
 
     {
       "key": "family",
       "title": "कौटुंबिक माहिती",
-      "startX": 160,
-      "startY": 760,
-      "maxWidth": 900,
-      "lineHeight": 42,
+      "startX": 140,
+      "startY": 700,
+      "maxWidth": 800,
+      "lineHeight": 38,
       "fields": [
         "fatherName",
         "motherName",
-        "brother",
-        "sister"
+        "brothers",
+        "sisters"
       ]
     },
 
     {
       "key": "contact",
       "title": "संपर्क",
-      "startX": 160,
-      "startY": 1120,
-      "maxWidth": 900,
-      "lineHeight": 42,
+      "startX": 140,
+      "startY": 1040,
+      "maxWidth": 800,
+      "lineHeight": 38,
       "fields": [
         "address",
         "mobile"
@@ -69,9 +70,9 @@
   ],
 
   "customFields": {
-    "startX": 160,
-    "startY": 1380,
-    "maxWidth": 900,
-    "lineHeight": 42
+    "startX": 140,
+    "startY": 1220,
+    "maxWidth": 800,
+    "lineHeight": 38
   }
 }
