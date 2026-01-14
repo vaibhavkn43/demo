@@ -243,3 +243,11 @@ footer {
     border-radius: 8px;
     border: 1px solid #e5e7eb;
 }
+.god-option {
+  max-height: 80px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.god-option:hover {
+  transform: scale(1.1);
+}

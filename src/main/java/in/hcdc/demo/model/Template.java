@@ -18,5 +18,6 @@ import lombok.ToString;
 public class Template {
 
     private String id;
+    private String group;
     private String thumbnail; // image path
 }

@@ -13,6 +13,48 @@
                     <span th:text="#{form.required.note}"></span>
                 </div>
 
+                <div class="god-preview text-center mb-4">
+                    <img th:src="@{/images/gods/{g}(g=${form.godImage + '.png'})}"
+                         alt="God"
+                         style="max-height:120px;">
+
+                    <div class="mt-2">
+                        <input type="text"
+                               name="mantra"
+                               th:value="${form.mantra}"
+                               class="form-control text-center"
+                               placeholder="मंत्र लिहा (ऐच्छिक)">
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-link mt-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#godModal">
+                        Change Image
+                    </button>
+
+                    <input type="hidden" name="godImage" th:value="${form.godImage}">
+                </div>
+
+                <div class="modal fade" id="godModal">
+                    <div class="modal-dialog modal-sm modal-dialog-centered">
+                        <div class="modal-content p-3 text-center">
+
+                            <h6>Select Deity</h6>
+
+                            <div class="d-flex justify-content-around mt-3">
+                                <img src="/images/gods/ganesh.png"
+                                     onclick="selectGod('ganesh')"
+                                     class="god-option">
+
+                                <img src="/images/gods/mahadev.png"
+                                     onclick="selectGod('mahadev')"
+                                     class="god-option">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
 
                 <div class="accordion" id="biodataAccordion">
 

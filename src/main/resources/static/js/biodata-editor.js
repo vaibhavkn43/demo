@@ -160,3 +160,13 @@ document.addEventListener("input", () => {
     updateFamily("brothers", msgBrotherLabel, "brotherInputs");
     updateFamily("sisters", msgSisterLabel, "sisterInputs");
 });
+
+function selectGod(god) {
+  document.querySelector("input[name='godImage']").value = god;
+  document.querySelector(".god-preview img").src =
+      "/images/gods/" + god + ".png";
+
+  bootstrap.Modal.getInstance(
+      document.getElementById('godModal')
+  ).hide();
+}

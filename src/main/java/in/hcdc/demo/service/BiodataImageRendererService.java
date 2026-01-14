@@ -12,9 +12,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -113,10 +117,14 @@ public class BiodataImageRendererService {
             g.setColor(Color.decode(layout.getFont().getColor()));
             FontMetrics fm = g.getFontMetrics();
 
+            int contentStartY = renderGodAndMantra(g, canvas, form);
+            Section first = layout.getSections().get(0);
+            int currentY = Math.max(first.getStartY(), contentStartY);
+
             /* =====================================================
                STEP 4: Render SECTIONS (FLOW BASED)
                ===================================================== */
-            int currentY = layout.getSections().get(0).getStartY();
+             layout.getSections().get(0).getStartY();
 
             for (Section section : layout.getSections()) {
 
@@ -197,6 +205,19 @@ public class BiodataImageRendererService {
             if (currentY < canvas.getHeight() * 0.75) {
                 drawWatermark(g, canvas);
             }
+            String brand = "VivahKala.in | 9022658566";
+
+            g.setFont(g.getFont().deriveFont(Font.PLAIN, 12f));
+            g.setColor(new Color(120, 120, 120));
+
+            fm = g.getFontMetrics();
+            int textWidth = fm.stringWidth(brand);
+
+            int x = canvas.getWidth() - textWidth - 20;
+            int y = canvas.getHeight() - 20;
+
+            g.drawString(brand, x, y);
+
             g.dispose();
 
             /* =====================================================
@@ -335,4 +356,85 @@ public class BiodataImageRendererService {
         g.drawString("शुभ विवाह", canvas.getWidth() / 2 - 260, canvas.getHeight() / 2);
         g.setComposite(AlphaComposite.SrcOver);
     }
+
+    private int renderGodAndMantra(
+            Graphics2D g,
+            BufferedImage canvas,
+            BiodataRequest form
+    ) throws IOException {
+
+        // =========================
+        // 1. Skip if no god selected
+        // =========================
+        if (form.getGodImage() == null
+                || form.getGodImage().equalsIgnoreCase("none")) {
+            return 520; // default text start Y
+        }
+
+        // =========================
+        // 2. Load god image
+        // =========================
+        String godPath = "/static/images/gods/" + form.getGodImage() + ".png";
+        BufferedImage godImg = loadImage(godPath);
+
+        // =========================
+        // 3. Scale god image
+        // =========================
+        int maxGodHeight = 180;
+        double scale = (double) maxGodHeight / godImg.getHeight();
+
+        int scaledWidth = (int) (godImg.getWidth() * scale);
+        int scaledHeight = (int) (godImg.getHeight() * scale);
+
+        Image scaledGod = godImg.getScaledInstance(
+                scaledWidth,
+                scaledHeight,
+                Image.SCALE_SMOOTH
+        );
+
+        // =========================
+        // 4. Position god image
+        // =========================
+        int centerX = canvas.getWidth() / 2;
+        int godX = centerX - (scaledWidth / 2);
+        int godY = 180;
+
+        g.drawImage(scaledGod, godX, godY, null);
+
+        int currentY = godY + scaledHeight + 12;
+
+        // =========================
+        // 5. Draw mantra (if present)
+        // =========================
+        if (form.getMantra() != null && !form.getMantra().isBlank()) {
+
+            g.setFont(new Font("NotoSerifDevanagari", Font.PLAIN, 24));
+            g.setColor(new Color(90, 60, 60)); // soft maroon
+
+            FontMetrics fm = g.getFontMetrics();
+            int textWidth = fm.stringWidth(form.getMantra());
+
+            int textX = centerX - (textWidth / 2);
+            int textY = currentY + fm.getAscent();
+
+            g.drawString(form.getMantra(), textX, textY);
+
+            currentY = textY + 20;
+        }
+
+        // =========================
+        // 6. Return Y where biodata starts
+        // =========================
+        return Math.max(currentY + 20, 520);
+    }
+
+    private BufferedImage loadImage(String path) throws IOException {
+        try (InputStream is = getClass().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new FileNotFoundException("Image not found: " + path);
+            }
+            return ImageIO.read(is);
+        }
+    }
+
 }

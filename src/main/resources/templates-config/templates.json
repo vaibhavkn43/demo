@@ -1,50 +1,52 @@
 [
-  {
-    "name": "biodata",
-    "titleKey": "category.wedding",
-    "templates": [
-      {
-        "id": "bio1",
-        "thumbnail": "/images/templates/biodata/bio1.png"
-      },
-      {
-        "id": "bio2",
-        "thumbnail": "/images/templates/biodata/bio2.png"
-      },
-       {
-        "id": "bio3",
-        "thumbnail": "/images/templates/biodata/bio3.png"
-      },
-      {
-        "id": "bio4",
-        "thumbnail": "/images/templates/biodata/bio4.png"
-      },
-      {
-        "id": "bio5",
-        "thumbnail": "/images/templates/biodata/bio5.png"
-      }
-    ]
-  },
-  {
-    "name": "birthday",
-    "titleKey": "category.birthday",
-    "templates": [
-      {
-        "id": "b1",
-        "thumbnail": "/images/templates/birthday/1.png"
-      },
-       {
-        "id": "b2",
-        "thumbnail": "/images/templates/birthday/2.png"
-      },
-       {
-        "id": "b3",
-        "thumbnail": "/images/templates/birthday/3.png"
-      },
-       {
-        "id": "b4",
-        "thumbnail": "/images/templates/birthday/4.png"
-      }
-    ]
-  }
+    {
+        "name": "biodata",
+        "titleKey": "category.wedding",
+        "templates": [
+            {
+                "id": "bio1",
+                "group": "GOD_ONLY",
+                "thumbnail": "/images/templates/biodata/bio1.png"
+            },
+            {
+                "id": "bio2",
+                "group": "GOD_ONLY",
+                "thumbnail": "/images/templates/biodata/bio2.png"
+            },
+            {
+                "id": "bio3",
+                "thumbnail": "/images/templates/biodata/bio3.png"
+            },
+            {
+                "id": "bio4",
+                "thumbnail": "/images/templates/biodata/bio4.png"
+            },
+            {
+                "id": "bio5",
+                "thumbnail": "/images/templates/biodata/bio5.png"
+            }
+        ]
+    },
+    {
+        "name": "birthday",
+        "titleKey": "category.birthday",
+        "templates": [
+            {
+                "id": "b1",
+                "thumbnail": "/images/templates/birthday/1.png"
+            },
+            {
+                "id": "b2",
+                "thumbnail": "/images/templates/birthday/2.png"
+            },
+            {
+                "id": "b3",
+                "thumbnail": "/images/templates/birthday/3.png"
+            },
+            {
+                "id": "b4",
+                "thumbnail": "/images/templates/birthday/4.png"
+            }
+        ]
+    }
 ]

@@ -75,4 +75,8 @@ public class BiodataRequest extends TemplateForm {
     private String mobile;
     private String alternateMobile;
     private String email;
+
+    private String godImage = "ganesh";
+    private String mantra = "श्री गणेशाय नमः";
+
 }
