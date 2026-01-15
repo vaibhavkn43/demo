@@ -1,75 +1,129 @@
 {
-    "templateId": "bio1",
+  "templateId": "bio1",
 
-    "canvas": {
-        "width": 1080,
-        "height": 1528
+  "canvas": {
+    "width": 1080,
+    "height": 1528
+  },
+
+  "font": {
+    "family": "NotoSerifDevanagari",
+    "size": 32,
+    "color": "#5A1E1E",
+    "labelWeight": "BOLD",
+    "valueWeight": "NORMAL"
+  },
+
+  "label": {
+    "suffix": " : ",
+    "gap": 14
+  },
+
+  "sections": [
+    {
+      "key": "personal",
+      "title": "वैयक्तिक माहिती",
+      "startX": 320,
+      "startY": 520,
+      "maxWidth": 1800,
+      "lineHeight": 48,
+      "fields": [
+        "name",
+        "gender",
+        "birthDate",
+        "birthTime",
+        "birthPlace",
+        "age",
+        "religion",
+        "caste",
+        "subCaste",
+        "gotra"
+      ]
     },
 
-    "font": {
-        "family": "NotoSerifDevanagari",
-        "size": 32,
-        "color": "#5A1E1E",
-        "labelWeight": "BOLD",
-        "valueWeight": "NORMAL"
+    {
+      "key": "horoscope",
+      "title": "जन्मपत्रिका",
+      "startX": 320,
+      "startY": 0,
+      "maxWidth": 1800,
+      "lineHeight": 48,
+      "fields": [
+        "rashi",
+        "nakshatra",
+        "gan",
+        "nadi",
+        "mangal"
+      ]
     },
 
-    "label": {
-        "suffix": " : ",
-        "gap": 14
+    {
+      "key": "physical",
+      "title": "शारीरिक माहिती",
+      "startX": 320,
+      "startY": 0,
+      "maxWidth": 1800,
+      "lineHeight": 48,
+      "fields": [
+        "height",
+        "weight",
+        "complexion",
+        "bloodGroup",
+        "disability"
+      ]
     },
 
-    "sections": [
-        {
-            "key": "personal",
-            "title": "वैयक्तिक माहिती",
-            "startX": 320,
-            "startY": 520,
-            "maxWidth": 1800,
-            "lineHeight": 48,
-            "fields": [
-                "name",
-                "birthDate",
-                "birthTime",
-                "birthPlace",
-                "religion",
-                "caste",
-                "height",
-                "education"
-            ]
-        },
-        {
-            "key": "family",
-            "title": "कौटुंबिक माहिती",
-            "startX": 320,
-            "startY": 0,
-            "maxWidth": 1800,
-            "lineHeight": 48,
-            "fields": [
-                "fatherName",
-                "motherName",
-                "brothers",
-                "sisters"
-            ]
-        },
-        {
-            "key": "contact",
-            "title": "संपर्क",
-            "startX": 320,
-            "startY": 0,
-            "maxWidth": 1800,
-            "lineHeight": 48,
-            "fields": [
-                "address",
-                "mobile"
-            ]
-        }
-    ],
+    {
+      "key": "education",
+      "title": "शिक्षण व व्यवसाय",
+      "startX": 320,
+      "startY": 0,
+      "maxWidth": 1800,
+      "lineHeight": 48,
+      "fields": [
+        "education",
+        "profession",
+        "income"
+      ]
+    },
 
-    "customFields": {
-        "startX": 320,
-        "startY": 0,
-        "maxWidth": 1800,
-        "lineHeight": 48
+    {
+      "key": "family",
+      "title": "कौटुंबिक माहिती",
+      "startX": 320,
+      "startY": 0,
+      "maxWidth": 1800,
+      "lineHeight": 48,
+      "fields": [
+        "fatherName",
+        "fatherOccupation",
+        "motherName",
+        "motherOccupation",
+        "brothers",
+        "sisters"
+      ]
+    },
+
+    {
+      "key": "contact",
+      "title": "संपर्क",
+      "startX": 320,
+      "startY": 0,
+      "maxWidth": 1800,
+      "lineHeight": 48,
+      "fields": [
+        "address",
+        "mobile",
+        "alternateMobile",
+        "email"
+      ]
     }
+  ],
+
+  "customFields": {
+    "startX": 320,
+    "startY": 0,
+    "maxWidth": 1800,
+    "lineHeight": 48
+  }
 }

@@ -5,8 +5,9 @@ import in.hcdc.demo.config.AppStorageConfig;
 import in.hcdc.demo.model.BiodataRequest;
 import in.hcdc.demo.model.CustomField;
 import in.hcdc.demo.model.Layout;
+import in.hcdc.demo.model.LayoutMode;
 import in.hcdc.demo.model.Section;
-import in.hcdc.demo.model.TemplateRenderer;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,45 +16,33 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.lang.reflect.Field;
+
 import java.nio.file.Path;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
+
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author Vaibhav This service does everything:
- *
- * Load PNG
- *
- * Load layout.json
- *
- * Auto-flow sections
- *
- * Wrap text
- *
- * Render custom fields
- *
- * save image
- */
 @Service
 public class BiodataImageRendererService {
 
     private final ObjectMapper mapper = new ObjectMapper();
-
     private final MessageSource messageSource;
 
-    // ⭐ CHANGE: Typography paddings
     private static final int LABEL_PADDING = 15;
     private static final int COLON_PADDING = 30;
 
@@ -64,28 +53,27 @@ public class BiodataImageRendererService {
     public String renderBiodata(BiodataRequest form, String templateId) {
 
         try {
-
             /* =====================================================
-               STEP 1: Load PNG template
+               STEP 1: Load template image
                ===================================================== */
             BufferedImage canvas = ImageIO.read(
                     getClass().getResourceAsStream(
-                            "/templates-assets/biodata/" + templateId + File.separator + templateId + ".png"
+                            "/templates-assets/biodata/" + templateId + "/" + templateId + ".png"
                     )
             );
 
             /* =====================================================
-               STEP 2: Load layout.json
+               STEP 2: Load layout JSON
                ===================================================== */
             Layout layout = mapper.readValue(
                     getClass().getResourceAsStream(
-                            "/templates-assets/biodata/" + templateId + File.separator + templateId + "-layout.json"
+                            "/templates-assets/biodata/" + templateId + "/" + templateId + "-layout.json"
                     ),
                     Layout.class
             );
 
             /* =====================================================
-               STEP 3: Create Graphics2D
+               STEP 3: Graphics setup
                ===================================================== */
             Graphics2D g = canvas.createGraphics();
             g.setRenderingHint(
@@ -93,39 +81,67 @@ public class BiodataImageRendererService {
                     RenderingHints.VALUE_TEXT_ANTIALIAS_ON
             );
 
-            // ⭐ CHANGE: Better Marathi font with fallback
-            Font font;
+            /* =====================================================
+               STEP 4: Load base font safely
+               ===================================================== */
+            Font baseFont;
             try {
-                font = Font.createFont(
+                baseFont = Font.createFont(
                         Font.TRUETYPE_FONT,
                         getClass().getResourceAsStream(
                                 "/fonts/NotoSerifDevanagari-Regular.ttf"
                         )
-                ).deriveFont(Font.PLAIN, layout.getFont().getSize());
+                );
             } catch (Exception e) {
-                try {
-                    font = Font.createFont(
-                            Font.TRUETYPE_FONT,
-                            getClass().getResourceAsStream("/fonts/Mangal.ttf")
-                    ).deriveFont(Font.PLAIN, layout.getFont().getSize());
-                } catch (Exception ex) {
-                    font = new Font("Serif", Font.PLAIN, layout.getFont().getSize());
+                baseFont = new Font("Serif", Font.PLAIN,
+                        layout.getFont().getSize());
+            }
+
+            g.setColor(Color.decode(layout.getFont().getColor()));
+
+            FontMetrics baseFm = g.getFontMetrics(
+                    baseFont.deriveFont(
+                            Font.PLAIN,
+                            (float) layout.getFont().getSize()
+                    )
+            );
+
+            /* =====================================================
+               STEP 5: Detect content density (Phase-1)
+               ===================================================== */
+            LayoutMode mode = detectLayoutMode(form, layout, baseFm);
+            System.out.println("mode" + mode.toString());
+            int fontSize = layout.getFont().getSize();
+            int lineAdjust = 0;
+            int sectionGap;
+
+            switch (mode) {
+                case AIRY -> {
+                    fontSize += 2;
+                    lineAdjust = 4;
+                    sectionGap = 28;
+                }
+                case NORMAL -> {
+                    sectionGap = 22;
+                }
+                default -> { // COMPACT
+                    fontSize -= 6;
+                    lineAdjust = -6;
+                    sectionGap = 14;
                 }
             }
 
-            g.setFont(font);
-            g.setColor(Color.decode(layout.getFont().getColor()));
+            Font renderFont = baseFont.deriveFont(Font.PLAIN, (float) fontSize);
+            g.setFont(renderFont);
             FontMetrics fm = g.getFontMetrics();
 
-            int contentStartY = renderGodAndMantra(g, canvas, form);
-            Section first = layout.getSections().get(0);
-            int currentY = Math.max(first.getStartY(), contentStartY);
-
             /* =====================================================
-               STEP 4: Render SECTIONS (FLOW BASED)
+               STEP 6: Render god image & mantra
                ===================================================== */
-             layout.getSections().get(0).getStartY();
-
+            int currentY = renderGodAndMantra(g, canvas, form, baseFont);
+            /* =====================================================
+               STEP 7: Render sections (single-column, adaptive)
+               ===================================================== */
             for (Section section : layout.getSections()) {
 
                 List<Map.Entry<String, String>> values
@@ -135,56 +151,47 @@ public class BiodataImageRendererService {
                     continue;
                 }
 
-                // section title
-                g.drawString(section.getTitle(), section.getStartX(), currentY);
-                currentY += section.getLineHeight();
+                g.drawString(
+                        section.getTitle(),
+                        section.getStartX(),
+                        currentY
+                );
 
-                // section fields
-                // ⭐ CHANGE: Calculate max label width for this section
+                currentY += section.getLineHeight() + lineAdjust;
+
                 int maxLabelWidth = 0;
-                for (Map.Entry<String, String> entry : values) {
+                for (Map.Entry<String, String> e : values) {
                     maxLabelWidth = Math.max(
                             maxLabelWidth,
-                            fm.stringWidth(entry.getKey())
+                            fm.stringWidth(e.getKey())
                     );
                 }
 
-// ⭐ CHANGE: Define column positions
                 int labelX = section.getStartX();
                 int colonX = labelX + maxLabelWidth + LABEL_PADDING;
                 int valueX = colonX + COLON_PADDING;
 
-// ⭐ CHANGE: Draw each row (label | colon | value)
-                for (Map.Entry<String, String> entry : values) {
+                for (Map.Entry<String, String> e : values) {
 
-                    // Label
-                    g.drawString(entry.getKey(), labelX, currentY);
-
-                    // Colon (aligned vertically!)
+                    g.drawString(e.getKey(), labelX, currentY);
                     g.drawString(":", colonX, currentY);
 
-                    // Value (wrapped under same column)
                     currentY += drawWrappedValue(
                             g,
-                            entry.getValue(),
+                            e.getValue(),
                             valueX,
                             currentY,
                             section.getMaxWidth() - (valueX - labelX),
-                            (int) (section.getLineHeight() * 1.1), // ⭐ better Marathi spacing
+                            section.getLineHeight() + lineAdjust,
                             fm
                     );
                 }
 
-                // gap after each section
-                currentY += Math.max(
-                        section.getSectionGap(),
-                        (int) (section.getLineHeight() * 0.8)
-                );
-
+                currentY += sectionGap;
             }
 
             /* =====================================================
-               STEP 5: Render CUSTOM FIELDS (CONTINUE FLOW)
+               STEP 8: Render custom fields
                ===================================================== */
             for (CustomField cf : form.getCustomFields()) {
 
@@ -198,37 +205,41 @@ public class BiodataImageRendererService {
                         layout.getCustomFields().getStartX(),
                         currentY,
                         layout.getCustomFields().getMaxWidth(),
-                        layout.getCustomFields().getLineHeight(),
+                        layout.getCustomFields().getLineHeight() + lineAdjust,
                         fm
                 );
             }
-            if (currentY < canvas.getHeight() * 0.75) {
+
+            /* =====================================================
+               STEP 9: Watermark & branding
+               ===================================================== */
+            if (currentY < canvas.getHeight() - 300) {
                 drawWatermark(g, canvas);
             }
-            String brand = "VivahKala.in | 9022658566";
 
-            g.setFont(g.getFont().deriveFont(Font.PLAIN, 12f));
+            g.setFont(baseFont.deriveFont(Font.PLAIN, 12f));
             g.setColor(new Color(120, 120, 120));
 
-            fm = g.getFontMetrics();
-            int textWidth = fm.stringWidth(brand);
+            String brand = "VivahKala.in | 9022658566";
+            int bw = g.getFontMetrics().stringWidth(brand);
 
-            int x = canvas.getWidth() - textWidth - 20;
-            int y = canvas.getHeight() - 20;
-
-            g.drawString(brand, x, y);
+            g.drawString(
+                    brand,
+                    canvas.getWidth() - bw - 20,
+                    canvas.getHeight() - 20
+            );
 
             g.dispose();
 
             /* =====================================================
-               STEP 6: Save Image
+               STEP 10: Save image
                ===================================================== */
-            Path outputPath = AppStorageConfig.IMAGE_DIR
+            Path out = AppStorageConfig.IMAGE_DIR
                     .resolve("biodata-" + System.currentTimeMillis() + ".png");
 
-            ImageIO.write(canvas, "png", outputPath.toFile());
+            ImageIO.write(canvas, "png", out.toFile());
 
-            return "/images/" + outputPath.getFileName();
+            return "/images/" + out.getFileName();
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to render biodata image", e);
@@ -236,21 +247,133 @@ public class BiodataImageRendererService {
     }
 
     /* =====================================================
-       Extract section values using reflection
+       Helper methods
        ===================================================== */
+    private int renderGodAndMantra(
+            Graphics2D g,
+            BufferedImage canvas,
+            BiodataRequest form,
+            Font baseFont
+    ) throws IOException {
+
+        // =========================
+        // 1. Skip if no god selected
+        // =========================
+        if (form.getGodImage() == null
+                || form.getGodImage().equalsIgnoreCase("none")) {
+            return 240; // much earlier start
+        }
+
+        // =========================
+        // 2. Load god image
+        // =========================
+        BufferedImage godImg = loadImage(
+                "/static/images/gods/" + form.getGodImage() + ".png"
+        );
+
+        // =========================
+        // 3. Scale god image (SMALL)
+        // =========================
+        int maxGodHeight = 100; // 🔑 compact devotional size
+        double scale = (double) maxGodHeight / godImg.getHeight();
+
+        int scaledW = (int) (godImg.getWidth() * scale);
+        int scaledH = (int) (godImg.getHeight() * scale);
+
+        Image scaled = godImg.getScaledInstance(
+                scaledW,
+                scaledH,
+                Image.SCALE_SMOOTH
+        );
+
+        // =========================
+        // 4. Position god image (HIGHER)
+        // =========================
+        int x = canvas.getWidth() / 2 - scaledW / 2;
+        int y = 80; // 🔑 higher placement
+
+        g.drawImage(scaled, x, y, null);
+
+        int currentY = y + scaledH + 12;
+
+        // =========================
+        // 5. Draw mantra (compact)
+        // =========================
+        if (!isEmpty(form.getMantra())) {
+
+            Font mantraFont = baseFont.deriveFont(Font.PLAIN, 22f);
+            g.setFont(mantraFont);
+
+            FontMetrics fm = g.getFontMetrics();
+            int textWidth = fm.stringWidth(form.getMantra());
+
+            int textX = canvas.getWidth() / 2 - textWidth / 2;
+            int textY = currentY + fm.getAscent();
+
+            g.drawString(form.getMantra(), textX, textY);
+
+            currentY = textY + 18; // tighter gap
+        }
+
+        // =========================
+        // 6. Return content start Y
+        // =========================
+        return Math.max(currentY + 16, 240);
+    }
+
+    private LayoutMode detectLayoutMode(
+            BiodataRequest form,
+            Layout layout,
+            FontMetrics fm
+    ) {
+
+        int totalLines = 0;
+
+        for (Section section : layout.getSections()) {
+            for (String fieldName : section.getFields()) {
+                try {
+                    Field f = BiodataRequest.class.getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Object v = f.get(form);
+
+                    if (v != null && !v.toString().isBlank()) {
+                        totalLines += Math.max(
+                                1,
+                                fm.stringWidth(v.toString()) / 400
+                        );
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        System.out.println("totalLines" + totalLines);
+        if (totalLines < 15) {
+            return LayoutMode.AIRY;
+        }
+        if (totalLines < 20) {
+            return LayoutMode.NORMAL;
+        }
+        return LayoutMode.COMPACT;
+    }
+
     private List<Map.Entry<String, String>> extractSectionValues(
-            Section section, BiodataRequest form) {
+            Section section,
+            BiodataRequest form
+    ) {
 
         List<Map.Entry<String, String>> list = new ArrayList<>();
 
         for (String fieldName : section.getFields()) {
             try {
-                Field field = BiodataRequest.class.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                Object value = field.get(form);
+                Field f = BiodataRequest.class.getDeclaredField(fieldName);
+                f.setAccessible(true);
+                Object v = f.get(form);
 
-                if (value != null && !value.toString().isBlank()) {
-                    list.add(Map.entry(resolveLabel(fieldName), value.toString()));
+                if (v != null && !v.toString().isBlank()) {
+                    list.add(Map.entry(
+                            resolveLabel(fieldName),
+                            v.toString()
+                    ));
                 }
             } catch (Exception ignored) {
             }
@@ -258,58 +381,6 @@ public class BiodataImageRendererService {
         return list;
     }
 
-    /* =====================================================
-       Draw wrapped text
-       ===================================================== */
-    private int drawWrappedText(
-            Graphics2D g,
-            String text,
-            int x,
-            int y,
-            int maxWidth,
-            int lineHeight,
-            FontMetrics fm) {
-
-        List<String> lines = wrapText(text, fm, maxWidth);
-        int startY = y;
-
-        for (String line : lines) {
-            g.drawString(line, x, y);
-            y += lineHeight;
-        }
-
-        return y - startY;
-    }
-
-    /* =====================================================
-       Word wrapping
-       ===================================================== */
-    private List<String> wrapText(String text, FontMetrics fm, int maxWidth) {
-
-        List<String> lines = new ArrayList<>();
-        StringBuilder current = new StringBuilder();
-
-        for (String word : text.split(" ")) {
-            String test = current.length() == 0
-                    ? word
-                    : current + " " + word;
-
-            if (fm.stringWidth(test) > maxWidth) {
-                lines.add(current.toString());
-                current = new StringBuilder(word);
-            } else {
-                current = new StringBuilder(test);
-            }
-        }
-
-        if (!current.isEmpty()) {
-            lines.add(current.toString());
-        }
-
-        return lines;
-    }
-
-    // ⭐ CHANGE: Wrap ONLY value text (not label/colon)
     private int drawWrappedValue(
             Graphics2D g,
             String text,
@@ -317,17 +388,81 @@ public class BiodataImageRendererService {
             int y,
             int maxWidth,
             int lineHeight,
-            FontMetrics fm) {
+            FontMetrics fm
+    ) {
 
-        List<String> lines = wrapText(text, fm, maxWidth);
         int startY = y;
-
-        for (String line : lines) {
+        for (String line : wrap(text, fm, maxWidth)) {
             g.drawString(line, x, y);
             y += lineHeight;
         }
-
         return y - startY;
+    }
+
+    private int drawWrappedText(
+            Graphics2D g,
+            String text,
+            int x,
+            int y,
+            int maxWidth,
+            int lineHeight,
+            FontMetrics fm
+    ) {
+        int startY = y;
+        for (String line : wrap(text, fm, maxWidth)) {
+            g.drawString(line, x, y);
+            y += lineHeight;
+        }
+        return y - startY;
+    }
+
+    private List<String> wrap(
+            String text,
+            FontMetrics fm,
+            int maxWidth
+    ) {
+
+        List<String> lines = new ArrayList<>();
+        StringBuilder cur = new StringBuilder();
+
+        for (String w : text.split(" ")) {
+            String t = cur.length() == 0 ? w : cur + " " + w;
+            if (fm.stringWidth(t) > maxWidth) {
+                lines.add(cur.toString());
+                cur = new StringBuilder(w);
+            } else {
+                cur = new StringBuilder(t);
+            }
+        }
+        if (!cur.isEmpty()) {
+            lines.add(cur.toString());
+        }
+        return lines;
+    }
+
+    private void drawWatermark(Graphics2D g, BufferedImage c) {
+        g.setComposite(
+                AlphaComposite.getInstance(
+                        AlphaComposite.SRC_OVER, 0.04f
+                )
+        );
+        g.setFont(g.getFont().deriveFont(Font.BOLD, 120f));
+        g.setColor(new Color(180, 160, 120));
+        g.drawString(
+                "शुभ विवाह",
+                c.getWidth() / 2 - 260,
+                c.getHeight() / 2
+        );
+        g.setComposite(AlphaComposite.SrcOver);
+    }
+
+    private BufferedImage loadImage(String path) throws IOException {
+        try (InputStream is = getClass().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new FileNotFoundException(path);
+            }
+            return ImageIO.read(is);
+        }
     }
 
     private boolean isEmpty(String s) {
@@ -336,105 +471,14 @@ public class BiodataImageRendererService {
 
     private String resolveLabel(String fieldName) {
         Locale locale = LocaleContextHolder.getLocale();
-        String key = "editor.form." + fieldName;
-
         try {
-            return messageSource.getMessage(key, null, locale);
+            return messageSource.getMessage(
+                    "editor.form." + fieldName,
+                    null,
+                    locale
+            );
         } catch (Exception e) {
-            // fallback: show field name if key missing
             return fieldName;
         }
     }
-
-    private void drawWatermark(Graphics2D g, BufferedImage canvas) {
-        g.setComposite(AlphaComposite.getInstance(
-                AlphaComposite.SRC_OVER, 0.04f
-        ));
-        g.setColor(new Color(180, 160, 120));
-
-        g.setFont(g.getFont().deriveFont(Font.BOLD, 120f));
-        g.drawString("शुभ विवाह", canvas.getWidth() / 2 - 260, canvas.getHeight() / 2);
-        g.setComposite(AlphaComposite.SrcOver);
-    }
-
-    private int renderGodAndMantra(
-            Graphics2D g,
-            BufferedImage canvas,
-            BiodataRequest form
-    ) throws IOException {
-
-        // =========================
-        // 1. Skip if no god selected
-        // =========================
-        if (form.getGodImage() == null
-                || form.getGodImage().equalsIgnoreCase("none")) {
-            return 520; // default text start Y
-        }
-
-        // =========================
-        // 2. Load god image
-        // =========================
-        String godPath = "/static/images/gods/" + form.getGodImage() + ".png";
-        BufferedImage godImg = loadImage(godPath);
-
-        // =========================
-        // 3. Scale god image
-        // =========================
-        int maxGodHeight = 180;
-        double scale = (double) maxGodHeight / godImg.getHeight();
-
-        int scaledWidth = (int) (godImg.getWidth() * scale);
-        int scaledHeight = (int) (godImg.getHeight() * scale);
-
-        Image scaledGod = godImg.getScaledInstance(
-                scaledWidth,
-                scaledHeight,
-                Image.SCALE_SMOOTH
-        );
-
-        // =========================
-        // 4. Position god image
-        // =========================
-        int centerX = canvas.getWidth() / 2;
-        int godX = centerX - (scaledWidth / 2);
-        int godY = 180;
-
-        g.drawImage(scaledGod, godX, godY, null);
-
-        int currentY = godY + scaledHeight + 12;
-
-        // =========================
-        // 5. Draw mantra (if present)
-        // =========================
-        if (form.getMantra() != null && !form.getMantra().isBlank()) {
-
-            g.setFont(new Font("NotoSerifDevanagari", Font.PLAIN, 24));
-            g.setColor(new Color(90, 60, 60)); // soft maroon
-
-            FontMetrics fm = g.getFontMetrics();
-            int textWidth = fm.stringWidth(form.getMantra());
-
-            int textX = centerX - (textWidth / 2);
-            int textY = currentY + fm.getAscent();
-
-            g.drawString(form.getMantra(), textX, textY);
-
-            currentY = textY + 20;
-        }
-
-        // =========================
-        // 6. Return Y where biodata starts
-        // =========================
-        return Math.max(currentY + 20, 520);
-    }
-
-    private BufferedImage loadImage(String path) throws IOException {
-        try (InputStream is = getClass().getResourceAsStream(path)) {
-            if (is == null) {
-                throw new FileNotFoundException("Image not found: " + path);
-            }
-            return ImageIO.read(is);
-        }
-    }
-
 }

@@ -334,12 +334,12 @@
                                     <span class="required-star">*</span>
                                 </label>
 
-                                <input class="form-control mb-2 ime-marathi"
+                                <input class="form-control mb-2 "
                                        th:field="*{education}"
                                        th:placeholder="#{editor.instruction.education}"/>
 
                                 <label class="form-label" th:text="#{editor.form.profession}"></label>
-                                <input class="form-control ime-marathi"
+                                <input class="form-control"
                                        th:field="*{profession}"
                                        th:placeholder="#{editor.instruction.profession}"/>
                             </div>
@@ -379,9 +379,9 @@
                                             th:text="${n}"></option>
                                 </select>
 
-                                <div id="brotherInputs"></div>
+                                <div class="ime-marathi"  id="brotherInputs"></div>
 
-                                <input type="hidden" th:field="*{brothers}" id="brothers"/>
+                                <input class="ime-marathi" type="hidden" th:field="*{brothers}" id="brothers"/>
 
                                 <!-- Sisters -->
                                 <label class="form-label mt-3" th:text="#{editor.form.sisters}"></label>
@@ -393,9 +393,9 @@
                                             th:text="${n}"></option>
                                 </select>
 
-                                <div id="sisterInputs"></div>
+                                <div  class="ime-marathi" id="sisterInputs"></div>
 
-                                <input type="hidden" th:field="*{sisters}" id="sisters"/>
+                                <input class="ime-marathi" type="hidden" th:field="*{sisters}" id="sisters"/>
 
                             </div>
                         </div>
