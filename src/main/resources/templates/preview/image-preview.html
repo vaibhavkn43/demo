@@ -17,11 +17,14 @@
             ← Edit
         </a>
 
-        <a th:href="${imagePath}"
-           download
+        <a th:href="@{'/editor/download/png/' + ${imageFile}}"
+           class="btn btn-outline-primary">
+            Download PNG
+        </a>
+
+        <a th:href="@{'/editor/download/pdf/' + ${imageFile}}"
            class="btn btn-success">
-            Download Image
+            Download PDF
         </a>
     </div>
-
 </section>

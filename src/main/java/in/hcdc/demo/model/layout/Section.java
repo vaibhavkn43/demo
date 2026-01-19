@@ -1,4 +1,4 @@
-package in.hcdc.demo.model;
+package in.hcdc.demo.model.layout;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,5 +29,7 @@ public class Section {
     private int lineHeight;
     private List<String> fields;
     @JsonProperty(defaultValue = "20")
-    private int sectionGap = 20; // DEFAULT GAP
+    private int sectionGap = 20;
+    private int priority = 2;
+
 }

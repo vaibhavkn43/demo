@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import in.hcdc.demo.config.AppStorageConfig;
 import in.hcdc.demo.model.BiodataRequest;
 import in.hcdc.demo.model.CustomField;
-import in.hcdc.demo.model.Layout;
-import in.hcdc.demo.model.LayoutMode;
-import in.hcdc.demo.model.Section;
+import in.hcdc.demo.model.layout.Layout;
+import in.hcdc.demo.model.layout.LayoutMode;
+import in.hcdc.demo.model.layout.LayoutModeConfig;
+import in.hcdc.demo.model.layout.Section;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -50,201 +51,194 @@ public class BiodataImageRendererService {
         this.messageSource = messageSource;
     }
 
-    public String renderBiodata(BiodataRequest form, String templateId) {
+public String renderBiodata(BiodataRequest form, String templateId) {
 
+    try {
+        /* =====================================================
+           STEP 1: Load template image
+           ===================================================== */
+        BufferedImage canvas = ImageIO.read(
+                getClass().getResourceAsStream(
+                        "/templates-assets/biodata/" + templateId + "/" + templateId + ".png"
+                )
+        );
+
+        /* =====================================================
+           STEP 2: Load layout JSON
+           ===================================================== */
+        Layout layout = mapper.readValue(
+                getClass().getResourceAsStream(
+                        "/templates-assets/biodata/" + templateId + "/" + templateId + "-layout.json"
+                ),
+                Layout.class
+        );
+
+        /* =====================================================
+           STEP 3: Graphics setup
+           ===================================================== */
+        Graphics2D g = canvas.createGraphics();
+        g.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+        );
+
+        /* =====================================================
+           STEP 4: Load base font safely
+           ===================================================== */
+        Font baseFont;
         try {
-            /* =====================================================
-               STEP 1: Load template image
-               ===================================================== */
-            BufferedImage canvas = ImageIO.read(
+            baseFont = Font.createFont(
+                    Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream(
-                            "/templates-assets/biodata/" + templateId + "/" + templateId + ".png"
+                            "/fonts/NotoSerifDevanagari-Regular.ttf"
                     )
             );
+        } catch (Exception e) {
+            baseFont = new Font("Serif", Font.PLAIN,
+                    layout.getFont().getSize());
+        }
 
-            /* =====================================================
-               STEP 2: Load layout JSON
-               ===================================================== */
-            Layout layout = mapper.readValue(
-                    getClass().getResourceAsStream(
-                            "/templates-assets/biodata/" + templateId + "/" + templateId + "-layout.json"
-                    ),
-                    Layout.class
+        g.setColor(Color.decode(layout.getFont().getColor()));
+
+        FontMetrics baseFm = g.getFontMetrics(
+                baseFont.deriveFont(
+                        Font.PLAIN,
+                        (float) layout.getFont().getSize()
+                )
+        );
+
+        /* =====================================================
+           STEP 5: Detect layout mode
+           ===================================================== */
+        LayoutMode mode = detectLayoutMode(form, layout, baseFm, canvas);
+
+        LayoutModeConfig modeCfg =
+                layout.getLayoutModes()
+                      .get(mode.name().toLowerCase());
+
+        Font renderFont =
+                baseFont.deriveFont(Font.PLAIN, (float) modeCfg.getFontSize());
+
+        g.setFont(renderFont);
+        FontMetrics fm = g.getFontMetrics();
+
+        // 🔑 SINGLE SOURCE OF TRUTH
+        int effectiveLineHeight = modeCfg.getLineHeight();
+        int sectionGap = modeCfg.getSectionGap();
+
+        /* =====================================================
+           STEP 6: Render God + mantra
+           ===================================================== */
+        int currentY = renderGodAndMantra(g, canvas, form, baseFont);
+
+        /* =====================================================
+           STEP 7: Render sections
+           ===================================================== */
+        for (Section section : layout.getSections()) {
+
+            List<Map.Entry<String, String>> values =
+                    extractSectionValues(section, form);
+
+            if (values.isEmpty()) {
+                continue;
+            }
+
+            // Section title
+            g.drawString(
+                    section.getTitle(),
+                    section.getStartX(),
+                    currentY
             );
 
-            /* =====================================================
-               STEP 3: Graphics setup
-               ===================================================== */
-            Graphics2D g = canvas.createGraphics();
-            g.setRenderingHint(
-                    RenderingHints.KEY_TEXT_ANTIALIASING,
-                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-            );
+            currentY += effectiveLineHeight;
 
-            /* =====================================================
-               STEP 4: Load base font safely
-               ===================================================== */
-            Font baseFont;
-            try {
-                baseFont = Font.createFont(
-                        Font.TRUETYPE_FONT,
-                        getClass().getResourceAsStream(
-                                "/fonts/NotoSerifDevanagari-Regular.ttf"
-                        )
+            int maxLabelWidth = 0;
+            for (Map.Entry<String, String> e : values) {
+                maxLabelWidth = Math.max(
+                        maxLabelWidth,
+                        fm.stringWidth(e.getKey())
                 );
-            } catch (Exception e) {
-                baseFont = new Font("Serif", Font.PLAIN,
-                        layout.getFont().getSize());
             }
 
-            g.setColor(Color.decode(layout.getFont().getColor()));
+            int labelX = section.getStartX();
+            int colonX = labelX + maxLabelWidth + LABEL_PADDING;
+            int valueX = colonX + COLON_PADDING;
 
-            FontMetrics baseFm = g.getFontMetrics(
-                    baseFont.deriveFont(
-                            Font.PLAIN,
-                            (float) layout.getFont().getSize()
-                    )
-            );
+            for (Map.Entry<String, String> e : values) {
 
-            /* =====================================================
-               STEP 5: Detect content density (Phase-1)
-               ===================================================== */
-            LayoutMode mode = detectLayoutMode(form, layout, baseFm);
-            System.out.println("mode" + mode.toString());
-            int fontSize = layout.getFont().getSize();
-            int lineAdjust = 0;
-            int sectionGap;
+                g.drawString(e.getKey(), labelX, currentY);
+                g.drawString(":", colonX, currentY);
 
-            switch (mode) {
-                case AIRY -> {
-                    fontSize += 2;
-                    lineAdjust = 4;
-                    sectionGap = 28;
-                }
-                case NORMAL -> {
-                    sectionGap = 22;
-                }
-                default -> { // COMPACT
-                    fontSize -= 6;
-                    lineAdjust = -6;
-                    sectionGap = 14;
-                }
-            }
-
-            Font renderFont = baseFont.deriveFont(Font.PLAIN, (float) fontSize);
-            g.setFont(renderFont);
-            FontMetrics fm = g.getFontMetrics();
-
-            /* =====================================================
-               STEP 6: Render god image & mantra
-               ===================================================== */
-            int currentY = renderGodAndMantra(g, canvas, form, baseFont);
-            /* =====================================================
-               STEP 7: Render sections (single-column, adaptive)
-               ===================================================== */
-            for (Section section : layout.getSections()) {
-
-                List<Map.Entry<String, String>> values
-                        = extractSectionValues(section, form);
-
-                if (values.isEmpty()) {
-                    continue;
-                }
-
-                g.drawString(
-                        section.getTitle(),
-                        section.getStartX(),
-                        currentY
-                );
-
-                currentY += section.getLineHeight() + lineAdjust;
-
-                int maxLabelWidth = 0;
-                for (Map.Entry<String, String> e : values) {
-                    maxLabelWidth = Math.max(
-                            maxLabelWidth,
-                            fm.stringWidth(e.getKey())
-                    );
-                }
-
-                int labelX = section.getStartX();
-                int colonX = labelX + maxLabelWidth + LABEL_PADDING;
-                int valueX = colonX + COLON_PADDING;
-
-                for (Map.Entry<String, String> e : values) {
-
-                    g.drawString(e.getKey(), labelX, currentY);
-                    g.drawString(":", colonX, currentY);
-
-                    currentY += drawWrappedValue(
-                            g,
-                            e.getValue(),
-                            valueX,
-                            currentY,
-                            section.getMaxWidth() - (valueX - labelX),
-                            section.getLineHeight() + lineAdjust,
-                            fm
-                    );
-                }
-
-                currentY += sectionGap;
-            }
-
-            /* =====================================================
-               STEP 8: Render custom fields
-               ===================================================== */
-            for (CustomField cf : form.getCustomFields()) {
-
-                if (isEmpty(cf.getLabel()) || isEmpty(cf.getValue())) {
-                    continue;
-                }
-
-                currentY += drawWrappedText(
+                currentY += drawWrappedValue(
                         g,
-                        cf.getLabel() + " : " + cf.getValue(),
-                        layout.getCustomFields().getStartX(),
+                        e.getValue(),
+                        valueX,
                         currentY,
-                        layout.getCustomFields().getMaxWidth(),
-                        layout.getCustomFields().getLineHeight() + lineAdjust,
+                        section.getMaxWidth() - (valueX - labelX),
+                        effectiveLineHeight,
                         fm
                 );
             }
 
-            /* =====================================================
-               STEP 9: Watermark & branding
-               ===================================================== */
-            if (currentY < canvas.getHeight() - 300) {
-                drawWatermark(g, canvas);
+            currentY += sectionGap;
+        }
+
+        /* =====================================================
+           STEP 8: Render custom fields
+           ===================================================== */
+        for (CustomField cf : form.getCustomFields()) {
+
+            if (isEmpty(cf.getLabel()) || isEmpty(cf.getValue())) {
+                continue;
             }
 
-            g.setFont(baseFont.deriveFont(Font.PLAIN, 12f));
-            g.setColor(new Color(120, 120, 120));
-
-            String brand = "VivahKala.in | 9022658566";
-            int bw = g.getFontMetrics().stringWidth(brand);
-
-            g.drawString(
-                    brand,
-                    canvas.getWidth() - bw - 20,
-                    canvas.getHeight() - 20
+            currentY += drawWrappedText(
+                    g,
+                    cf.getLabel() + " : " + cf.getValue(),
+                    layout.getCustomFields().getStartX(),
+                    currentY,
+                    layout.getCustomFields().getMaxWidth(),
+                    effectiveLineHeight,
+                    fm
             );
-
-            g.dispose();
-
-            /* =====================================================
-               STEP 10: Save image
-               ===================================================== */
-            Path out = AppStorageConfig.IMAGE_DIR
-                    .resolve("biodata-" + System.currentTimeMillis() + ".png");
-
-            ImageIO.write(canvas, "png", out.toFile());
-
-            return "/images/" + out.getFileName();
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to render biodata image", e);
         }
+
+        /* =====================================================
+           STEP 9: Watermark & branding
+           ===================================================== */
+        if (currentY < canvas.getHeight() - 300) {
+            drawWatermark(g, canvas);
+        }
+
+        g.setFont(baseFont.deriveFont(Font.PLAIN, 12f));
+        g.setColor(new Color(120, 120, 120));
+
+        String brand = "VivahKala.in | 9022658566";
+        int bw = g.getFontMetrics().stringWidth(brand);
+
+        g.drawString(
+                brand,
+                canvas.getWidth() - bw - 20,
+                canvas.getHeight() - 20
+        );
+
+        g.dispose();
+
+        /* =====================================================
+           STEP 10: Save image
+           ===================================================== */
+        Path out = AppStorageConfig.IMAGE_DIR
+                .resolve("biodata-" + System.currentTimeMillis() + ".png");
+
+        ImageIO.write(canvas, "png", out.toFile());
+
+        return out.getFileName().toString();
+
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to render biodata image", e);
     }
+}
+
 
     /* =====================================================
        Helper methods
@@ -324,35 +318,32 @@ public class BiodataImageRendererService {
     private LayoutMode detectLayoutMode(
             BiodataRequest form,
             Layout layout,
-            FontMetrics fm
+            FontMetrics fm,
+            BufferedImage canvas
     ) {
 
-        int totalLines = 0;
+        int godBlockHeight = 140;
 
-        for (Section section : layout.getSections()) {
-            for (String fieldName : section.getFields()) {
-                try {
-                    Field f = BiodataRequest.class.getDeclaredField(fieldName);
-                    f.setAccessible(true);
-                    Object v = f.get(form);
+        int availableHeight
+                = canvas.getHeight()
+                - layout.getContentArea().getBottom()
+                - layout.getContentArea().getTop()
+                - godBlockHeight;
 
-                    if (v != null && !v.toString().isBlank()) {
-                        totalLines += Math.max(
-                                1,
-                                fm.stringWidth(v.toString()) / 400
-                        );
-                    }
-                } catch (Exception ignored) {
-                }
+        for (LayoutMode mode : LayoutMode.values()) {
+
+            LayoutModeConfig cfg
+                    = layout.getLayoutModes()
+                            .get(mode.name().toLowerCase());
+
+            int estimatedHeight
+                    = estimateContentHeight(form, layout, cfg, fm);
+
+            if (estimatedHeight <= availableHeight) {
+                return mode;
             }
         }
-        System.out.println("totalLines" + totalLines);
-        if (totalLines < 15) {
-            return LayoutMode.AIRY;
-        }
-        if (totalLines < 20) {
-            return LayoutMode.NORMAL;
-        }
+
         return LayoutMode.COMPACT;
     }
 
@@ -481,4 +472,46 @@ public class BiodataImageRendererService {
             return fieldName;
         }
     }
+
+    private int estimateContentHeight(
+            BiodataRequest form,
+            Layout layout,
+            LayoutModeConfig mode,
+            FontMetrics fm
+    ) {
+
+        int height = 0;
+
+        for (Section section : layout.getSections()) {
+
+            int sectionLines = 0;
+
+            for (String fieldName : section.getFields()) {
+                try {
+                    Field f = BiodataRequest.class.getDeclaredField(fieldName);
+                    f.setAccessible(true);
+                    Object v = f.get(form);
+
+                    if (v != null && !v.toString().isBlank()) {
+                        int lines = Math.max(
+                                1,
+                               (fm.stringWidth(v.toString()) + 200) / section.getMaxWidth()
+
+                        );
+                        sectionLines += lines;
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+
+            if (sectionLines > 0) {
+                height += mode.getLineHeight();               // section title
+                height += sectionLines * mode.getLineHeight();
+                height += mode.getSectionGap();
+            }
+        }
+
+        return height;
+    }
+
 }

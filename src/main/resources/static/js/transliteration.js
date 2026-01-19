@@ -8,50 +8,60 @@ document.getElementById("marathiToggle").addEventListener("change", e => {
     hideSuggestions();
 });
 
-document.querySelectorAll(".ime-marathi").forEach(input => {
+/* =====================================================
+   MARATHI IME — EVENT DELEGATION (STATIC + DYNAMIC)
+   ===================================================== */
 
-    // KEYUP → fetch suggestions
-    input.addEventListener("keyup", async e => {
-        if (!marathiEnabled)
-            return;
+document.addEventListener("keyup", async function (e) {
 
-        // ignore space / enter here (handled in keydown)
-        if (e.key === " " || e.key === "Enter")
-            return;
+    const input = e.target;
+    if (!input.classList.contains("ime-marathi"))
+        return;
 
-        const cursor = input.selectionStart;
-        const text = input.value;
+    if (!marathiEnabled)
+        return;
 
-        const left = text.slice(0, cursor);
-        const match = left.match(/([a-zA-Z]+)$/);
+    // ignore space / enter (handled in keydown)
+    if (e.key === " " || e.key === "Enter")
+        return;
 
-        if (!match) {
-            hideSuggestions();
-            return;
-        }
+    const cursor = input.selectionStart;
+    const text = input.value || "";
 
-        const word = match[1];
-        const start = cursor - word.length;
-        const end = cursor;
+    const left = text.slice(0, cursor);
+    const match = left.match(/([a-zA-Z]+)$/);
 
-        activeInput = input;
-        activeWordRange = {start, end};
+    if (!match) {
+        hideSuggestions();
+        return;
+    }
 
-        const suggestions = await fetchSuggestions(word);
-        showSuggestions(suggestions);
-    });
+    const word = match[1];
+    const start = cursor - word.length;
+    const end = cursor;
 
-    // KEYDOWN → accept suggestion with space / enter
-    input.addEventListener("keydown", e => {
-        if (!marathiEnabled || !activeSuggestion)
-            return;
+    activeInput = input;
+    activeWordRange = { start, end };
 
-        if (e.key === " " || e.key === "Enter") {
-            e.preventDefault();
-            replaceWord(activeSuggestion + " ");
-            activeSuggestion = null;
-        }
-    });
+    const suggestions = await fetchSuggestions(word);
+    showSuggestions(suggestions);
+});
+
+
+document.addEventListener("keydown", function (e) {
+
+    const input = e.target;
+    if (!input.classList.contains("ime-marathi"))
+        return;
+
+    if (!marathiEnabled || !activeSuggestion)
+        return;
+
+    if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        replaceWord(activeSuggestion + " ");
+        activeSuggestion = null;
+    }
 });
 
 

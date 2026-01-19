@@ -1,5 +1,6 @@
 package in.hcdc.demo.controller;
 
+import in.hcdc.demo.config.AppStorageConfig;
 import in.hcdc.demo.model.BiodataRequest;
 import in.hcdc.demo.model.Template;
 import in.hcdc.demo.model.TemplateForm;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.springframework.core.io.UrlResource;
 
 /**
  *
@@ -36,29 +39,43 @@ public class EditorController {
     private final TemplateFormFactory formFactory;
     private final BiodataImageRendererService biodataImageRendererService;
     private final BiodataValidationService validationService;
+    private final PdfExportService pdfExportService;
 
     public EditorController(TemplateService templateService,
             TemplateFormFactory formFactory,
             BiodataImageRendererService biodataImageRendererService,
+            PdfExportService pdfExportService,
             BiodataValidationService validationService) {
         this.templateService = templateService;
         this.formFactory = formFactory;
         this.biodataImageRendererService = biodataImageRendererService;
         this.validationService = validationService;
+        this.pdfExportService = pdfExportService;
     }
 
-    // OPEN EDITOR (biodata / birthday / invitation)
     @GetMapping("/{categoryName}/{templateId}")
-    public String openEditor(@PathVariable String categoryName,
+    public String openEditor(
+            @PathVariable String categoryName,
             @PathVariable String templateId,
-            Model model) {
+            Model model,
+            HttpSession session
+    ) {
 
         Template template = templateService.getTemplateById(categoryName, templateId);
-        TemplateForm form = formFactory.getForm(categoryName);
         if (template == null) {
             return "redirect:/dashboard";
         }
 
+        // ✅ STEP 1: Try to get form from session
+        String sessionKey = "BIO_FORM_" + categoryName;
+        TemplateForm form = (TemplateForm) session.getAttribute(sessionKey);
+
+        // ✅ STEP 2: If not present, create new form (existing behavior)
+        if (form == null) {
+            form = formFactory.getForm(categoryName);
+        }
+
+        // ✅ STEP 3: Bind model as before
         model.addAttribute("template", template);
         model.addAttribute("categoryName", categoryName);
         model.addAttribute("form", form);
@@ -72,7 +89,8 @@ public class EditorController {
             @PathVariable String categoryName,
             @RequestParam String templateId,
             HttpServletRequest request,
-            Model model) {
+            Model model,
+            HttpSession session) {
 
         TemplateForm form = formFactory.getForm(categoryName);
 
@@ -92,17 +110,56 @@ public class EditorController {
                 return "layout/base";
             }
 
-            String imagePath = biodataImageRendererService
+            String imageFile = biodataImageRendererService
                     .renderBiodata(biodata, templateId);
 
-            model.addAttribute("imagePath", imagePath);
+// preview image URL
+            model.addAttribute("imagePath", "/images/" + imageFile);
+
+// raw filename (for download)
+            model.addAttribute("imageFile", imageFile);
+
         }
 
         model.addAttribute("categoryName", categoryName);
         model.addAttribute("templateId", templateId);
         model.addAttribute("content", "preview/image-preview");
+        session.setAttribute("BIO_FORM_" + categoryName, form);
 
         return "layout/base";
+    }
+
+    @GetMapping("/download/png/{fileName}")
+    public ResponseEntity<Resource> downloadPng(@PathVariable String fileName)
+            throws Exception {
+
+        Path file = AppStorageConfig.IMAGE_DIR.resolve(fileName);
+        Resource resource = new UrlResource(file.toUri());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .header("Content-Disposition",
+                        "attachment; filename=\"biodata.png\"")
+                .body(resource);
+    }
+
+    @GetMapping("/download/pdf/{fileName}")
+    public ResponseEntity<Resource> downloadPdf(
+            @PathVariable String fileName) throws Exception {
+
+        Path imagePath
+                = AppStorageConfig.IMAGE_DIR.resolve(fileName);
+
+        Path pdfPath
+                = pdfExportService.createPdfFromImage(imagePath);
+
+        Resource resource = new UrlResource(pdfPath.toUri());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header("Content-Disposition",
+                        "attachment; filename=\"biodata.pdf\"")
+                .body(resource);
     }
 
 //    @PostMapping("/{categoryName}/preview")

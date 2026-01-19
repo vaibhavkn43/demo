@@ -162,11 +162,11 @@ document.addEventListener("input", () => {
 });
 
 function selectGod(god) {
-  document.querySelector("input[name='godImage']").value = god;
-  document.querySelector(".god-preview img").src =
-      "/images/gods/" + god + ".png";
+    document.querySelector("input[name='godImage']").value = god;
+    document.querySelector(".god-preview img").src =
+            "/images/gods/" + god + ".png";
 
-  bootstrap.Modal.getInstance(
-      document.getElementById('godModal')
-  ).hide();
+    bootstrap.Modal.getInstance(
+            document.getElementById('godModal')
+            ).hide();
 }
