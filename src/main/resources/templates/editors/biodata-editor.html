@@ -64,12 +64,28 @@
                          alt="God"
                          style="max-height:120px;">
 
+                    <div class="text-end">
+                        <a href="#"
+                           class="small text-muted text-decoration-none"
+                           onclick="openGodImageSelector()">
+                            [ <span th:text="#{action.changeGodImage}"></span> ]
+                        </a>
+                    </div>
                     <div class="mt-2">
                         <input type="text"
                                name="mantra"
                                th:value="${form.mantra}"
                                class="form-control text-center"
                                placeholder="मंत्र लिहा (ऐच्छिक)">
+
+                        <div class="mt-1 text-end">
+                            <a href="#"
+                               class="small text-muted text-decoration-none"
+                               onclick="focusMantraInput()">
+                                [ <span th:text="#{action.changeMantra}"></span> ]
+                            </a>
+                        </div>
+
                     </div>
 
                     <button type="button"
