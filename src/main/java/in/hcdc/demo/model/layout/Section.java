@@ -24,12 +24,12 @@ public class Section {
     private String key;
     private String title;
     private int startX;
-    private int startY;
     private int maxWidth;
-    private int lineHeight;
     private List<String> fields;
     @JsonProperty(defaultValue = "20")
     private int sectionGap = 20;
     private int priority = 2;
+    /** SIDE or FULL */
+    private String flow;
 
 }

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.springframework.core.io.UrlResource;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -88,6 +89,7 @@ public class EditorController {
     public String preview(
             @PathVariable String categoryName,
             @RequestParam String templateId,
+            @RequestParam(required = false) MultipartFile profileImage,
             HttpServletRequest request,
             Model model,
             HttpSession session) {

@@ -50,5 +50,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/generated/**")
                 .addResourceLocations("file:" + generatedDir + "/");
+
+        registry.addResourceHandler("/templates-assets/**")
+                .addResourceLocations("classpath:/templates-assets/");
+
     }
 }

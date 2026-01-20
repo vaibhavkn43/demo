@@ -1,6 +1,6 @@
 =============================== 
 PROJECT SNAPSHOT 
-Generated on Mon 01/19/2026 17:21:38.86 
+Generated on Tue 01/20/2026 11:54:04.72 
 =============================== 
  
  
@@ -217,6 +217,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/generated/**")
                 .addResourceLocations("file:" + generatedDir + "/");
+
+        registry.addResourceHandler("/templates-assets/**")
+                .addResourceLocations("classpath:/templates-assets/");
+
     }
 }
  
@@ -842,6 +846,50 @@ public class FontConfig {
 }
  
 -------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\MediaConfig.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.model;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ *
+ * @author Vaibhav
+ */
+@Getter
+@Setter
+public class MediaConfig {
+
+    private MediaItem god;
+    private MediaItem profile;
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\MediaItem.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.model;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+/**
+ *
+ * @author Vaibhav
+ */
+@Getter
+@Setter
+@ToString        
+class MediaItem {
+    private boolean enabled;
+    private boolean optional;
+    private String position;
+    private int height; // or size
+}
+
+ 
+-------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\Position.java" 
 -------------------------------------------------- 
 package in.hcdc.demo.model;
@@ -1053,6 +1101,7 @@ package in.hcdc.demo.model.layout;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import in.hcdc.demo.model.CustomFieldsLayout;
 import in.hcdc.demo.model.FontConfig;
+import in.hcdc.demo.model.MediaConfig;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -1079,6 +1128,7 @@ public class Layout {
     private FontConfig font;
     private ContentArea contentArea;
     private Map<String, LayoutModeConfig> layoutModes;
+    private MediaConfig media;
 
 }
  
@@ -1216,184 +1266,194 @@ public class BiodataImageRendererService {
         this.messageSource = messageSource;
     }
 
-    public String renderBiodata(BiodataRequest form, String templateId) {
+public String renderBiodata(BiodataRequest form, String templateId) {
 
+    try {
+        /* =====================================================
+           STEP 1: Load template image
+           ===================================================== */
+        BufferedImage canvas = ImageIO.read(
+                getClass().getResourceAsStream(
+                        "/templates-assets/biodata/" + templateId + "/" + "base.png"
+                )
+        );
+
+        /* =====================================================
+           STEP 2: Load layout JSON
+           ===================================================== */
+        Layout layout = mapper.readValue(
+                getClass().getResourceAsStream(
+                        "/templates-assets/biodata/" + templateId + "/" + "layout.json"
+                ),
+                Layout.class
+        );
+
+        /* =====================================================
+           STEP 3: Graphics setup
+           ===================================================== */
+        Graphics2D g = canvas.createGraphics();
+        g.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+        );
+
+        /* =====================================================
+           STEP 4: Load base font safely
+           ===================================================== */
+        Font baseFont;
         try {
-            /* =====================================================
-               STEP 1: Load template image
-               ===================================================== */
-            BufferedImage canvas = ImageIO.read(
+            baseFont = Font.createFont(
+                    Font.TRUETYPE_FONT,
                     getClass().getResourceAsStream(
-                            "/templates-assets/biodata/" + templateId + "/" + templateId + ".png"
+                            "/fonts/NotoSerifDevanagari-Regular.ttf"
                     )
             );
+        } catch (Exception e) {
+            baseFont = new Font("Serif", Font.PLAIN,
+                    layout.getFont().getSize());
+        }
 
-            /* =====================================================
-               STEP 2: Load layout JSON
-               ===================================================== */
-            Layout layout = mapper.readValue(
-                    getClass().getResourceAsStream(
-                            "/templates-assets/biodata/" + templateId + "/" + templateId + "-layout.json"
-                    ),
-                    Layout.class
-            );
+        g.setColor(Color.decode(layout.getFont().getColor()));
 
-            /* =====================================================
-               STEP 3: Graphics setup
-               ===================================================== */
-            Graphics2D g = canvas.createGraphics();
-            g.setRenderingHint(
-                    RenderingHints.KEY_TEXT_ANTIALIASING,
-                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-            );
+        FontMetrics baseFm = g.getFontMetrics(
+                baseFont.deriveFont(
+                        Font.PLAIN,
+                        (float) layout.getFont().getSize()
+                )
+        );
 
-            /* =====================================================
-               STEP 4: Load base font safely
-               ===================================================== */
-            Font baseFont;
-            try {
-                baseFont = Font.createFont(
-                        Font.TRUETYPE_FONT,
-                        getClass().getResourceAsStream(
-                                "/fonts/NotoSerifDevanagari-Regular.ttf"
-                        )
-                );
-            } catch (Exception e) {
-                baseFont = new Font("Serif", Font.PLAIN,
-                        layout.getFont().getSize());
+        /* =====================================================
+           STEP 5: Detect layout mode
+           ===================================================== */
+        LayoutMode mode = detectLayoutMode(form, layout, baseFm, canvas);
+
+        LayoutModeConfig modeCfg =
+                layout.getLayoutModes()
+                      .get(mode.name().toLowerCase());
+
+        Font renderFont =
+                baseFont.deriveFont(Font.PLAIN, (float) modeCfg.getFontSize());
+
+        g.setFont(renderFont);
+        FontMetrics fm = g.getFontMetrics();
+
+        // 🔑 SINGLE SOURCE OF TRUTH
+        int effectiveLineHeight = modeCfg.getLineHeight();
+        int sectionGap = modeCfg.getSectionGap();
+
+        /* =====================================================
+           STEP 6: Render God + mantra
+           ===================================================== */
+        int currentY = renderGodAndMantra(g, canvas, form, baseFont);
+
+        /* =====================================================
+           STEP 7: Render sections
+           ===================================================== */
+        for (Section section : layout.getSections()) {
+
+            List<Map.Entry<String, String>> values =
+                    extractSectionValues(section, form);
+
+            if (values.isEmpty()) {
+                continue;
             }
 
-            g.setColor(Color.decode(layout.getFont().getColor()));
-
-            FontMetrics baseFm = g.getFontMetrics(
-                    baseFont.deriveFont(
-                            Font.PLAIN,
-                            (float) layout.getFont().getSize()
-                    )
+            // Section title
+            g.drawString(
+                    section.getTitle(),
+                    section.getStartX(),
+                    currentY
             );
 
-            /* =====================================================
-               STEP 5: Detect content density (Phase-1)
-               ===================================================== */
-           LayoutMode mode = detectLayoutMode(form, layout, baseFm, canvas);
+            currentY += effectiveLineHeight;
 
-            LayoutModeConfig modeCfg
-                    = layout.getLayoutModes()
-                            .get(mode.name().toLowerCase());
-
-            Font renderFont = baseFont.deriveFont(Font.PLAIN, (float) modeCfg.getFontSize());
-
-            g.setFont(renderFont);
-            FontMetrics fm = g.getFontMetrics();
-
-            int lineAdjust = modeCfg.getLineHeight() - layout.getFont().getSize();
-
-            int sectionGap = modeCfg.getSectionGap();
-
-            int currentY = renderGodAndMantra(g, canvas, form, baseFont);
-            for (Section section : layout.getSections()) {
-
-                List<Map.Entry<String, String>> values
-                        = extractSectionValues(section, form);
-
-                if (values.isEmpty()) {
-                    continue;
-                }
-
-                g.drawString(
-                        section.getTitle(),
-                        section.getStartX(),
-                        currentY
+            int maxLabelWidth = 0;
+            for (Map.Entry<String, String> e : values) {
+                maxLabelWidth = Math.max(
+                        maxLabelWidth,
+                        fm.stringWidth(e.getKey())
                 );
-
-                currentY += section.getLineHeight() + lineAdjust;
-
-                int maxLabelWidth = 0;
-                for (Map.Entry<String, String> e : values) {
-                    maxLabelWidth = Math.max(
-                            maxLabelWidth,
-                            fm.stringWidth(e.getKey())
-                    );
-                }
-
-                int labelX = section.getStartX();
-                int colonX = labelX + maxLabelWidth + LABEL_PADDING;
-                int valueX = colonX + COLON_PADDING;
-
-                for (Map.Entry<String, String> e : values) {
-
-                    g.drawString(e.getKey(), labelX, currentY);
-                    g.drawString(":", colonX, currentY);
-
-                    currentY += drawWrappedValue(
-                            g,
-                            e.getValue(),
-                            valueX,
-                            currentY,
-                            section.getMaxWidth() - (valueX - labelX),
-                            section.getLineHeight() + lineAdjust,
-                            fm
-                    );
-                }
-
-                currentY += sectionGap;
             }
 
-            /* =====================================================
-               STEP 8: Render custom fields
-               ===================================================== */
-            for (CustomField cf : form.getCustomFields()) {
+            int labelX = section.getStartX();
+            int colonX = labelX + maxLabelWidth + LABEL_PADDING;
+            int valueX = colonX + COLON_PADDING;
 
-                if (isEmpty(cf.getLabel()) || isEmpty(cf.getValue())) {
-                    continue;
-                }
+            for (Map.Entry<String, String> e : values) {
 
-                currentY += drawWrappedText(
+                g.drawString(e.getKey(), labelX, currentY);
+                g.drawString(":", colonX, currentY);
+
+                currentY += drawWrappedValue(
                         g,
-                        cf.getLabel() + " : " + cf.getValue(),
-                        layout.getCustomFields().getStartX(),
+                        e.getValue(),
+                        valueX,
                         currentY,
-                        layout.getCustomFields().getMaxWidth(),
-                        layout.getCustomFields().getLineHeight() + lineAdjust,
+                        section.getMaxWidth() - (valueX - labelX),
+                        effectiveLineHeight,
                         fm
                 );
             }
 
-            /* =====================================================
-               STEP 9: Watermark & branding
-               ===================================================== */
-            if (currentY < canvas.getHeight() - 300) {
-                drawWatermark(g, canvas);
+            currentY += sectionGap;
+        }
+
+        /* =====================================================
+           STEP 8: Render custom fields
+           ===================================================== */
+        for (CustomField cf : form.getCustomFields()) {
+
+            if (isEmpty(cf.getLabel()) || isEmpty(cf.getValue())) {
+                continue;
             }
 
-            g.setFont(baseFont.deriveFont(Font.PLAIN, 12f));
-            g.setColor(new Color(120, 120, 120));
-
-            String brand = "VivahKala.in | 9022658566";
-            int bw = g.getFontMetrics().stringWidth(brand);
-
-            g.drawString(
-                    brand,
-                    canvas.getWidth() - bw - 20,
-                    canvas.getHeight() - 20
+            currentY += drawWrappedText(
+                    g,
+                    cf.getLabel() + " : " + cf.getValue(),
+                    layout.getCustomFields().getStartX(),
+                    currentY,
+                    layout.getCustomFields().getMaxWidth(),
+                    effectiveLineHeight,
+                    fm
             );
-
-            g.dispose();
-
-            /* =====================================================
-               STEP 10: Save image
-               ===================================================== */
-            Path out = AppStorageConfig.IMAGE_DIR
-                    .resolve("biodata-" + System.currentTimeMillis() + ".png");
-
-            ImageIO.write(canvas, "png", out.toFile());
-
-            return out.getFileName().toString();
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to render biodata image", e);
         }
+
+        /* =====================================================
+           STEP 9: Watermark & branding
+           ===================================================== */
+        if (currentY < canvas.getHeight() - 300) {
+            drawWatermark(g, canvas);
+        }
+
+        g.setFont(baseFont.deriveFont(Font.PLAIN, 12f));
+        g.setColor(new Color(120, 120, 120));
+
+        String brand = "VivahKala.in | 9022658566";
+        int bw = g.getFontMetrics().stringWidth(brand);
+
+        g.drawString(
+                brand,
+                canvas.getWidth() - bw - 20,
+                canvas.getHeight() - 20
+        );
+
+        g.dispose();
+
+        /* =====================================================
+           STEP 10: Save image
+           ===================================================== */
+        Path out = AppStorageConfig.IMAGE_DIR
+                .resolve("biodata-" + System.currentTimeMillis() + ".png");
+
+        ImageIO.write(canvas, "png", out.toFile());
+
+        return out.getFileName().toString();
+
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to render biodata image", e);
     }
+}
+
 
     /* =====================================================
        Helper methods
@@ -1855,39 +1915,6 @@ public class TemplateService {
                 .findFirst()
                 .orElse(null);
     }
-}
- 
--------------------------------------------------- 
-FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\service\Test.java" 
--------------------------------------------------- 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package in.hcdc.demo.service;
-
-import in.hcdc.demo.model.BiodataRequest;
-import in.hcdc.demo.model.SampleBiodataFactory;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-/**
- *
- * @author Vaibhav
- */
-@Service
-public class Test {
-
-    @Autowired
-    private BiodataImageRendererService biodataImageRendererService;
-
-    @PostConstruct
-    public void generateSample() {
-        BiodataRequest sample = SampleBiodataFactory.create();
-        biodataImageRendererService.renderBiodata(sample, "bio1");
-    }
-
 }
  
 -------------------------------------------------- 
@@ -4007,7 +4034,7 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates\dashboard.html"
 
             <!-- RIGHT IMAGE -->
             <div class="col-md-6 text-center">
-                <img src="/images/templates/biodata/bio1.png"
+                <img src="/templates-assets/biodata/bio1/preview.png"
                      alt="Biodata Template Preview"
                      class="hero-image">
             </div>
@@ -4945,7 +4972,7 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates\validation\minimum-vali
 </div>
  
 -------------------------------------------------- 
-FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\bio1-layout.json" 
+FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\layout.json" 
 -------------------------------------------------- 
 {
     "templateId": "bio1",
@@ -5101,89 +5128,21 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\bio
         "startY": 0,
         "maxWidth": 1800,
         "lineHeight": 48
-    }
-}
- 
--------------------------------------------------- 
-FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio2\bio2-layout.json" 
--------------------------------------------------- 
-{
-  "templateId": "bio2",
-
-  "canvas": {
-    "width": 1080,
-    "height": 1528
-  },
-
-  "font": {
-    "family": "NotoSerifDevanagari",
-    "size": 28,
-    "color": "#5A1E1E",
-    "labelWeight": "BOLD",
-    "valueWeight": "NORMAL"
-  },
-
-  "label": {
-    "suffix": " : ",
-    "gap": 14
-  },
-
-  "sections": [
-    {
-      "key": "personal",
-      "title": "वैयक्तिक माहिती",
-      "startX": 140,
-      "startY": 340,
-      "maxWidth": 800,
-      "lineHeight": 38,
-      "fields": [
-        "name",
-        "birthDate",
-        "birthPlace",
-        "birthTime",
-        "religion",
-        "caste",
-        "height",
-        "education",
-        "occupation"
-      ]
     },
-
-    {
-      "key": "family",
-      "title": "कौटुंबिक माहिती",
-      "startX": 140,
-      "startY": 700,
-      "maxWidth": 800,
-      "lineHeight": 38,
-      "fields": [
-        "fatherName",
-        "motherName",
-        "brothers",
-        "sisters"
-      ]
-    },
-
-    {
-      "key": "contact",
-      "title": "संपर्क",
-      "startX": 140,
-      "startY": 1040,
-      "maxWidth": 800,
-      "lineHeight": 38,
-      "fields": [
-        "address",
-        "mobile"
-      ]
+    "media": {
+        "god": {
+            "enabled": true,
+            "optional": true,
+            "position": "TOP_CENTER",
+            "height": 120
+        },
+        "profile": {
+            "enabled": false,
+            "optional": true,
+            "position": "TOP_RIGHT",
+            "size": 160
+        }
     }
-  ],
-
-  "customFields": {
-    "startX": 140,
-    "startY": 1220,
-    "maxWidth": 800,
-    "lineHeight": 38
-  }
 }
  
 -------------------------------------------------- 
@@ -5287,27 +5246,28 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-config\templates.json"
             {
                 "id": "bio1",
                 "group": "GOD_ONLY",
-                "thumbnail": "/images/templates/biodata/bio1.png"
+                "thumbnail": "/templates-assets/biodata/bio1/preview.png"
             },
             {
                 "id": "bio2",
                 "group": "GOD_ONLY",
-                "thumbnail": "/images/templates/biodata/bio2.png"
+                "thumbnail": "/templates-assets/biodata/bio2/preview.png"
             },
             {
                 "id": "bio3",
-                "thumbnail": "/images/templates/biodata/bio3.png"
+                "thumbnail": "/templates-assets/biodata/bio3/preview.png"
             },
             {
                 "id": "bio4",
-                "thumbnail": "/images/templates/biodata/bio4.png"
+                "thumbnail": "/templates-assets/biodata/bio4/preview.png"
             },
             {
                 "id": "bio5",
-                "thumbnail": "/images/templates/biodata/bio5.png"
+                "thumbnail": "/templates-assets/biodata/bio5/preview.png"
             }
         ]
     },
+
     {
         "name": "birthday",
         "titleKey": "category.birthday",

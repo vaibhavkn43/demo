@@ -10,11 +10,16 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString        
-class MediaItem {
-    private boolean enabled;
-    private boolean optional;
-    private String position;
-    private int height; // or size
+@ToString
+public class MediaItem {
+
+    private boolean enabled;     // template allows this media
+    private boolean optional;    // user may skip
+    private String position;     // TOP_CENTER | RIGHT | LEFT
+    private int width;
+    private int height;
+    private int marginTop;
+    private int marginBottom;
 }
+
 

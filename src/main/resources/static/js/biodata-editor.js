@@ -170,3 +170,48 @@ function selectGod(god) {
             document.getElementById('godModal')
             ).hide();
 }
+
+const profileInput = document.getElementById("profileImage");
+const profilePreview = document.getElementById("profilePreview");
+
+if (profileInput) {
+    profileInput.addEventListener("change", function () {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                profilePreview.src = e.target.result;
+                profilePreview.style.display = "block";
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+}
+
+function removeProfilePhoto() {
+    if (profileInput) {
+        profileInput.value = "";
+    }
+    if (profilePreview) {
+        profilePreview.src = "";
+        profilePreview.style.display = "none";
+    }
+}
+
+function adjustGodPreview(hasProfile) {
+    const godImg = document.getElementById("godPreview");
+    if (!godImg) return;
+
+    godImg.style.maxHeight = hasProfile ? "80px" : "120px";
+}
+
+function toggleGuide(btn) {
+    const content = document.getElementById("biodataGuideContent");
+    const isHidden = content.style.display === "none";
+
+    content.style.display = isHidden ? "block" : "none";
+
+    const hideText = btn.getAttribute("data-hide");
+    const showText = btn.getAttribute("data-show");
+
+    btn.querySelector("span").innerText = isHidden ? hideText : showText;
+}

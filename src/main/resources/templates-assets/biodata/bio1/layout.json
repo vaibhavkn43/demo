@@ -46,9 +46,8 @@
             "title": "वैयक्तिक माहिती",
             "priority": 1,
             "startX": 320,
-            "startY": 520,
             "maxWidth": 1800,
-            "lineHeight": 48,
+            "flow": "AUTO",
             "fields": [
                 "name",
                 "gender",
@@ -68,9 +67,8 @@
             "title": "जन्मपत्रिका",
             "priority": 2,
             "startX": 320,
-            "startY": 0,
+              "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "rashi",
                 "nakshatra",
@@ -85,9 +83,8 @@
             "title": "शारीरिक माहिती",
             "priority": 1,
             "startX": 320,
-            "startY": 0,
+              "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "height",
                 "weight",
@@ -102,9 +99,8 @@
             "title": "शिक्षण व व्यवसाय",
             "priority": 1,
             "startX": 320,
-            "startY": 0,
+             "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "education",
                 "profession",
@@ -117,9 +113,8 @@
             "title": "कौटुंबिक माहिती",
             "priority": 2,
             "startX": 320,
-            "startY": 0,
+             "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "fatherName",
                 "fatherOccupation",
@@ -135,9 +130,8 @@
             "title": "संपर्क",
             "priority": 1,
             "startX": 320,
-            "startY": 0,
+            "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "address",
                 "mobile",
@@ -149,22 +143,24 @@
 
     "customFields": {
         "startX": 320,
-        "startY": 0,
-        "maxWidth": 1800,
-        "lineHeight": 48
+         "flow": "AUTO",
+        "maxWidth": 1800
     },
     "media": {
         "god": {
             "enabled": true,
             "optional": true,
             "position": "TOP_CENTER",
-            "height": 120
+            "height": 90,
+            "marginBottom": 16
         },
         "profile": {
-            "enabled": false,
+            "enabled": true,
             "optional": true,
-            "position": "TOP_RIGHT",
-            "size": 160
+            "position": "RIGHT",
+            "width": 260,
+            "height": 320,
+            "marginTop": 20
         }
     }
 }

@@ -12,7 +12,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ContentArea {
+
     private int top;
+    private int left;
+    private int right;
     private int bottom;
 }
-

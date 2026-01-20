@@ -251,3 +251,11 @@ footer {
 .god-option:hover {
   transform: scale(1.1);
 }
+.biodata-guide {
+    background: #f8fbff;
+    border-left: 4px solid #0d6efd;
+}
+
+.biodata-guide ul li {
+    margin-bottom: 6px;
+}

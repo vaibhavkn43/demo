@@ -79,4 +79,9 @@ public class BiodataRequest extends TemplateForm {
     private String godImage = "ganesh";
     private String mantra = "श्री गणेशाय नमः";
 
+    /** Stored profile image path on disk */
+    private String profileImagePath;
+
+    /** User may choose to hide profile image */
+    private boolean showProfileImage = true;
 }

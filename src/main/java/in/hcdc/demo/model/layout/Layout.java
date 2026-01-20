@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import in.hcdc.demo.model.CustomFieldsLayout;
 import in.hcdc.demo.model.FontConfig;
 import in.hcdc.demo.model.MediaConfig;
+import java.awt.Canvas;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -31,5 +32,6 @@ public class Layout {
     private ContentArea contentArea;
     private Map<String, LayoutModeConfig> layoutModes;
     private MediaConfig media;
+    private Canvas canvas;
 
 }

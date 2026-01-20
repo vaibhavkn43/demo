@@ -6,27 +6,28 @@
             {
                 "id": "bio1",
                 "group": "GOD_ONLY",
-                "thumbnail": "/images/templates/biodata/bio1.png"
+                "thumbnail": "/templates-assets/biodata/bio1/preview.png"
             },
             {
                 "id": "bio2",
                 "group": "GOD_ONLY",
-                "thumbnail": "/images/templates/biodata/bio2.png"
+                "thumbnail": "/templates-assets/biodata/bio2/preview.png"
             },
             {
                 "id": "bio3",
-                "thumbnail": "/images/templates/biodata/bio3.png"
+                "thumbnail": "/templates-assets/biodata/bio3/preview.png"
             },
             {
                 "id": "bio4",
-                "thumbnail": "/images/templates/biodata/bio4.png"
+                "thumbnail": "/templates-assets/biodata/bio4/preview.png"
             },
             {
                 "id": "bio5",
-                "thumbnail": "/images/templates/biodata/bio5.png"
+                "thumbnail": "/templates-assets/biodata/bio5/preview.png"
             }
         ]
     },
+
     {
         "name": "birthday",
         "titleKey": "category.birthday",
