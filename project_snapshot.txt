@@ -1,6 +1,6 @@
 =============================== 
 PROJECT SNAPSHOT 
-Generated on Tue 01/20/2026 11:54:04.72 
+Generated on Wed 01/21/2026 13:47:35.76 
 =============================== 
  
  
@@ -133,10 +133,11 @@ import java.nio.file.Paths;
  */
 public class AppStorageConfig {
 
-    public static final Path BASE_DIR =
-            Paths.get(System.getProperty("user.home"), ".templateMaker");
+    public static final Path BASE_DIR =Paths.get(System.getProperty("user.home"), ".templateMaker");
 
     public static final Path IMAGE_DIR = BASE_DIR.resolve("images");
+    
+    public static final Path PROFILE_DIR = BASE_DIR.resolve("uploads/profile");
 }
  
 -------------------------------------------------- 
@@ -287,6 +288,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.springframework.core.io.UrlResource;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -349,6 +351,7 @@ public class EditorController {
     public String preview(
             @PathVariable String categoryName,
             @RequestParam String templateId,
+            @RequestParam(required = false) MultipartFile profileImage,
             HttpServletRequest request,
             Model model,
             HttpSession session) {
@@ -708,6 +711,11 @@ public class BiodataRequest extends TemplateForm {
     private String godImage = "ganesh";
     private String mantra = "श्री गणेशाय नमः";
 
+    /** Stored profile image path on disk */
+    private String profileImagePath;
+
+    /** User may choose to hide profile image */
+    private boolean showProfileImage = true;
 }
  
 -------------------------------------------------- 
@@ -880,13 +888,18 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString        
-class MediaItem {
-    private boolean enabled;
-    private boolean optional;
-    private String position;
-    private int height; // or size
+@ToString
+public class MediaItem {
+
+    private boolean enabled;     // template allows this media
+    private boolean optional;    // user may skip
+    private String position;     // TOP_CENTER | RIGHT | LEFT
+    private int width;
+    private int height;
+    private int marginTop;
+    private int marginBottom;
 }
+
 
  
 -------------------------------------------------- 
@@ -1088,10 +1101,12 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ContentArea {
+
     private int top;
+    private int left;
+    private int right;
     private int bottom;
 }
-
  
 -------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\model\layout\Layout.java" 
@@ -1102,6 +1117,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import in.hcdc.demo.model.CustomFieldsLayout;
 import in.hcdc.demo.model.FontConfig;
 import in.hcdc.demo.model.MediaConfig;
+import java.awt.Canvas;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -1129,6 +1145,7 @@ public class Layout {
     private ContentArea contentArea;
     private Map<String, LayoutModeConfig> layoutModes;
     private MediaConfig media;
+    private Canvas canvas;
 
 }
  
@@ -1200,13 +1217,13 @@ public class Section {
     private String key;
     private String title;
     private int startX;
-    private int startY;
     private int maxWidth;
-    private int lineHeight;
     private List<String> fields;
     @JsonProperty(defaultValue = "20")
     private int sectionGap = 20;
     private int priority = 2;
+    /** SIDE or FULL */
+    private String flow;
 
 }
  
@@ -1219,6 +1236,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import in.hcdc.demo.config.AppStorageConfig;
 import in.hcdc.demo.model.BiodataRequest;
 import in.hcdc.demo.model.CustomField;
+import in.hcdc.demo.model.MediaItem;
 import in.hcdc.demo.model.layout.Layout;
 import in.hcdc.demo.model.layout.LayoutMode;
 import in.hcdc.demo.model.layout.LayoutModeConfig;
@@ -1230,6 +1248,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
@@ -1266,194 +1285,239 @@ public class BiodataImageRendererService {
         this.messageSource = messageSource;
     }
 
-public String renderBiodata(BiodataRequest form, String templateId) {
+    public String renderBiodata(BiodataRequest form, String templateId) {
 
-    try {
-        /* =====================================================
-           STEP 1: Load template image
-           ===================================================== */
-        BufferedImage canvas = ImageIO.read(
-                getClass().getResourceAsStream(
-                        "/templates-assets/biodata/" + templateId + "/" + "base.png"
-                )
-        );
-
-        /* =====================================================
-           STEP 2: Load layout JSON
-           ===================================================== */
-        Layout layout = mapper.readValue(
-                getClass().getResourceAsStream(
-                        "/templates-assets/biodata/" + templateId + "/" + "layout.json"
-                ),
-                Layout.class
-        );
-
-        /* =====================================================
-           STEP 3: Graphics setup
-           ===================================================== */
-        Graphics2D g = canvas.createGraphics();
-        g.setRenderingHint(
-                RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON
-        );
-
-        /* =====================================================
-           STEP 4: Load base font safely
-           ===================================================== */
-        Font baseFont;
         try {
-            baseFont = Font.createFont(
-                    Font.TRUETYPE_FONT,
+            /* =====================================================
+           STEP 1: Load base template image
+           ===================================================== */
+            BufferedImage canvas = ImageIO.read(
                     getClass().getResourceAsStream(
-                            "/fonts/NotoSerifDevanagari-Regular.ttf"
+                            "/templates-assets/biodata/" + templateId + "/base.png"
                     )
             );
-        } catch (Exception e) {
-            baseFont = new Font("Serif", Font.PLAIN,
-                    layout.getFont().getSize());
-        }
 
-        g.setColor(Color.decode(layout.getFont().getColor()));
-
-        FontMetrics baseFm = g.getFontMetrics(
-                baseFont.deriveFont(
-                        Font.PLAIN,
-                        (float) layout.getFont().getSize()
-                )
-        );
-
-        /* =====================================================
-           STEP 5: Detect layout mode
+            /* =====================================================
+           STEP 2: Load layout JSON
            ===================================================== */
-        LayoutMode mode = detectLayoutMode(form, layout, baseFm, canvas);
-
-        LayoutModeConfig modeCfg =
-                layout.getLayoutModes()
-                      .get(mode.name().toLowerCase());
-
-        Font renderFont =
-                baseFont.deriveFont(Font.PLAIN, (float) modeCfg.getFontSize());
-
-        g.setFont(renderFont);
-        FontMetrics fm = g.getFontMetrics();
-
-        // 🔑 SINGLE SOURCE OF TRUTH
-        int effectiveLineHeight = modeCfg.getLineHeight();
-        int sectionGap = modeCfg.getSectionGap();
-
-        /* =====================================================
-           STEP 6: Render God + mantra
-           ===================================================== */
-        int currentY = renderGodAndMantra(g, canvas, form, baseFont);
-
-        /* =====================================================
-           STEP 7: Render sections
-           ===================================================== */
-        for (Section section : layout.getSections()) {
-
-            List<Map.Entry<String, String>> values =
-                    extractSectionValues(section, form);
-
-            if (values.isEmpty()) {
-                continue;
-            }
-
-            // Section title
-            g.drawString(
-                    section.getTitle(),
-                    section.getStartX(),
-                    currentY
+            Layout layout = mapper.readValue(
+                    getClass().getResourceAsStream(
+                            "/templates-assets/biodata/" + templateId + "/layout.json"
+                    ),
+                    Layout.class
             );
 
-            currentY += effectiveLineHeight;
+            /* =====================================================
+           STEP 3: Graphics setup
+           ===================================================== */
+            Graphics2D g = canvas.createGraphics();
+            g.setRenderingHint(
+                    RenderingHints.KEY_TEXT_ANTIALIASING,
+                    RenderingHints.VALUE_TEXT_ANTIALIAS_ON
+            );
 
-            int maxLabelWidth = 0;
-            for (Map.Entry<String, String> e : values) {
-                maxLabelWidth = Math.max(
-                        maxLabelWidth,
-                        fm.stringWidth(e.getKey())
+            /* =====================================================
+           STEP 4: Load base font
+           ===================================================== */
+            Font baseFont;
+            try {
+                baseFont = Font.createFont(
+                        Font.TRUETYPE_FONT,
+                        getClass().getResourceAsStream(
+                                "/fonts/NotoSerifDevanagari-Regular.ttf"
+                        )
                 );
+            } catch (Exception e) {
+                baseFont = new Font("Serif", Font.PLAIN, layout.getFont().getSize());
             }
 
-            int labelX = section.getStartX();
-            int colonX = labelX + maxLabelWidth + LABEL_PADDING;
-            int valueX = colonX + COLON_PADDING;
+            g.setColor(Color.decode(layout.getFont().getColor()));
 
-            for (Map.Entry<String, String> e : values) {
+            FontMetrics baseFm = g.getFontMetrics(
+                    baseFont.deriveFont(Font.PLAIN, (float) layout.getFont().getSize())
+            );
 
-                g.drawString(e.getKey(), labelX, currentY);
-                g.drawString(":", colonX, currentY);
+            /* =====================================================
+           STEP 5: Detect layout mode
+           ===================================================== */
+            LayoutMode mode = detectLayoutMode(form, layout, baseFm, canvas);
 
-                currentY += drawWrappedValue(
+            LayoutModeConfig modeCfg
+                    = layout.getLayoutModes().get(mode.name().toLowerCase());
+
+            Font renderFont
+                    = baseFont.deriveFont(Font.PLAIN, (float) modeCfg.getFontSize());
+
+            g.setFont(renderFont);
+            FontMetrics fm = g.getFontMetrics();
+
+            int effectiveLineHeight = modeCfg.getLineHeight();
+            int sectionGap = modeCfg.getSectionGap();
+
+            /* =====================================================
+           STEP 6: Render GOD image + mantra (auto-adjust)
+           ===================================================== */
+            int currentY = renderGodAndMantra(g, canvas, form, baseFont);
+
+            /* =====================================================
+           STEP 7: Detect profile photo presence
+           ===================================================== */
+            boolean profilePresent
+                    = layout.getMedia() != null
+                    && layout.getMedia().getProfile() != null
+                    && layout.getMedia().getProfile().isEnabled()
+                    && !isEmpty(form.getProfileImagePath());
+
+            int profileBottomY = Integer.MAX_VALUE;
+
+            if (profilePresent) {
+                MediaItem profile = layout.getMedia().getProfile();
+
+                int px = canvas.getWidth()
+                        - layout.getContentArea().getRight()
+                        - profile.getWidth();
+
+                int py = layout.getContentArea().getTop()
+                        + profile.getMarginTop();
+
+                BufferedImage profileImg
+                        = ImageIO.read(new File(form.getProfileImagePath()));
+
+                g.drawImage(
+                        profileImg.getScaledInstance(
+                                profile.getWidth(),
+                                profile.getHeight(),
+                                Image.SCALE_SMOOTH
+                        ),
+                        px,
+                        py,
+                        null
+                );
+
+                profileBottomY = py + profile.getHeight();
+            }
+
+            /* =====================================================
+           STEP 8: Render sections (AUTO FLOW)
+           ===================================================== */
+            for (Section section : layout.getSections()) {
+
+                List<Map.Entry<String, String>> values
+                        = extractSectionValues(section, form);
+
+                if (values.isEmpty()) {
+                    continue;
+                }
+
+                boolean sideFlowAllowed
+                        = profilePresent && currentY < profileBottomY;
+
+                int contentLeft = layout.getContentArea().getLeft();
+                int contentRight = canvas.getWidth() - layout.getContentArea().getRight();
+
+                if (sideFlowAllowed) {
+                    contentRight -= layout.getMedia().getProfile().getWidth() + 20;
+                }
+
+                int availableWidth = contentRight - contentLeft;
+
+                // Section title
+                g.drawString(
+                        section.getTitle(),
+                        contentLeft,
+                        currentY
+                );
+
+                currentY += effectiveLineHeight;
+
+                int maxLabelWidth = 0;
+                for (Map.Entry<String, String> e : values) {
+                    maxLabelWidth = Math.max(
+                            maxLabelWidth,
+                            fm.stringWidth(e.getKey())
+                    );
+                }
+
+                int labelX = contentLeft;
+                int colonX = labelX + maxLabelWidth + LABEL_PADDING;
+                int valueX = colonX + COLON_PADDING;
+
+                for (Map.Entry<String, String> e : values) {
+
+                    g.drawString(e.getKey(), labelX, currentY);
+                    g.drawString(":", colonX, currentY);
+
+                    currentY += drawWrappedValue(
+                            g,
+                            e.getValue(),
+                            valueX,
+                            currentY,
+                            availableWidth - (valueX - labelX),
+                            effectiveLineHeight,
+                            fm
+                    );
+                }
+
+                currentY += sectionGap;
+            }
+
+            /* =====================================================
+           STEP 9: Render custom fields (full width)
+           ===================================================== */
+            for (CustomField cf : form.getCustomFields()) {
+
+                if (isEmpty(cf.getLabel()) || isEmpty(cf.getValue())) {
+                    continue;
+                }
+
+                currentY += drawWrappedText(
                         g,
-                        e.getValue(),
-                        valueX,
+                        cf.getLabel() + " : " + cf.getValue(),
+                        layout.getContentArea().getLeft(),
                         currentY,
-                        section.getMaxWidth() - (valueX - labelX),
+                        canvas.getWidth()
+                        - layout.getContentArea().getLeft()
+                        - layout.getContentArea().getRight(),
                         effectiveLineHeight,
                         fm
                 );
             }
 
-            currentY += sectionGap;
-        }
-
-        /* =====================================================
-           STEP 8: Render custom fields
+            /* =====================================================
+           STEP 10: Watermark & branding
            ===================================================== */
-        for (CustomField cf : form.getCustomFields()) {
-
-            if (isEmpty(cf.getLabel()) || isEmpty(cf.getValue())) {
-                continue;
+            if (currentY < canvas.getHeight() - 300) {
+                drawWatermark(g, canvas);
             }
 
-            currentY += drawWrappedText(
-                    g,
-                    cf.getLabel() + " : " + cf.getValue(),
-                    layout.getCustomFields().getStartX(),
-                    currentY,
-                    layout.getCustomFields().getMaxWidth(),
-                    effectiveLineHeight,
-                    fm
+            g.setFont(baseFont.deriveFont(Font.PLAIN, 12f));
+            g.setColor(new Color(120, 120, 120));
+
+            String brand = "VivahKala.in | 9022658566";
+            int bw = g.getFontMetrics().stringWidth(brand);
+
+            g.drawString(
+                    brand,
+                    canvas.getWidth() - bw - 20,
+                    canvas.getHeight() - 20
             );
-        }
 
-        /* =====================================================
-           STEP 9: Watermark & branding
+            g.dispose();
+
+            /* =====================================================
+           STEP 11: Save image
            ===================================================== */
-        if (currentY < canvas.getHeight() - 300) {
-            drawWatermark(g, canvas);
+            Path out = AppStorageConfig.IMAGE_DIR
+                    .resolve("biodata-" + System.currentTimeMillis() + ".png");
+
+            ImageIO.write(canvas, "png", out.toFile());
+
+            return out.getFileName().toString();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to render biodata image", e);
         }
-
-        g.setFont(baseFont.deriveFont(Font.PLAIN, 12f));
-        g.setColor(new Color(120, 120, 120));
-
-        String brand = "VivahKala.in | 9022658566";
-        int bw = g.getFontMetrics().stringWidth(brand);
-
-        g.drawString(
-                brand,
-                canvas.getWidth() - bw - 20,
-                canvas.getHeight() - 20
-        );
-
-        g.dispose();
-
-        /* =====================================================
-           STEP 10: Save image
-           ===================================================== */
-        Path out = AppStorageConfig.IMAGE_DIR
-                .resolve("biodata-" + System.currentTimeMillis() + ".png");
-
-        ImageIO.write(canvas, "png", out.toFile());
-
-        return out.getFileName().toString();
-
-    } catch (Exception e) {
-        throw new RuntimeException("Failed to render biodata image", e);
     }
-}
-
 
     /* =====================================================
        Helper methods
@@ -1710,8 +1774,7 @@ public String renderBiodata(BiodataRequest form, String templateId) {
                     if (v != null && !v.toString().isBlank()) {
                         int lines = Math.max(
                                 1,
-                               (fm.stringWidth(v.toString()) + 200) / section.getMaxWidth()
-
+                                (fm.stringWidth(v.toString()) + 200) / section.getMaxWidth()
                         );
                         sectionLines += lines;
                     }
@@ -1727,6 +1790,102 @@ public String renderBiodata(BiodataRequest form, String templateId) {
         }
 
         return height;
+    }
+
+    private void renderProfilePhoto(
+            Graphics2D g,
+            BufferedImage canvas,
+            Layout layout,
+            BiodataRequest form
+    ) throws IOException {
+
+        MediaItem p = layout.getMedia().getProfile();
+
+        if (p == null || !p.isEnabled() || isEmpty(form.getProfileImagePath())) {
+            return;
+        }
+
+        BufferedImage img = ImageIO.read(new File(form.getProfileImagePath()));
+
+        int x = canvas.getWidth()
+                - p.getWidth()
+                - layout.getContentArea().getRight();
+
+        int y = layout.getContentArea().getTop() + p.getMarginTop();
+
+        g.drawImage(
+                img.getScaledInstance(p.getWidth(), p.getHeight(), Image.SCALE_SMOOTH),
+                x,
+                y,
+                null
+        );
+    }
+
+    private Rectangle calculateContentBounds(
+            Layout layout,
+            BiodataRequest form,
+            BufferedImage canvas
+    ) {
+
+        int left = layout.getContentArea().getLeft();
+        int right = canvas.getWidth() - layout.getContentArea().getRight();
+
+        MediaItem profile = layout.getMedia().getProfile();
+
+        if (profile != null && profile.isEnabled()
+                && form.getProfileImagePath() != null) {
+
+            // Reserve space on right
+            right -= profile.getWidth() + 20;
+        }
+
+        return new Rectangle(left, 0, right - left, canvas.getHeight());
+    }
+
+    private int renderTopMedia(
+            Graphics2D g,
+            BufferedImage canvas,
+            Layout layout,
+            BiodataRequest form
+    ) throws IOException {
+
+        int y = layout.getContentArea().getTop();
+
+        MediaItem god = layout.getMedia().getGod();
+
+        if (god != null && god.isEnabled()
+                && form.getGodImage() != null
+                && !"none".equalsIgnoreCase(form.getGodImage())) {
+
+            BufferedImage img = loadImage(
+                    "/static/images/gods/" + form.getGodImage() + ".png"
+            );
+
+            int h = god.getHeight();
+            int w = img.getWidth() * h / img.getHeight();
+
+            int x = canvas.getWidth() / 2 - w / 2;
+
+            g.drawImage(
+                    img.getScaledInstance(w, h, Image.SCALE_SMOOTH),
+                    x,
+                    y,
+                    null
+            );
+
+            y += h + god.getMarginBottom();
+        }
+
+        if (!isEmpty(form.getMantra())) {
+            g.drawString(
+                    form.getMantra(),
+                    canvas.getWidth() / 2 - g.getFontMetrics().stringWidth(form.getMantra()) / 2,
+                    y
+            );
+            y += 28;
+        }
+
+        return y;
     }
 
 }
@@ -1915,6 +2074,45 @@ public class TemplateService {
                 .findFirst()
                 .orElse(null);
     }
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\java\in\hcdc\demo\util\BiodataUtil.java" 
+-------------------------------------------------- 
+package in.hcdc.demo.util;
+
+import in.hcdc.demo.config.AppStorageConfig;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+/**
+ *
+ * @author Vaibhav
+ */
+@Service
+public class BiodataUtil {
+
+    public String storeProfileImage(MultipartFile file) throws IOException {
+
+        if (file == null || file.isEmpty()) {
+            return null;
+        }
+
+        String ext = StringUtils.getFilenameExtension(file.getOriginalFilename());
+
+        String name = "profile-" + System.currentTimeMillis() + "." + ext;
+
+        Path target = AppStorageConfig.PROFILE_DIR.resolve(name);
+
+        Files.copy(file.getInputStream(), target);
+
+        return target.toString(); // store path
+    }
+
 }
  
 -------------------------------------------------- 
@@ -2347,7 +2545,29 @@ dropdown.month.08=Aug
 dropdown.month.09=Sep
 dropdown.month.10=Oct
 dropdown.month.11=Nov
-dropdown.month.12=Dec 
+dropdown.month.12=Dec
+
+# Profile Photo
+editor.profile.title=Profile Photo (Optional)
+editor.profile.hint=You may upload a passport size photo. This is optional.
+editor.profile.remove=Remove photo
+editor.profile.upload=Upload Photo
+
+
+guide.title=How to use Biodata Maker
+guide.hide=Hide instructions
+guide.show=Show instructions
+
+guide.god=You can change or remove the God image.
+guide.photo=You can add a photograph or leave it blank.
+guide.mantra=The mantra text can be edited as per your preference.
+guide.mandatory=Fields marked with (*) are mandatory.
+guide.optional=All other information is optional.
+guide.hideOptional=Optional fields left empty will not appear in the final biodata.
+guide.auto=Biodata layout will automatically adjust based on the information you provide.
+action.changeGodImage=Change God Image
+action.changeMantra=Change Mantra
+ 
 -------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\resources\messages_mr.properties" 
 -------------------------------------------------- 
@@ -2694,7 +2914,30 @@ dropdown.month.08=\u0911\u0917\u0938\u094d\u091f
 dropdown.month.09=\u0938\u092a\u094d\u091f\u0947\u0902\u092c\u0930
 dropdown.month.10=\u0911\u0915\u094d\u091f\u094b\u092c\u0930
 dropdown.month.11=\u0928\u094b\u0935\u094d\u0939\u0947\u0902\u092c\u0930
-dropdown.month.12=\u0921\u093f\u0938\u0947\u0902\u092c\u0930 
+dropdown.month.12=\u0921\u093f\u0938\u0947\u0902\u092c\u0930
+
+# Profile Photo
+editor.profile.title=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 (\u0910\u091a\u094d\u091b\u093f\u0915)
+editor.profile.remove=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u0915\u093e\u0922\u093e
+editor.profile.upload=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u093e
+editor.profile.hint=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u091c\u094b\u0921\u0932\u094d\u092f\u093e\u0938 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u0905\u0927\u093f\u0915 \u0906\u0915\u0930\u094d\u0937\u0915 \u0926\u093f\u0938\u0924\u094b.
+
+
+guide.title=\u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u0915\u0938\u093e \u0924\u092f\u093e\u0930 \u0915\u0930\u093e\u0935\u093e
+guide.hide=\u0938\u0942\u091a\u0928\u093e \u0932\u092a\u0935\u093e
+guide.show=\u0938\u0942\u091a\u0928\u093e \u0926\u093e\u0916\u0935\u093e
+
+guide.god=\u0926\u0947\u0935\u093e\u091a\u0947 \u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u092c\u0926\u0932\u0942 \u0915\u093f\u0902\u0935\u093e \u0915\u093e\u0922\u0942 \u0936\u0915\u0924\u093e.
+guide.photo=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u0926\u0947\u0923\u0947 \u0910\u091a\u094d\u091b\u093f\u0915 \u0906\u0939\u0947, \u0928 \u0926\u093f\u0932\u094d\u092f\u093e\u0938 \u0930\u093f\u0915\u093e\u092e\u0947 \u0930\u093e\u0939\u0940\u0932.
+guide.mantra=\u092e\u0902\u0924\u094d\u0930\u093e\u091a\u093e \u092e\u091c\u0915\u0942\u0930 \u0906\u092a\u0932\u094d\u092f\u093e \u092a\u0938\u0902\u0924\u0940\u0928\u0941\u0938\u093e\u0930 \u092c\u0926\u0932\u0942 \u0936\u0915\u0924\u093e.
+guide.mandatory=(*) \u0905\u0938\u0932\u0947\u0932\u0940 \u092e\u093e\u0939\u093f\u0924\u0940 \u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0906\u0939\u0947.
+guide.optional=\u0909\u0930\u094d\u0935\u0930\u093f\u0924 \u0938\u0930\u094d\u0935 \u092e\u093e\u0939\u093f\u0924\u0940 \u0910\u091a\u094d\u091b\u093f\u0915 \u0906\u0939\u0947.
+guide.hideOptional=\u0910\u091a\u094d\u091b\u093f\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u0928 \u0926\u093f\u0932\u094d\u092f\u093e\u0938 \u0924\u0940 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e\u092e\u0927\u094d\u092f\u0947 \u0926\u093f\u0938\u0923\u093e\u0930 \u0928\u093e\u0939\u0940.
+guide.auto=\u0906\u092a\u0923 \u0926\u093f\u0932\u0947\u0932\u094d\u092f\u093e \u092e\u093e\u0939\u093f\u0924\u0940\u0928\u0941\u0938\u093e\u0930 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e\u091a\u093e \u0932\u0947\u0906\u0909\u091f \u0906\u092a\u094b\u0906\u092a \u091c\u0941\u0933\u0935\u0942\u0928 \u0918\u0947\u0924\u0932\u093e \u091c\u093e\u0908\u0932.
+action.changeGodImage=\u0926\u0947\u0935\u093e\u091a\u0947 \u091a\u093f\u0924\u094d\u0930 \u092c\u0926\u0932\u093e
+action.changeMantra=\u092e\u0902\u0924\u094d\u0930 \u092c\u0926\u0932\u093e
+
+ 
 -------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\resources\static\css\base.css" 
 -------------------------------------------------- 
@@ -3281,6 +3524,14 @@ footer {
 .god-option:hover {
   transform: scale(1.1);
 }
+.biodata-guide {
+    background: #f8fbff;
+    border-left: 4px solid #0d6efd;
+}
+
+.biodata-guide ul li {
+    margin-bottom: 6px;
+}
  
 -------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\resources\static\css\layout.css" 
@@ -3755,7 +4006,51 @@ function selectGod(god) {
             document.getElementById('godModal')
             ).hide();
 }
- 
+
+const profileInput = document.getElementById("profileImage");
+const profilePreview = document.getElementById("profilePreview");
+
+if (profileInput) {
+    profileInput.addEventListener("change", function () {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                profilePreview.src = e.target.result;
+                profilePreview.style.display = "block";
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+}
+
+function removeProfilePhoto() {
+    if (profileInput) {
+        profileInput.value = "";
+    }
+    if (profilePreview) {
+        profilePreview.src = "";
+        profilePreview.style.display = "none";
+    }
+}
+
+function adjustGodPreview(hasProfile) {
+    const godImg = document.getElementById("godPreview");
+    if (!godImg) return;
+
+    godImg.style.maxHeight = hasProfile ? "80px" : "120px";
+}
+
+function toggleGuide(btn) {
+    const content = document.getElementById("biodataGuideContent");
+    const isHidden = content.style.display === "none";
+
+    content.style.display = isHidden ? "block" : "none";
+
+    const hideText = btn.getAttribute("data-hide");
+    const showText = btn.getAttribute("data-show");
+
+    btn.querySelector("span").innerText = isHidden ? hideText : showText;
+} 
 -------------------------------------------------- 
 FILE: "D:\My_Workspace\demo\src\main\resources\static\js\bootstrap.bundle.min.js" 
 -------------------------------------------------- 
@@ -4231,12 +4526,58 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates\editors\biodata-editor.
             <form id="biodataForm"
                   th:action="@{'/editor/' + ${categoryName} + '/preview'}"
                   th:object="${form}"
+                  enctype="multipart/form-data"
                   method="post">
 
                 <input type="hidden" name="templateId" th:value="${template.id}"/>
-                <div class="form-text mb-3">
-                    <span class="required-star">*</span>
-                    <span th:text="#{form.required.note}"></span>
+
+                <!-- Biodata Guide Section -->
+                <div class="biodata-guide card mb-4 mt-2">
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0 text-primary">
+                                <i class="bi bi-info-circle"></i>
+                                <span th:text="#{guide.title}">How to use Biodata Maker</span>
+                            </h6>
+
+                            <button type="button"
+                                    class="btn btn-sm btn-link text-decoration-none"
+                                    onclick="toggleGuide(this)"
+                                    th:attr="data-hide=#{guide.hide},data-show=#{guide.show}">
+                                <span th:text="#{guide.hide}"></span>
+                            </button>
+                        </div>
+
+                        <div id="biodataGuideContent">
+                            <ul class="mb-0 small text-muted">
+                                <li th:text="#{guide.god}">
+                                    You can change or remove the God image.
+                                </li>
+                                <li th:text="#{guide.photo}">
+                                    You can add a photograph or leave it blank.
+                                </li>
+                                <li th:text="#{guide.mantra}">
+                                    The mantra text can be edited as per your preference.
+                                </li>
+                                <li>
+                                    <strong th:text="#{guide.mandatory}">
+                                        Fields marked with (*) are mandatory.
+                                    </strong>
+                                </li>
+                                <li th:text="#{guide.optional}">
+                                    All other information is optional.
+                                </li>
+                                <li th:text="#{guide.hideOptional}">
+                                    Optional fields left empty will not appear in the final biodata.
+                                </li>
+                                <li th:text="#{guide.auto}">
+                                    Biodata layout will automatically adjust based on provided information.
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="god-preview text-center mb-4">
@@ -4244,12 +4585,28 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates\editors\biodata-editor.
                          alt="God"
                          style="max-height:120px;">
 
+                    <div class="text-end">
+                        <a href="#"
+                           class="small text-muted text-decoration-none"
+                           onclick="openGodImageSelector()">
+                            [ <span th:text="#{action.changeGodImage}"></span> ]
+                        </a>
+                    </div>
                     <div class="mt-2">
                         <input type="text"
                                name="mantra"
                                th:value="${form.mantra}"
                                class="form-control text-center"
                                placeholder="मंत्र लिहा (ऐच्छिक)">
+
+                        <div class="mt-1 text-end">
+                            <a href="#"
+                               class="small text-muted text-decoration-none"
+                               onclick="focusMantraInput()">
+                                [ <span th:text="#{action.changeMantra}"></span> ]
+                            </a>
+                        </div>
+
                     </div>
 
                     <button type="button"
@@ -4280,6 +4637,43 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates\editors\biodata-editor.
 
                         </div>
                     </div>
+                </div> 
+
+                <!-- ================= Profile Photo ================= -->
+                <div class="profile-photo-box text-center">
+
+                    <label class="form-label fw-semibold"
+                           th:text="#{editor.profile.title}">
+                    </label>
+
+                    <div class="profile-preview mb-2">
+                        <img id="profilePreview"
+                             src="/images/profile-placeholder.png"
+                             class="rounded border"
+                             style="display:none; max-height:140px;">
+                    </div>
+
+                    <input type="file"
+                           name="profileImage"
+                           id="profileImage"
+                           accept="image/png,image/jpeg"
+                           hidden>
+
+                    <button type="button"
+                            class="btn btn-outline-primary btn-sm"
+                            onclick="document.getElementById('profileImage').click()"
+                            th:text="#{editor.profile.upload}">
+                    </button>
+
+                    <div class="form-text mt-1"
+                         th:text="#{editor.profile.hint}">
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-link text-danger p-0 mt-1"
+                            onclick="removeProfilePhoto()"
+                            th:text="#{editor.profile.remove}">
+                    </button>
                 </div>
 
                 <div class="accordion" id="biodataAccordion">
@@ -5022,9 +5416,8 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\lay
             "title": "वैयक्तिक माहिती",
             "priority": 1,
             "startX": 320,
-            "startY": 520,
             "maxWidth": 1800,
-            "lineHeight": 48,
+            "flow": "AUTO",
             "fields": [
                 "name",
                 "gender",
@@ -5044,9 +5437,8 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\lay
             "title": "जन्मपत्रिका",
             "priority": 2,
             "startX": 320,
-            "startY": 0,
+              "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "rashi",
                 "nakshatra",
@@ -5061,9 +5453,8 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\lay
             "title": "शारीरिक माहिती",
             "priority": 1,
             "startX": 320,
-            "startY": 0,
+              "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "height",
                 "weight",
@@ -5078,9 +5469,8 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\lay
             "title": "शिक्षण व व्यवसाय",
             "priority": 1,
             "startX": 320,
-            "startY": 0,
+             "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "education",
                 "profession",
@@ -5093,9 +5483,8 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\lay
             "title": "कौटुंबिक माहिती",
             "priority": 2,
             "startX": 320,
-            "startY": 0,
+             "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "fatherName",
                 "fatherOccupation",
@@ -5111,9 +5500,8 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\lay
             "title": "संपर्क",
             "priority": 1,
             "startX": 320,
-            "startY": 0,
+            "flow": "AUTO",
             "maxWidth": 1800,
-            "lineHeight": 48,
             "fields": [
                 "address",
                 "mobile",
@@ -5125,114 +5513,536 @@ FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio1\lay
 
     "customFields": {
         "startX": 320,
-        "startY": 0,
-        "maxWidth": 1800,
-        "lineHeight": 48
+         "flow": "AUTO",
+        "maxWidth": 1800
     },
     "media": {
         "god": {
             "enabled": true,
             "optional": true,
             "position": "TOP_CENTER",
-            "height": 120
+            "height": 90,
+            "marginBottom": 16
         },
         "profile": {
-            "enabled": false,
+            "enabled": true,
             "optional": true,
-            "position": "TOP_RIGHT",
-            "size": 160
+            "position": "RIGHT",
+            "width": 260,
+            "height": 320,
+            "marginTop": 20
         }
     }
 }
  
 -------------------------------------------------- 
-FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio3\bio3-layout.json" 
+FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio2\layout.json" 
 -------------------------------------------------- 
 {
-  "templateId": "bio3",
-
-  "canvas": {
-    "width": 1080,
-    "height": 1528
-  },
-
-  "font": {
-    "family": "NotoSerifDevanagari",
-    "size": 28,
-    "color": "#5A1E1E",
-    "labelWeight": "BOLD",
-    "valueWeight": "NORMAL"
-  },
-
-  "label": {
-    "suffix": "",
-    "gap": 14
-  },
-
-  "god": {
-    "enabled": true,
-    "centerX": 540,
-    "startY": 140,
-    "maxWidth": 180,
-    "mantraGap": 14
-  },
-
-  "sections": [
-    {
-      "key": "personal",
-      "title": "वैयक्तिक माहिती",
-      "startX": 160,
-      "startY": 420,
-      "maxWidth": 760,
-      "lineHeight": 40,
-      "sectionGap": 32,
-      "fields": [
-        "name",
-        "birthDate",
-        "birthTime",
-        "birthPlace",
-        "religion",
-        "caste",
-        "height",
-        "education"
-      ]
+    "templateId": "bio2",
+    "contentArea": {
+        "top": 520,
+        "bottom": 180
     },
-    {
-      "key": "family",
-      "title": "कौटुंबिक माहिती",
-      "startX": 160,
-      "startY": 760,
-      "maxWidth": 760,
-      "lineHeight": 40,
-      "sectionGap": 32,
-      "fields": [
-        "fatherName",
-        "motherName",
-        "brother",
-        "sister"
-      ]
+    "layoutModes": {
+        "airy": {
+            "fontSize": 34,
+            "lineHeight": 52,
+            "sectionGap": 36
+        },
+        "normal": {
+            "fontSize": 32,
+            "lineHeight": 48,
+            "sectionGap": 28
+        },
+        "compact": {
+            "fontSize": 26,
+            "lineHeight": 40,
+            "sectionGap": 18
+        }
     },
-    {
-      "key": "contact",
-      "title": "संपर्क",
-      "startX": 160,
-      "startY": 1080,
-      "maxWidth": 760,
-      "lineHeight": 40,
-      "sectionGap": 32,
-      "fields": [
-        "address",
-        "mobile"
-      ]
+
+    "canvas": {
+        "width": 1080,
+        "height": 1528
+    },
+
+    "font": {
+        "family": "NotoSerifDevanagari",
+        "size": 32,
+        "color": "#5A1E1E",
+        "labelWeight": "BOLD",
+        "valueWeight": "NORMAL"
+    },
+
+    "label": {
+        "suffix": " : ",
+        "gap": 14
+    },
+
+    "sections": [
+        {
+            "key": "personal",
+            "title": "वैयक्तिक माहिती",
+            "priority": 1,
+            "startX": 320,
+            "maxWidth": 1800,
+            "flow": "AUTO",
+            "fields": [
+                "name",
+                "gender",
+                "birthDate",
+                "birthTime",
+                "birthPlace",
+                "age",
+                "religion",
+                "caste",
+                "subCaste",
+                "gotra"
+            ]
+        },
+
+        {
+            "key": "horoscope",
+            "title": "जन्मपत्रिका",
+            "priority": 2,
+            "startX": 320,
+              "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "rashi",
+                "nakshatra",
+                "gan",
+                "nadi",
+                "mangal"
+            ]
+        },
+
+        {
+            "key": "physical",
+            "title": "शारीरिक माहिती",
+            "priority": 1,
+            "startX": 320,
+              "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "height",
+                "weight",
+                "complexion",
+                "bloodGroup",
+                "disability"
+            ]
+        },
+
+        {
+            "key": "education",
+            "title": "शिक्षण व व्यवसाय",
+            "priority": 1,
+            "startX": 320,
+             "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "education",
+                "profession",
+                "income"
+            ]
+        },
+
+        {
+            "key": "family",
+            "title": "कौटुंबिक माहिती",
+            "priority": 2,
+            "startX": 320,
+             "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "fatherName",
+                "fatherOccupation",
+                "motherName",
+                "motherOccupation",
+                "brothers",
+                "sisters"
+            ]
+        },
+
+        {
+            "key": "contact",
+            "title": "संपर्क",
+            "priority": 1,
+            "startX": 320,
+            "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "address",
+                "mobile",
+                "alternateMobile",
+                "email"
+            ]
+        }
+    ],
+
+    "customFields": {
+        "startX": 320,
+         "flow": "AUTO",
+        "maxWidth": 1800
+    },
+    "media": {
+        "god": {
+            "enabled": true,
+            "optional": true,
+            "position": "TOP_CENTER",
+            "height": 90,
+            "marginBottom": 16
+        },
+        "profile": {
+            "enabled": true,
+            "optional": true,
+            "position": "RIGHT",
+            "width": 260,
+            "height": 320,
+            "marginTop": 20
+        }
     }
-  ],
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio3\layout.json" 
+-------------------------------------------------- 
+{
+    "templateId": "bio3",
+    "contentArea": {
+        "top": 520,
+        "bottom": 180
+    },
+    "layoutModes": {
+        "airy": {
+            "fontSize": 34,
+            "lineHeight": 52,
+            "sectionGap": 36
+        },
+        "normal": {
+            "fontSize": 32,
+            "lineHeight": 48,
+            "sectionGap": 28
+        },
+        "compact": {
+            "fontSize": 26,
+            "lineHeight": 40,
+            "sectionGap": 18
+        }
+    },
 
-  "customFields": {
-    "startX": 160,
-    "startY": 1260,
-    "maxWidth": 760,
-    "lineHeight": 40
-  }
+    "canvas": {
+        "width": 1080,
+        "height": 1528
+    },
+
+    "font": {
+        "family": "NotoSerifDevanagari",
+        "size": 32,
+        "color": "#5A1E1E",
+        "labelWeight": "BOLD",
+        "valueWeight": "NORMAL"
+    },
+
+    "label": {
+        "suffix": " : ",
+        "gap": 14
+    },
+
+    "sections": [
+        {
+            "key": "personal",
+            "title": "वैयक्तिक माहिती",
+            "priority": 1,
+            "startX": 320,
+            "maxWidth": 1800,
+            "flow": "AUTO",
+            "fields": [
+                "name",
+                "gender",
+                "birthDate",
+                "birthTime",
+                "birthPlace",
+                "age",
+                "religion",
+                "caste",
+                "subCaste",
+                "gotra"
+            ]
+        },
+
+        {
+            "key": "horoscope",
+            "title": "जन्मपत्रिका",
+            "priority": 2,
+            "startX": 320,
+              "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "rashi",
+                "nakshatra",
+                "gan",
+                "nadi",
+                "mangal"
+            ]
+        },
+
+        {
+            "key": "physical",
+            "title": "शारीरिक माहिती",
+            "priority": 1,
+            "startX": 320,
+              "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "height",
+                "weight",
+                "complexion",
+                "bloodGroup",
+                "disability"
+            ]
+        },
+
+        {
+            "key": "education",
+            "title": "शिक्षण व व्यवसाय",
+            "priority": 1,
+            "startX": 320,
+             "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "education",
+                "profession",
+                "income"
+            ]
+        },
+
+        {
+            "key": "family",
+            "title": "कौटुंबिक माहिती",
+            "priority": 2,
+            "startX": 320,
+             "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "fatherName",
+                "fatherOccupation",
+                "motherName",
+                "motherOccupation",
+                "brothers",
+                "sisters"
+            ]
+        },
+
+        {
+            "key": "contact",
+            "title": "संपर्क",
+            "priority": 1,
+            "startX": 320,
+            "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "address",
+                "mobile",
+                "alternateMobile",
+                "email"
+            ]
+        }
+    ],
+
+    "customFields": {
+        "startX": 320,
+         "flow": "AUTO",
+        "maxWidth": 1800
+    },
+    "media": {
+        "god": {
+            "enabled": true,
+            "optional": true,
+            "position": "TOP_CENTER",
+            "height": 90,
+            "marginBottom": 16
+        },
+        "profile": {
+            "enabled": true,
+            "optional": true,
+            "position": "RIGHT",
+            "width": 260,
+            "height": 320,
+            "marginTop": 20
+        }
+    }
+}
+ 
+-------------------------------------------------- 
+FILE: "D:\My_Workspace\demo\src\main\resources\templates-assets\biodata\bio4\layout.json" 
+-------------------------------------------------- 
+{
+    "templateId": "bio4",
+    "contentArea": {
+        "top": 520,
+        "bottom": 180
+    },
+    "layoutModes": {
+        "airy": {
+            "fontSize": 34,
+            "lineHeight": 52,
+            "sectionGap": 36
+        },
+        "normal": {
+            "fontSize": 32,
+            "lineHeight": 48,
+            "sectionGap": 28
+        },
+        "compact": {
+            "fontSize": 26,
+            "lineHeight": 40,
+            "sectionGap": 18
+        }
+    },
+
+    "canvas": {
+        "width": 1080,
+        "height": 1528
+    },
+
+    "font": {
+        "family": "NotoSerifDevanagari",
+        "size": 32,
+        "color": "#5A1E1E",
+        "labelWeight": "BOLD",
+        "valueWeight": "NORMAL"
+    },
+
+    "label": {
+        "suffix": " : ",
+        "gap": 14
+    },
+
+    "sections": [
+        {
+            "key": "personal",
+            "title": "वैयक्तिक माहिती",
+            "priority": 1,
+            "startX": 320,
+            "maxWidth": 1800,
+            "flow": "AUTO",
+            "fields": [
+                "name",
+                "gender",
+                "birthDate",
+                "birthTime",
+                "birthPlace",
+                "age",
+                "religion",
+                "caste",
+                "subCaste",
+                "gotra"
+            ]
+        },
+
+        {
+            "key": "horoscope",
+            "title": "जन्मपत्रिका",
+            "priority": 2,
+            "startX": 320,
+              "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "rashi",
+                "nakshatra",
+                "gan",
+                "nadi",
+                "mangal"
+            ]
+        },
+
+        {
+            "key": "physical",
+            "title": "शारीरिक माहिती",
+            "priority": 1,
+            "startX": 320,
+              "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "height",
+                "weight",
+                "complexion",
+                "bloodGroup",
+                "disability"
+            ]
+        },
+
+        {
+            "key": "education",
+            "title": "शिक्षण व व्यवसाय",
+            "priority": 1,
+            "startX": 320,
+             "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "education",
+                "profession",
+                "income"
+            ]
+        },
+
+        {
+            "key": "family",
+            "title": "कौटुंबिक माहिती",
+            "priority": 2,
+            "startX": 320,
+             "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "fatherName",
+                "fatherOccupation",
+                "motherName",
+                "motherOccupation",
+                "brothers",
+                "sisters"
+            ]
+        },
+
+        {
+            "key": "contact",
+            "title": "संपर्क",
+            "priority": 1,
+            "startX": 320,
+            "flow": "AUTO",
+            "maxWidth": 1800,
+            "fields": [
+                "address",
+                "mobile",
+                "alternateMobile",
+                "email"
+            ]
+        }
+    ],
+
+    "customFields": {
+        "startX": 320,
+         "flow": "AUTO",
+        "maxWidth": 1800
+    },
+    "media": {
+        "god": {
+            "enabled": true,
+            "optional": true,
+            "position": "TOP_CENTER",
+            "height": 90,
+            "marginBottom": 16
+        },
+        "profile": {
+            "enabled": true,
+            "optional": true,
+            "position": "RIGHT",
+            "width": 260,
+            "height": 320,
+            "marginTop": 20
+        }
+    }
 }
  
 -------------------------------------------------- 

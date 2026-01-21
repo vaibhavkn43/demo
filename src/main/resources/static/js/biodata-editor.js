@@ -199,7 +199,8 @@ function removeProfilePhoto() {
 
 function adjustGodPreview(hasProfile) {
     const godImg = document.getElementById("godPreview");
-    if (!godImg) return;
+    if (!godImg)
+        return;
 
     godImg.style.maxHeight = hasProfile ? "80px" : "120px";
 }
@@ -214,4 +215,98 @@ function toggleGuide(btn) {
     const showText = btn.getAttribute("data-show");
 
     btn.querySelector("span").innerText = isHidden ? hideText : showText;
+}
+
+let cropper;
+let cropImageEl = document.getElementById("cropperImage");
+let cropModalEl = document.getElementById("photoCropModal");
+let originalFile = null;
+function openCropper(event) {
+    const file = event.target.files[0];
+    if (!file)
+        return;
+    originalFile = file;
+    // Set image source
+    cropImageEl.src = URL.createObjectURL(file);
+
+    // Show modal
+    const modal = new bootstrap.Modal(cropModalEl);
+    modal.show();
+}
+
+// 🔑 INIT CROPper AFTER modal is visible
+cropModalEl.addEventListener('shown.bs.modal', function () {
+
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+
+    cropper = new Cropper(cropImageEl, {
+        aspectRatio: 1,
+        viewMode: 1,
+
+        dragMode: 'move',
+        cropBoxMovable: false,
+        cropBoxResizable: false,
+
+        movable: true,
+        zoomable: true,
+        rotatable: false,
+
+        background: false,
+        responsive: true,
+        autoCropArea: 1,
+
+        zoomOnTouch: true,
+        zoomOnWheel: true,
+        wheelZoomRatio: 0.08,
+
+        toggleDragModeOnDblclick: false
+    });
+});
+
+// Cleanup on close
+cropModalEl.addEventListener('hidden.bs.modal', function () {
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+});
+
+
+function applyCroppedPhoto() {
+
+    if (!cropper || !originalFile)
+        return;
+
+    const canvas = cropper.getCroppedCanvas({
+        width: 400,
+        height: 400,
+        imageSmoothingQuality: "high"
+    });
+
+    canvas.toBlob(blob => {
+
+        const croppedFile = new File(
+                [blob],
+                originalFile.name || "profile.png",
+                {type: "image/png"}
+        );
+
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(croppedFile);
+        document.getElementById("profileImage").files = dataTransfer.files;
+
+        const preview = document.getElementById("profilePreview");
+        preview.src = URL.createObjectURL(croppedFile);
+        preview.style.display = "inline-block";
+
+        cropper.destroy();
+        cropper = null;
+
+        bootstrap.Modal
+                .getInstance(document.getElementById("photoCropModal"))
+                .hide();
+    });
 }

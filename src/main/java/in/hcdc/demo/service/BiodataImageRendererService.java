@@ -16,8 +16,8 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 import java.io.File;
@@ -128,17 +128,20 @@ public class BiodataImageRendererService {
             int currentY = renderGodAndMantra(g, canvas, form, baseFont);
 
             /* =====================================================
-           STEP 7: Detect profile photo presence
-           ===================================================== */
+   STEP 7: Detect profile photo presence
+   ===================================================== */
             boolean profilePresent
                     = layout.getMedia() != null
                     && layout.getMedia().getProfile() != null
                     && layout.getMedia().getProfile().isEnabled()
-                    && !isEmpty(form.getProfileImagePath());
+                    && form.isShowProfileImage()
+                    && !isEmpty(form.getProfileImagePath())
+                    && new File(form.getProfileImagePath()).exists();
 
-            int profileBottomY = Integer.MAX_VALUE;
+            int profileBottomY = -1;
 
             if (profilePresent) {
+
                 MediaItem profile = layout.getMedia().getProfile();
 
                 int px = canvas.getWidth()
@@ -148,27 +151,33 @@ public class BiodataImageRendererService {
                 int py = layout.getContentArea().getTop()
                         + profile.getMarginTop();
 
-                BufferedImage profileImg
+                BufferedImage original
                         = ImageIO.read(new File(form.getProfileImagePath()));
 
-                g.drawImage(
-                        profileImg.getScaledInstance(
+                BufferedImage cropped
+                        = centerCrop(original);
+
+                BufferedImage rounded
+                        = makeRounded(
+                                cropped,
                                 profile.getWidth(),
                                 profile.getHeight(),
-                                Image.SCALE_SMOOTH
-                        ),
-                        px,
-                        py,
-                        null
-                );
+                                24
+                        );
+
+                g.drawImage(rounded, px, py, null);
 
                 profileBottomY = py + profile.getHeight();
             }
+
 
             /* =====================================================
            STEP 8: Render sections (AUTO FLOW)
            ===================================================== */
             for (Section section : layout.getSections()) {
+                if (profilePresent && currentY > profileBottomY + 20) {
+                    profilePresent = false;
+                }
 
                 List<Map.Entry<String, String>> values
                         = extractSectionValues(section, form);
@@ -184,10 +193,24 @@ public class BiodataImageRendererService {
                 int contentRight = canvas.getWidth() - layout.getContentArea().getRight();
 
                 if (sideFlowAllowed) {
-                    contentRight -= layout.getMedia().getProfile().getWidth() + 20;
+                    contentRight = Math.min(
+                            contentRight,
+                            canvas.getWidth()
+                            - layout.getMedia().getProfile().getWidth()
+                            - layout.getContentArea().getRight()
+                            - 20
+                    );
                 }
 
                 int availableWidth = contentRight - contentLeft;
+                System.out.println("LEFT=" + contentLeft);
+                System.out.println("RIGHT=" + contentRight);
+                System.out.println("WIDTH=" + availableWidth);
+                if (!profilePresent) {
+                    int idealWidth = Math.min(900, availableWidth);
+                    contentLeft = (canvas.getWidth() - idealWidth) / 2;
+                    availableWidth = idealWidth;
+                }
 
                 // Section title
                 g.drawString(
@@ -560,100 +583,34 @@ public class BiodataImageRendererService {
         return height;
     }
 
-    private void renderProfilePhoto(
-            Graphics2D g,
-            BufferedImage canvas,
-            Layout layout,
-            BiodataRequest form
-    ) throws IOException {
+    private BufferedImage makeRounded(
+            BufferedImage img, int w, int h, int radius) {
 
-        MediaItem p = layout.getMedia().getProfile();
+        BufferedImage output = new BufferedImage(
+                w, h, BufferedImage.TYPE_INT_ARGB);
 
-        if (p == null || !p.isEnabled() || isEmpty(form.getProfileImagePath())) {
-            return;
-        }
+        Graphics2D g2 = output.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        
 
-        BufferedImage img = ImageIO.read(new File(form.getProfileImagePath()));
+        g2.setClip(new RoundRectangle2D.Float(
+                0, 0, w, h, radius, radius));
 
-        int x = canvas.getWidth()
-                - p.getWidth()
-                - layout.getContentArea().getRight();
+        g2.drawImage(
+                img.getScaledInstance(w, h, Image.SCALE_SMOOTH),
+                0, 0, null);
 
-        int y = layout.getContentArea().getTop() + p.getMarginTop();
-
-        g.drawImage(
-                img.getScaledInstance(p.getWidth(), p.getHeight(), Image.SCALE_SMOOTH),
-                x,
-                y,
-                null
-        );
+        g2.dispose();
+        return output;
     }
 
-    private Rectangle calculateContentBounds(
-            Layout layout,
-            BiodataRequest form,
-            BufferedImage canvas
-    ) {
-
-        int left = layout.getContentArea().getLeft();
-        int right = canvas.getWidth() - layout.getContentArea().getRight();
-
-        MediaItem profile = layout.getMedia().getProfile();
-
-        if (profile != null && profile.isEnabled()
-                && form.getProfileImagePath() != null) {
-
-            // Reserve space on right
-            right -= profile.getWidth() + 20;
-        }
-
-        return new Rectangle(left, 0, right - left, canvas.getHeight());
-    }
-
-    private int renderTopMedia(
-            Graphics2D g,
-            BufferedImage canvas,
-            Layout layout,
-            BiodataRequest form
-    ) throws IOException {
-
-        int y = layout.getContentArea().getTop();
-
-        MediaItem god = layout.getMedia().getGod();
-
-        if (god != null && god.isEnabled()
-                && form.getGodImage() != null
-                && !"none".equalsIgnoreCase(form.getGodImage())) {
-
-            BufferedImage img = loadImage(
-                    "/static/images/gods/" + form.getGodImage() + ".png"
-            );
-
-            int h = god.getHeight();
-            int w = img.getWidth() * h / img.getHeight();
-
-            int x = canvas.getWidth() / 2 - w / 2;
-
-            g.drawImage(
-                    img.getScaledInstance(w, h, Image.SCALE_SMOOTH),
-                    x,
-                    y,
-                    null
-            );
-
-            y += h + god.getMarginBottom();
-        }
-
-        if (!isEmpty(form.getMantra())) {
-            g.drawString(
-                    form.getMantra(),
-                    canvas.getWidth() / 2 - g.getFontMetrics().stringWidth(form.getMantra()) / 2,
-                    y
-            );
-            y += 28;
-        }
-
-        return y;
+    private BufferedImage centerCrop(BufferedImage img) {
+        int size = Math.min(img.getWidth(), img.getHeight());
+        int x = (img.getWidth() - size) / 2;
+        int y = (img.getHeight() - size) / 2;
+        return img.getSubimage(x, y, size, size);
     }
 
 }

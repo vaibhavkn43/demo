@@ -32,6 +32,5 @@ public class Layout {
     private ContentArea contentArea;
     private Map<String, LayoutModeConfig> layoutModes;
     private MediaConfig media;
-    private Canvas canvas;
 
 }

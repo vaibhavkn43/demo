@@ -8,11 +8,13 @@ import in.hcdc.demo.model.TemplateFormFactory;
 import in.hcdc.demo.service.BiodataImageRendererService;
 import in.hcdc.demo.service.BiodataValidationService;
 import in.hcdc.demo.service.TemplateService;
+import in.hcdc.demo.util.BiodataUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import org.springframework.core.io.UrlResource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,17 +44,20 @@ public class EditorController {
     private final BiodataImageRendererService biodataImageRendererService;
     private final BiodataValidationService validationService;
     private final PdfExportService pdfExportService;
+    private final BiodataUtil biodataUtil;
 
     public EditorController(TemplateService templateService,
             TemplateFormFactory formFactory,
             BiodataImageRendererService biodataImageRendererService,
             PdfExportService pdfExportService,
-            BiodataValidationService validationService) {
+            BiodataValidationService validationService,
+            BiodataUtil biodataUtil) {
         this.templateService = templateService;
         this.formFactory = formFactory;
         this.biodataImageRendererService = biodataImageRendererService;
         this.validationService = validationService;
         this.pdfExportService = pdfExportService;
+        this.biodataUtil = biodataUtil;
     }
 
     @GetMapping("/{categoryName}/{templateId}")
@@ -100,25 +106,30 @@ public class EditorController {
         binder.bind(request);
 
         if ("biodata".equals(categoryName)) {
-
             BiodataRequest biodata = (BiodataRequest) form;
-
             var validation = validationService.validate(biodata);
-
             if (!validation.isValid()) {
-
                 model.addAttribute("validationErrors", validation.getMissingKeys());
                 model.addAttribute("content", "validation/minimum-validation");
                 return "layout/base";
             }
+            String contentType = profileImage.getContentType();
+            if (!List.of("image/jpeg", "image/png").contains(contentType)) {
+                throw new IllegalArgumentException("Only JPG/PNG allowed");
+            }
 
+            if (profileImage != null && !profileImage.isEmpty()) {
+                try {
+                    String storedPath = biodataUtil.storeProfileImage(profileImage);
+                    biodata.setProfileImagePath(storedPath);
+                    biodata.setShowProfileImage(true);
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to store profile image", e);
+                }
+            }
             String imageFile = biodataImageRendererService
                     .renderBiodata(biodata, templateId);
-
-// preview image URL
             model.addAttribute("imagePath", "/images/" + imageFile);
-
-// raw filename (for download)
             model.addAttribute("imageFile", imageFile);
 
         }
