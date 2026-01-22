@@ -188,13 +188,18 @@ if (profileInput) {
 }
 
 function removeProfilePhoto() {
-    if (profileInput) {
-        profileInput.value = "";
-    }
-    if (profilePreview) {
-        profilePreview.src = "";
-        profilePreview.style.display = "none";
-    }
+    profileInput.value = "";
+    profilePreview.style.display = "none";
+    document.getElementById("removePhotoBtn")?.classList.add("d-none");
+    updatePhotoButtons(false);
+
+}
+
+function updatePhotoButtons(hasPhoto) {
+    const uploadBtn = document.getElementById("uploadPhotoBtn");
+    if (!uploadBtn) return;
+
+    uploadBtn.innerText = hasPhoto ? "Replace Photo" : "Upload Photo";
 }
 
 function adjustGodPreview(hasProfile) {
@@ -309,4 +314,16 @@ function applyCroppedPhoto() {
                 .getInstance(document.getElementById("photoCropModal"))
                 .hide();
     });
+    document.getElementById("removePhotoBtn")?.classList.remove("d-none");
+    updatePhotoButtons(true);
+
+}
+function toggleGuideFromContainer(event) {
+    // Prevent double trigger if user clicks button itself
+    if (event.target.closest("button")) return;
+
+    const btn = document.querySelector(".biodata-guide button");
+    if (btn) {
+        toggleGuide(btn);
+    }
 }

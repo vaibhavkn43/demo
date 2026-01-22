@@ -2,6 +2,7 @@
 <link rel="stylesheet" th:href="@{/css/cropper.css}">  
 <section class="editor-page">
     <div class="editor-grid">
+        <!-- ================= LEFT : FORM ================= -->
         <div class="col-md-8">
             <form id="biodataForm"
                   th:action="@{'/editor/' + ${categoryName} + '/preview'}"
@@ -11,113 +12,84 @@
 
                 <input type="hidden" name="templateId" th:value="${template.id}"/>
 
-                <!-- Biodata Guide Section -->
-                <div class="biodata-guide card mb-4 mt-2">
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                <!-- ================= GUIDE (COLLAPSED) ================= -->
+                <div class="biodata-guide card mb-3">
+                    <div class="card-body py-2 guide-clickable" onclick="toggleGuideFromContainer(event)">
+                        <div class="d-flex justify-content-between align-items-center">
                             <h6 class="mb-0 text-primary">
                                 <i class="bi bi-info-circle"></i>
-                                <span th:text="#{guide.title}">How to use Biodata Maker</span>
+                                <span th:text="#{guide.title}"></span>
                             </h6>
 
                             <button type="button"
-                                    class="btn btn-sm btn-link text-decoration-none"
+                                    class="btn btn-sm btn-link"
                                     onclick="toggleGuide(this)"
                                     th:attr="data-hide=#{guide.hide},data-show=#{guide.show}">
-                                <span th:text="#{guide.hide}"></span>
+                                <span th:text="#{guide.show}"></span>
                             </button>
                         </div>
 
-                        <div id="biodataGuideContent">
-                            <ul class="mb-0 small text-muted">
-                                <li th:text="#{guide.god}">
-                                    You can change or remove the God image.
-                                </li>
-                                <li th:text="#{guide.photo}">
-                                    You can add a photograph or leave it blank.
-                                </li>
-                                <li th:text="#{guide.mantra}">
-                                    The mantra text can be edited as per your preference.
-                                </li>
-                                <li>
-                                    <strong th:text="#{guide.mandatory}">
-                                        Fields marked with (*) are mandatory.
-                                    </strong>
-                                </li>
-                                <li th:text="#{guide.optional}">
-                                    All other information is optional.
-                                </li>
-                                <li th:text="#{guide.hideOptional}">
-                                    Optional fields left empty will not appear in the final biodata.
-                                </li>
-                                <li th:text="#{guide.auto}">
-                                    Biodata layout will automatically adjust based on provided information.
-                                </li>
+                        <div id="biodataGuideContent" style="display:none">
+                            <ul class="small text-muted mt-2 mb-0">
+                                <li th:text="#{guide.god}"></li>
+                                <li th:text="#{guide.photo}"></li>
+                                <li th:text="#{guide.mantra}"></li>
+                                <li><strong th:text="#{guide.mandatory}"></strong></li>
+                                <li th:text="#{guide.optional}"></li>
+                                <li th:text="#{guide.hideOptional}"></li>
+                                <li th:text="#{guide.auto}"></li>
                             </ul>
                         </div>
-
                     </div>
                 </div>
 
-                <div class="god-preview text-center mb-4">
+                <!-- ================= HEADER (GOD + MANTRA) ================= -->
+                <div class="card mb-4 p-3 text-center god-preview">
+
+                    <div class="fw-semibold mb-2"
+                         th:text="#{editor.header.title}">
+                    </div>
+
                     <img th:src="@{/images/gods/{g}(g=${form.godImage + '.png'})}"
                          alt="God"
-                         style="max-height:120px;">
+                         class="god-image">
 
-                    <div class="text-end">
-                        <a href="#"
-                           class="small text-muted text-decoration-none"
-                           onclick="openGodImageSelector()">
-                            [ <span th:text="#{action.changeGodImage}"></span> ]
-                        </a>
-                    </div>
                     <div class="mt-2">
                         <input type="text"
                                name="mantra"
                                th:value="${form.mantra}"
                                class="form-control text-center"
                                placeholder="मंत्र लिहा (ऐच्छिक)">
-
-                        <div class="mt-1 text-end">
-                            <a href="#"
-                               class="small text-muted text-decoration-none"
-                               onclick="focusMantraInput()">
-                                [ <span th:text="#{action.changeMantra}"></span> ]
-                            </a>
-                        </div>
-
                     </div>
 
-                    <button type="button"
-                            class="btn btn-link mt-2"
-                            data-bs-toggle="modal"
-                            data-bs-target="#godModal">
-                        Change Image
-                    </button>
+                    <div class="mt-2">
+                        <button type="button"
+                                class="btn btn-light btn-sm god-change-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#godModal">
+                            Change God Image
+                        </button>
+                    </div>
 
                     <input type="hidden" name="godImage" th:value="${form.godImage}">
                 </div>
 
+                <!-- ================= GOD MODAL ================= -->
                 <div class="modal fade" id="godModal">
                     <div class="modal-dialog modal-sm modal-dialog-centered">
                         <div class="modal-content p-3 text-center">
-
                             <h6>Select Deity</h6>
-
                             <div class="d-flex justify-content-around mt-3">
                                 <img src="/images/gods/ganesh.png"
                                      onclick="selectGod('ganesh')"
                                      class="god-option">
-
                                 <img src="/images/gods/mahadev.png"
                                      onclick="selectGod('mahadev')"
                                      class="god-option">
                             </div>
-
                         </div>
                     </div>
-                </div> 
+                </div>
 
                 <!-- ================= Profile Photo ================= -->
                 <div class="profile-photo-box text-center">
@@ -141,20 +113,24 @@
                            onchange="openCropper(event)">
 
                     <button type="button"
+                            id="uploadPhotoBtn"
                             class="btn btn-outline-primary btn-sm"
                             onclick="document.getElementById('profileImage').click()"
                             th:text="#{editor.profile.upload}">
                     </button>
+
 
                     <div class="form-text mt-1"
                          th:text="#{editor.profile.hint}">
                     </div>
 
                     <button type="button"
-                            class="btn btn-link text-danger p-0 mt-1"
+                            id="removePhotoBtn"
+                            class="btn btn-link text-danger p-0 mt-1 d-none"
                             onclick="removeProfilePhoto()"
                             th:text="#{editor.profile.remove}">
                     </button>
+
                 </div>
 
                 <div class="accordion" id="biodataAccordion">
@@ -185,7 +161,7 @@
                                     <span class="required-star">*</span>
                                 </label>
 
-                                <input class="form-control mb-2 ime-marathi"
+                                <input  autocomplete="off" class="form-control mb-2 ime-marathi"
                                        th:field="*{name}"
                                        th:placeholder="#{editor.instruction.name}"/>
 

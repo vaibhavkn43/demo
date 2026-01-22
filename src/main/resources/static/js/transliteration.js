@@ -2,6 +2,8 @@ let marathiEnabled = true;
 let activeInput = null;
 let activeWordRange = null;
 let activeSuggestion = null;
+let activeSuggestionIndex = -1;
+let suggestionList = [];
 
 document.getElementById("marathiToggle").addEventListener("change", e => {
     marathiEnabled = e.target.checked;
@@ -9,8 +11,8 @@ document.getElementById("marathiToggle").addEventListener("change", e => {
 });
 
 /* =====================================================
-   MARATHI IME — EVENT DELEGATION (STATIC + DYNAMIC)
-   ===================================================== */
+ MARATHI IME — EVENT DELEGATION (STATIC + DYNAMIC)
+ ===================================================== */
 
 document.addEventListener("keyup", async function (e) {
 
@@ -41,7 +43,7 @@ document.addEventListener("keyup", async function (e) {
     const end = cursor;
 
     activeInput = input;
-    activeWordRange = { start, end };
+    activeWordRange = {start, end};
 
     const suggestions = await fetchSuggestions(word);
     showSuggestions(suggestions);
@@ -58,11 +60,33 @@ document.addEventListener("keydown", function (e) {
         return;
 
     if (e.key === " " || e.key === "Enter") {
+
+        if (activeSuggestionIndex < 0 || !suggestionList.length)
+            return;
+
         e.preventDefault();
-        replaceWord(activeSuggestion + " ");
+
+        const selected = suggestionList[activeSuggestionIndex];
+        replaceWord(selected + " ");
+
         activeSuggestion = null;
+        activeSuggestionIndex = -1;
     }
 });
+function moveSelection(dir) {
+
+    const items = document.querySelectorAll(".suggestion-item");
+    if (!items.length)
+        return;
+
+    items[activeSuggestionIndex]?.classList.remove("active");
+
+    activeSuggestionIndex =
+            (activeSuggestionIndex + dir + items.length) % items.length;
+
+    items[activeSuggestionIndex].classList.add("active");
+    activeSuggestion = items[activeSuggestionIndex].textContent;
+}
 
 
 async function fetchSuggestions(word) {
@@ -79,33 +103,42 @@ async function fetchSuggestions(word) {
 }
 
 function showSuggestions(list) {
+
     const box = document.getElementById("suggestionBox");
     const container = document.getElementById("suggestionList");
 
     container.innerHTML = "";
-    activeSuggestion = null;
+    suggestionList = list.slice(0, 9);
+    activeSuggestionIndex = 0;
 
-    if (!list || !list.length) {
+    if (!suggestionList.length) {
         hideSuggestions();
         return;
     }
 
-    list.slice(0, 6).forEach((word, index) => {
+    suggestionList.forEach((word, index) => {
+
         const div = document.createElement("div");
         div.className = "suggestion-item";
         div.textContent = word;
 
         if (index === 0) {
-            div.classList.add("active");   // highlight first
+            div.classList.add("active");
             activeSuggestion = word;
         }
 
-        div.onclick = () => replaceWord(word);
+        div.onclick = () => {
+            activeSuggestionIndex = index;
+            activeSuggestion = word;
+            replaceWord(word + " ");
+        };
+
         container.appendChild(div);
     });
 
     box.classList.remove("d-none");
 }
+
 
 
 function hideSuggestions() {
