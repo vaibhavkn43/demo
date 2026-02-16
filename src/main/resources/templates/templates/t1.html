@@ -1,0 +1,31 @@
+<div th:fragment="content">
+
+<div class="w-[794px] h-[1123px] relative"
+     style="background-image:url('/images/biodata_templates/t1.jpg');
+            background-size:cover;">
+
+    <div class="absolute inset-0 p-16">
+
+        <div class="flex">
+
+            <!-- LEFT SIDE -->
+            <div class="w-3/4 space-y-2">
+
+                <p><b>Name:</b> <span th:text="${data.name}"></span></p>
+                <p><b>Birth Date:</b> <span th:text="${data.birthDate}"></span></p>
+                <p><b>Education:</b> <span th:text="${data.education}"></span></p>
+
+            </div>
+
+            <!-- RIGHT PHOTO -->
+            <div class="w-1/4">
+                <div class="w-32 h-40 border mx-auto"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>

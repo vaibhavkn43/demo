@@ -1,136 +1,91 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="#{app.title}">Template Maker</title>
 
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/base.css}">
-    <link rel="stylesheet" th:href="@{/css/layout.css}">
-    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<body>
+        <!-- SEO -->
+        <meta name="description"
+              content="Create beautiful marriage biodata online in Marathi and English. Free printable biodata templates. No login required. VivahPatra makes biodata creation easy.">
 
-<!-- =========================
-     NAVBAR
-========================= -->
-<nav class="navbar navbar-expand-lg bg-white sticky-top border-bottom">
-    <div class="container">
+        <title>
+            VivahPatra – Free Marriage Biodata Maker (Marathi & English)
+        </title>
 
-        <!-- BRAND -->
-        <a class="navbar-brand d-flex align-items-center" href="/">
-            <span class="brand-logo me-2">🧾</span>
-            <span th:text="#{app.title}">Marathi Biodata Maker</span>
+        <!-- Tailwind CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <!-- Marathi Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet">
+
+        <style>
+            body {
+                font-family: 'Noto Serif Devanagari', serif;
+            }
+        </style>
+
+    </head>
+
+    <body class="bg-gray-50 text-gray-800">
+
+<header class="bg-white border-b shadow-sm">
+
+    <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+
+        <!-- LOGO -->
+        <a href="/dashboard"
+           class="flex items-center gap-2 hover:opacity-90 transition">
+
+            <img th:src="${#locale.language == 'mr'} ? '/images/logo_mr.png' : '/images/logo.png'"
+                 alt="VivahPatra"
+                class="h-16 md:h-20 w-auto object-contain scale-110">
         </a>
 
-        <!-- TOGGLER -->
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#mainNavbar"
-                aria-controls="mainNavbar"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <!-- Language Switch -->
+        <div class="flex items-center gap-4 text-sm md:text-base">
 
-        <!-- NAV LINKS -->
-        <div class="collapse navbar-collapse" id="mainNavbar">
-            <ul class="navbar-nav ms-auto align-items-center gap-3">
+            <a href="?lang=en"
+               th:classappend="${#locale.language == 'en'} ? 'font-semibold text-red-600' : ''"
+               class="hover:text-red-600 transition">
+                EN
+            </a>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/" th:text="#{nav.home}">Home</a>
-                </li>
+            <span class="text-gray-300">|</span>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/templates/biodata" th:text="#{nav.templates}">
-                        Templates
-                    </a>
-                </li>
+            <a href="?lang=mr"
+               th:classappend="${#locale.language == 'mr'} ? 'font-semibold text-red-600' : ''"
+               class="hover:text-red-600 transition">
+                मराठी
+            </a>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/how-it-works" th:text="#{nav.how}">
-                        How It Works
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/contact" th:text="#{nav.contact}">
-                        Contact
-                    </a>
-                </li>
-
-                <!-- LANGUAGE -->
-                <li class="nav-item">
-                    <select class="language-select"
-                            onchange="changeLanguage(this.value)">
-                        <option value="mr" th:selected="${#locale.language == 'mr'}">मराठी</option>
-                        <option value="en" th:selected="${#locale.language == 'en'}">English</option>
-                    </select>
-                </li>
-
-            </ul>
         </div>
 
     </div>
-</nav>
+
+</header>
 
 
-<!-- =========================
-     MAIN (FULL WIDTH)
-========================= -->
-<main class="main-wrapper">
-    <div th:replace="~{${content}}"></div>
-</main>
 
-<!-- =========================
-     FOOTER
-========================= -->
-<footer class="footer">
-    <div class="container main-container">
 
-        <div class="row">
 
-            <div class="col-md-4 mb-4">
-                <h5 th:text="#{footer.brand}">Biodata Maker</h5>
-                <p class="footer-desc"
-                   th:text="#{footer.desc}">
-                    Create beautiful marriage biodata in just a few minutes.
-                </p>
-            </div>
+        <!-- ================= MAIN CONTENT ================= -->
+        <main class="min-h-screen">
 
-            <div class="col-md-4 mb-4">
-                <h5 th:text="#{footer.links.title}">Quick Links</h5>
-                <ul>
-                    <li><a href="/" th:text="#{footer.links.home}">Home</a></li>
-                    <li><a href="/templates/biodata" th:text="#{footer.links.templates}">Templates</a></li>
-                    <li><a href="/how-it-works" th:text="#{footer.links.how}">How It Works</a></li>
-                    <li><a href="/contact" th:text="#{footer.links.contact}">Contact</a></li>
-                </ul>
-            </div>
+            <!-- dynamic page content -->
+            <div th:replace="~{ ${content} :: content }"></div>
 
-            <div class="col-md-4 mb-4">
-                <h5 th:text="#{footer.legal.title}">Legal</h5>
-                <ul>
-                    <li><a href="/privacy-policy" th:text="#{footer.legal.privacy}">Privacy Policy</a></li>
-                    <li><a href="/terms" th:text="#{footer.legal.terms}">Terms & Conditions</a></li>
-                </ul>
-            </div>
+        </main>
 
-        </div>
 
-        <div class="footer-bottom">
-            <span th:text="#{footer.copyright}">
-                © 2026 Biodata Maker. All rights reserved.
-            </span>
-        </div>
+        <!-- ================= FOOTER ================= -->
+        <footer class="bg-gray-100 text-center text-sm text-gray-600 py-6 mt-10 border-t">
+            © 2026 VivahPatra • Made with ❤️ in India
+        </footer>
 
-    </div>
-</footer>
 
-<script th:src="@{/js/bootstrap.bundle.min.js}" defer></script>
-<script th:src="@{/js/base.js}" defer></script>
-<script th:src="@{/js/transliteration.js}" defer></script>
+        <!-- ================= BASE JS ================= -->
+        <script th:src="@{/js/base.js}" defer></script>
 
-</body>
+    </body>
 </html>

@@ -1,0 +1,250 @@
+<div th:fragment="content">
+
+    <section class="max-w-7xl mx-auto p-6">
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- =========================================================
+             LEFT FORM
+            ========================================================= -->
+            <div class="lg:col-span-2 bg-white shadow rounded p-6">
+
+                <form id="biodataForm"
+                      th:action="@{/preview}"
+                      th:object="${form}"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                    <input type="hidden" name="templateId" th:value="${templateId}"/>
+
+                    <!-- ================= TOGGLE ================= -->
+                    <div class="flex justify-between items-center mb-4">
+                        <label class="font-semibold" th:text="#{editor.toggle.marathiTyping}"></label>
+                        <input type="checkbox" id="marathiToggle" checked class="h-4 w-4">
+                    </div>
+
+                    <!-- ================= PERSONAL ================= -->
+                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.personal}"></h3>
+
+                    <input class="w-full border p-2 mb-2 ime-marathi"
+                           th:field="*{name}"
+                           th:placeholder="#{editor.instruction.name}"/>
+
+                    <select class="w-full border p-2 mb-2" th:field="*{religion}">
+                        <option value="" th:text="#{dropdown.religion.select}"></option>
+
+                        <option th:value="#{dropdown.religion.hindu}"
+                                th:text="#{dropdown.religion.hindu}"></option>
+
+                        <option th:value="#{dropdown.religion.muslim}"
+                                th:text="#{dropdown.religion.muslim}"></option>
+
+                        <option th:value="#{dropdown.religion.christian}"
+                                th:text="#{dropdown.religion.christian}"></option>
+
+                        <option th:value="#{dropdown.religion.buddhist}"
+                                th:text="#{dropdown.religion.buddhist}"></option>
+
+                        <option th:value="#{dropdown.religion.jain}"
+                                th:text="#{dropdown.religion.jain}"></option>
+                    </select>
+
+
+                    <input class="w-full border p-2 mb-2 ime-marathi"
+                           th:field="*{caste}"
+                           th:placeholder="#{editor.instruction.caste}"/>
+
+                    <input class="w-full border p-2 mb-2 ime-marathi"
+                           th:field="*{subCaste}"
+                           th:placeholder="#{editor.instruction.subCaste}"/>
+
+                    <input class="w-full border p-2 mb-4 ime-marathi"
+                           th:field="*{gotra}"
+                           th:placeholder="#{editor.instruction.gotra}"/>
+
+                    <!-- ================= BIRTH ================= -->
+                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.birth}"></h3>
+
+                    <div class="grid grid-cols-3 gap-2 mb-2">
+                        <select id="birthDay" class="border p-2">
+                            <option value="">Day</option>
+                            <option th:each="d : ${#numbers.sequence(1,31)}"
+                                    th:value="${d}"
+                                    th:text="${d}"></option>
+                        </select>
+
+                        <select id="birthMonth" class="border p-2">
+                            <option value="" th:text="#{dropdown.month.select}"></option>
+                            <option value="01" th:text="#{dropdown.month.01}"></option>
+                            <option value="02" th:text="#{dropdown.month.02}"></option>
+                            <option value="03" th:text="#{dropdown.month.03}"></option>
+                        </select>
+
+                        <select id="birthYear" class="border p-2">
+                            <option value="">Year</option>
+                            <option th:each="y : ${#numbers.sequence(1960,2010)}"
+                                    th:value="${y}"
+                                    th:text="${y}"></option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" th:field="*{birthDate}" id="birthDate"/>
+
+                    <input class="w-full border p-2 mb-2 ime-marathi"
+                           th:field="*{birthPlace}"
+                           th:placeholder="#{editor.instruction.birthPlace}"/>
+
+                    <select class="w-full border p-2 mb-2" th:field="*{rashi}">
+                        <option value="" th:text="#{dropdown.rashi.select}"></option>
+
+                        <option th:value="#{dropdown.rashi.mesh}"
+                                th:text="#{dropdown.rashi.mesh}"></option>
+
+                        <option th:value="#{dropdown.rashi.vrushabh}"
+                                th:text="#{dropdown.rashi.vrushabh}"></option>
+                    </select>
+
+
+                    <select class="w-full border p-2 mb-2" th:field="*{nakshatra}">
+                        <option value="" th:text="#{dropdown.nakshatra.select}"></option>
+
+                        <option th:value="#{dropdown.nakshatra.ashwini}"
+                                th:text="#{dropdown.nakshatra.ashwini}"></option>
+
+                        <option th:value="#{dropdown.nakshatra.bharani}"
+                                th:text="#{dropdown.nakshatra.bharani}"></option>
+                    </select>
+
+
+                    <!-- ================= PHYSICAL ================= -->
+                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.physical}"></h3>
+
+                    <select class="w-full border p-2 mb-2" th:field="*{height}">
+                        <option value="" th:text="#{dropdown.height.select}"></option>
+
+                        <option th:value="#{dropdown.height.5_4}"
+                                th:text="#{dropdown.height.5_4}"></option>
+
+                        <option th:value="#{dropdown.height.5_6}"
+                                th:text="#{dropdown.height.5_6}"></option>
+                    </select>
+
+
+                    <select class="w-full border p-2 mb-2" th:field="*{bloodGroup}">
+                        <option value="" th:text="#{dropdown.blood.select}"></option>
+
+                        <option th:value="#{dropdown.blood.a_pos}"
+                                th:text="#{dropdown.blood.a_pos}"></option>
+
+                        <option th:value="#{dropdown.blood.b_pos}"
+                                th:text="#{dropdown.blood.b_pos}"></option>
+                    </select>
+
+
+                    <!-- ================= EDUCATION ================= -->
+                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.education}"></h3>
+
+                    <input class="w-full border p-2 mb-2"
+                           th:field="*{education}"
+                           th:placeholder="#{editor.instruction.education}"/>
+
+                    <input class="w-full border p-2 mb-4"
+                           th:field="*{profession}"
+                           th:placeholder="#{editor.instruction.profession}"/>
+
+                    <!-- ================= FAMILY ================= -->
+                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.family}"></h3>
+
+                    <input class="w-full border p-2 mb-2 ime-marathi"
+                           th:field="*{fatherName}"
+                           th:placeholder="#{editor.instruction.fatherName}"/>
+
+                    <input class="w-full border p-2 mb-3 ime-marathi"
+                           th:field="*{motherName}"
+                           th:placeholder="#{editor.instruction.motherName}"/>
+
+                    <!-- Brother Count -->
+                    <select id="brotherCount" class="w-full border p-2 mb-2">
+                        <option value="" th:text="#{dropdown.count.select}"></option>
+                        <option th:each="n : ${#numbers.sequence(0,5)}"
+                                th:value="${n}" th:text="${n}"></option>
+                    </select>
+
+                    <div id="brotherInputs"></div>
+                    <input type="hidden" th:field="*{brothers}" id="brothers"/>
+
+                    <!-- Sister Count -->
+                    <select id="sisterCount" class="w-full border p-2 mb-2">
+                        <option value="" th:text="#{dropdown.count.select}"></option>
+                        <option th:each="n : ${#numbers.sequence(0,5)}"
+                                th:value="${n}" th:text="${n}"></option>
+                    </select>
+
+                    <div id="sisterInputs"></div>
+                    <input type="hidden" th:field="*{sisters}" id="sisters"/>
+
+                    <!-- dataset for JS -->
+                    <div id="familyMessages"
+                         th:data-brother-name="#{editor.placeholder.brotherName}"
+                         th:data-sister-name="#{editor.placeholder.sisterName}"
+                         th:data-status-select="#{dropdown.marital.select}"
+                         th:data-married="#{dropdown.marital.married}"
+                         th:data-unmarried="#{dropdown.marital.unmarried}">
+                    </div>
+
+                    <!-- ================= CONTACT ================= -->
+                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.contact}"></h3>
+
+                    <input class="w-full border p-2 mb-2"
+                           th:field="*{mobile}"
+                           th:placeholder="#{editor.instruction.mobile}"/>
+
+                    <textarea class="w-full border p-2 mb-4 ime-marathi"
+                              th:field="*{address}"
+                              th:placeholder="#{editor.instruction.address}"></textarea>
+
+                    <!-- ================= CUSTOM ================= -->
+                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.custom}"></h3>
+
+                    <div id="customFields"></div>
+
+                    <button type="button"
+                            onclick="addCustomField()"
+                            class="text-blue-600 underline text-sm">
+                        + Add Custom Field
+                    </button>
+
+                    <!-- ================= SUBMIT ================= -->
+                    <button type="submit"
+                            class="w-full bg-green-600 text-white py-3 mt-6 rounded"
+                            th:text="#{editor.form.submit}">
+                    </button>
+
+                </form>
+            </div>
+
+            <!-- =========================================================
+             RIGHT SIDE – SUGGESTIONS
+            ========================================================= -->
+            <div id="suggestionBox"
+                 class="hidden border rounded p-3 bg-white shadow h-fit">
+
+                <div class="flex justify-between mb-2">
+                    <b th:text="#{suggestions.title}"></b>
+                    <button onclick="closeSuggestions()">✕</button>
+                </div>
+
+                <div id="suggestionList"></div>
+
+                <div class="text-sm text-gray-500 mt-2"
+                     th:text="#{suggestions.hint}">
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+    <script th:src="@{/js/transliteration.js}"></script>
+    <script th:src="@{/js/biodata-editor.js}"></script>
+
+</div>
