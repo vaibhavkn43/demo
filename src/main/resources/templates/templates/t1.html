@@ -1,31 +1,177 @@
 <div th:fragment="content">
 
-<div class="w-[794px] h-[1123px] relative"
-     style="background-image:url('/images/biodata_templates/t1.jpg');
-            background-size:cover;">
+    <div class="w-[794px] h-[1123px] mx-auto bg-white relative shadow"
+         th:style="'background-image:url(' + @{/images/biodata_templates/t1.png} + '); background-size:cover;'">
 
-    <div class="absolute inset-0 p-16">
 
-        <div class="flex">
+        <!-- INNER MARGIN -->
+        <div class="absolute inset-0 px-20 py-14">
 
-            <!-- LEFT SIDE -->
-            <div class="w-3/4 space-y-2">
+            <!-- 🔱 HEADER -->
+            <div class="text-center mb-6">
+                <!-- GOD IMAGE -->
+                <div class="text-center mb-2">
+                    <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}"
+                         class="mx-auto h-16"/>
+                </div>
 
-                <p><b>Name:</b> <span th:text="${data.name}"></span></p>
-                <p><b>Birth Date:</b> <span th:text="${data.birthDate}"></span></p>
-                <p><b>Education:</b> <span th:text="${data.education}"></span></p>
+                <!-- MANTRA -->
+                <h2 class="text-[18px] font-semibold tracking-wide"
+                    th:text="${data.mantra}">
+                </h2>
 
+
+                <h1 class="text-[26px] font-bold mt-2 border-b border-gray-400 inline-block px-8 pb-1">
+                    <span th:text="#{preview.header}">Biodata</span>
+                </h1>
             </div>
 
-            <!-- RIGHT PHOTO -->
-            <div class="w-1/4">
-                <div class="w-32 h-40 border mx-auto"></div>
+            <!-- NAME -->
+            <div class="text-center mb-6">
+                <h1 class="text-[28px] font-bold tracking-wide text-gray-800"
+                    th:text="${data.name}">
+                    Name
+                </h1>
+            </div>
+
+            <div class="flex gap-6">
+
+                <!-- LEFT CONTENT -->
+                <div class="w-3/4 space-y-5 text-[15px] leading-6">
+
+                    <!-- ================= PERSONAL ================= -->
+                    <div>
+                        <h3 class="font-semibold text-[15px] border-b border-gray-300 mb-2 pb-1 uppercase tracking-wide"
+                            th:text="#{editor.section.personal}">
+                            Personal Details
+                        </h3>
+
+                        <div class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.birthDate}">Birth Date</div>
+                            <div class="col-span-2" th:text="${data.birthDate}"></div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.birthPlace}">Birth Place</div>
+                            <div class="col-span-2" th:text="${data.birthPlace}"></div>
+                        </div>
+
+                        <div th:if="${data.religion}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.religion}">Religion</div>
+                            <div class="col-span-2" th:text="${data.religion}"></div>
+                        </div>
+
+                        <div th:if="${data.caste}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.caste}">Caste</div>
+                            <div class="col-span-2" th:text="${data.caste}"></div>
+                        </div>
+
+                        <div th:if="${data.subCaste}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.subCaste}">Sub Caste</div>
+                            <div class="col-span-2" th:text="${data.subCaste}"></div>
+                        </div>
+
+                        <div th:if="${data.gotra}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.gotra}">Gotra</div>
+                            <div class="col-span-2" th:text="${data.gotra}"></div>
+                        </div>
+
+                        <div th:if="${data.kuldaivat}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.kuldaivat}">Kuldaivat</div>
+                            <div class="col-span-2" th:text="${data.kuldaivat}"></div>
+                        </div>
+                    </div>
+
+                    <!-- ================= EDUCATION ================= -->
+                    <div>
+                        <h3 class="font-semibold text-[15px] border-b border-gray-300 mb-2 pb-1 uppercase tracking-wide"
+                            th:text="#{editor.section.education}">
+                            Education & Profession
+                        </h3>
+
+                        <div class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.education}">Education</div>
+                            <div class="col-span-2" th:text="${data.education}"></div>
+                        </div>
+
+                        <div th:if="${data.profession}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.profession}">Profession</div>
+                            <div class="col-span-2" th:text="${data.profession}"></div>
+                        </div>
+
+                        <div th:if="${data.income}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.income}">Income</div>
+                            <div class="col-span-2" th:text="${data.income}"></div>
+                        </div>
+                    </div>
+
+                    <!-- ================= FAMILY ================= -->
+                    <div>
+                        <h3 class="font-semibold text-[15px] border-b border-gray-300 mb-2 pb-1 uppercase tracking-wide"
+                            th:text="#{editor.section.family}">
+                            Family Details
+                        </h3>
+
+                        <div th:if="${data.fatherName}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.fatherName}">Father Name</div>
+                            <div class="col-span-2" th:text="${data.fatherName}"></div>
+                        </div>
+
+                        <div th:if="${data.motherName}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.motherName}">Mother Name</div>
+                            <div class="col-span-2" th:text="${data.motherName}"></div>
+                        </div>
+
+                        <div th:if="${data.brothers}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.brothers}">Brothers</div>
+                            <div class="col-span-2" th:text="${data.brothers}"></div>
+                        </div>
+
+                        <div th:if="${data.sisters}" class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.sisters}">Sisters</div>
+                            <div class="col-span-2" th:text="${data.sisters}"></div>
+                        </div>
+                    </div>
+
+                    <!-- ================= CONTACT ================= -->
+                    <div>
+                        <h3 class="font-semibold text-[15px] border-b border-gray-300 mb-2 pb-1 uppercase tracking-wide"
+                            th:text="#{editor.section.contact}">
+                            Contact
+                        </h3>
+
+                        <div class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.mobile}">Mobile</div>
+                            <div class="col-span-2" th:text="${data.mobile}"></div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.address}">Address</div>
+                            <div class="col-span-2" th:text="${data.address}"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ================= PHOTO ================= -->
+                <div class="w-1/4 flex justify-center">
+                    <div class="w-36 h-44 border border-gray-400 bg-white flex items-center justify-center shadow-sm">
+
+                        <img th:if="${data.profileImagePath}"
+                             th:src="@{'/generated/' + ${data.profileImagePath}}"
+                             class="object-cover w-full h-full"/>
+
+                        <span th:if="${data.profileImagePath == null}"
+                              class="text-xs text-gray-500">
+                            Photo
+                        </span>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>
-
     </div>
-
-</div>
 
 </div>

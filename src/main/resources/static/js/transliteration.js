@@ -1,22 +1,66 @@
-let marathiEnabled = true;
-let activeInput = null;
-let activeWordRange = null;
-let activeSuggestionIndex = -1;
-let suggestionList = [];
+/* ============================================================
+ Marathi Transliteration + Inline Suggestions
+ ------------------------------------------------------------
+ Features:
+ ✔ English → Marathi transliteration
+ ✔ Inline dropdown suggestions under input
+ ✔ Arrow key navigation (↑ ↓)
+ ✔ Enter / Space selection
+ ✔ Auto hide on outside click
+ ✔ Works with multiple inputs (.ime-marathi)
+ ============================================================ */
+
+
+/* ================= GLOBAL STATE ================= */
+
+let marathiEnabled = true;            // toggle for enabling/disabling IME
+let activeInput = null;               // currently focused input
+let activeWordRange = null;           // start & end index of active word
+let activeSuggestionIndex = -1;       // keyboard navigation index
+
+
+/* ================= TOGGLE INIT ================= */
 
 document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("marathiToggle")?.addEventListener("change", e => {
-        marathiEnabled = e.target.checked;
-        hideSuggestions();
-    });
+
+    const toggle = document.getElementById("marathiToggle");
+
+    if (toggle) {
+        toggle.addEventListener("change", (e) => {
+            marathiEnabled = e.target.checked;
+            hideSuggestions();
+        });
+    }
+
 });
 
-/* ================= KEYUP ================= */
+
+/* ================= CLICK OUTSIDE ================= */
+
+document.addEventListener("click", function (e) {
+    if (!e.target.closest(".ime-wrapper")) {
+        hideSuggestions();
+    }
+});
+
+
+/* ============================================================
+ KEYUP EVENT  (Fetch suggestions while typing)
+ ============================================================ */
+
 document.addEventListener("keyup", async function (e) {
 
     const input = e.target;
-    if (!input.classList.contains("ime-marathi")) return;
-    if (!marathiEnabled) return;
+
+    if (!input.classList.contains("ime-marathi"))
+        return;
+    if (!marathiEnabled)
+        return;
+
+    // 🚀 FIX: ignore navigation keys
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+        return;
+    }
 
     const cursor = input.selectionStart;
     const text = input.value || "";
@@ -36,112 +80,200 @@ document.addEventListener("keyup", async function (e) {
     activeInput = input;
     activeWordRange = {start, end};
 
+    activeSuggestionIndex = -1;
+
     const suggestions = await fetchSuggestions(word);
-    showSuggestions(suggestions);
+    showInlineSuggestions(input, suggestions);
 });
 
-/* ================= KEYDOWN ================= */
+
+
+/* ============================================================
+ KEYDOWN EVENT  (Arrow navigation + select)
+ ============================================================ */
+
 document.addEventListener("keydown", function (e) {
 
-    const input = e.target;
-    if (!input.classList.contains("ime-marathi")) return;
-    if (!marathiEnabled || !suggestionList.length) return;
+    if (!activeInput)
+        return;
 
+    const wrapper = activeInput.closest(".ime-wrapper");
+    const dropdown = wrapper.querySelector(".suggestion-dropdown");
+
+    if (!dropdown)
+        return;
+
+    const items = dropdown.querySelectorAll("div");
+
+    if (!items.length)
+        return;
+
+
+    /* ---------- ARROW DOWN ---------- */
     if (e.key === "ArrowDown") {
         e.preventDefault();
-        moveSelection(1);
+
+        activeSuggestionIndex =
+                (activeSuggestionIndex + 1) % items.length;
+
+        updateHighlight(items);
     }
 
-    if (e.key === "ArrowUp") {
+
+    /* ---------- ARROW UP ---------- */
+    else if (e.key === "ArrowUp") {
         e.preventDefault();
-        moveSelection(-1);
+
+        activeSuggestionIndex =
+                (activeSuggestionIndex - 1 + items.length) % items.length;
+
+        updateHighlight(items);
     }
 
-    if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        const selected = suggestionList[activeSuggestionIndex] || suggestionList[0];
-        replaceWord(selected + " ");
+
+    /* ---------- ENTER ---------- */
+    else if (e.key === "Enter") {
+        if (activeSuggestionIndex >= 0) {
+            e.preventDefault();
+
+            items[activeSuggestionIndex].click();
+
+// add space at cursor position
+            const pos = activeInput.selectionStart;
+            activeInput.value =
+                    activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
+
+            activeInput.setSelectionRange(pos + 1, pos + 1);
+
+            hideSuggestions();
+        }
+    }
+
+
+    /* ---------- SPACE ---------- */
+    else if (e.key === " ") {
+        if (activeSuggestionIndex >= 0) {
+            e.preventDefault();
+
+            items[activeSuggestionIndex].click();
+
+// add space at cursor position
+            const pos = activeInput.selectionStart;
+            activeInput.value =
+                    activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
+
+            activeInput.setSelectionRange(pos + 1, pos + 1);
+
+            activeInput.value += " ";
+
+            hideSuggestions();
+        }
     }
 });
 
-/* ================= FETCH ================= */
+
+/* ============================================================
+ FETCH SUGGESTIONS (Google Input Tools API)
+ ============================================================ */
+
 async function fetchSuggestions(word) {
+
     const url =
-        `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=mr-t-i0-und&num=6`;
+            `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=mr-t-i0-und&num=6`;
 
     try {
         const res = await fetch(url);
         const data = await res.json();
+
         return data?.[1]?.[0]?.[1] || [];
-    } catch {
+
+    } catch (err) {
+        console.error("Suggestion fetch error:", err);
         return [];
     }
 }
 
-/* ================= SHOW ================= */
-function showSuggestions(list) {
 
-    const box = document.getElementById("suggestionBox");
-    const container = document.getElementById("suggestionList");
+/* ============================================================
+ SHOW INLINE DROPDOWN UNDER INPUT
+ ============================================================ */
 
-    if (!box || !container) return;
+function showInlineSuggestions(input, suggestions) {
 
-    container.innerHTML = "";
-    suggestionList = list.slice(0, 8);
-    activeSuggestionIndex = 0;
+    const wrapper = input.closest(".ime-wrapper");
+    const dropdown = wrapper.querySelector(".suggestion-dropdown");
 
-    suggestionList.forEach((word, index) => {
+    dropdown.innerHTML = "";
+
+    // no suggestions → hide
+    if (!suggestions || suggestions.length === 0) {
+        dropdown.classList.add("hidden");
+        return;
+    }
+
+    // build dropdown items
+    suggestions.slice(0, 6).forEach((word, index) => {
 
         const div = document.createElement("div");
-        div.className = "cursor-pointer px-2 py-1 rounded hover:bg-gray-100";
-        div.textContent = word;
 
-        if (index === 0) div.classList.add("bg-gray-200");
+        div.className =
+                "px-3 py-2 cursor-pointer hover:bg-gray-100";
 
+        div.innerText = word;
+
+        // click handler
         div.onclick = () => {
-            activeSuggestionIndex = index;
-            replaceWord(word + " ");
+
+            const {start, end} = activeWordRange;
+            const text = input.value;
+
+            const newText =
+                    text.slice(0, start) + word + text.slice(end);
+
+            input.value = newText;
+
+            // set cursor position after inserted word
+            const pos = start + word.length;
+
+            input.setSelectionRange(pos, pos);
+            input.focus();
+
+            dropdown.classList.add("hidden");
         };
 
-        container.appendChild(div);
+        dropdown.appendChild(div);
+    });
+    dropdown.classList.remove("hidden");
+    activeSuggestionIndex = 0;
+    updateHighlight(dropdown.querySelectorAll("div"));
+}
+
+
+/* ============================================================
+ HIDE ALL DROPDOWNS
+ ============================================================ */
+
+function hideSuggestions() {
+
+    document.querySelectorAll(".suggestion-dropdown")
+            .forEach(d => d.classList.add("hidden"));
+
+    activeSuggestionIndex = -1;
+}
+
+
+/* ============================================================
+ UPDATE HIGHLIGHT DURING KEY NAVIGATION
+ ============================================================ */
+
+function updateHighlight(items) {
+
+    items.forEach((el, i) => {
+        el.classList.remove("bg-gray-200");
+
+        if (i === activeSuggestionIndex) {
+            el.classList.add("bg-gray-200");
+        }
     });
 
-    box.classList.remove("hidden");
-}
-
-/* ================= NAVIGATION ================= */
-function moveSelection(dir) {
-
-    const items = document.querySelectorAll("#suggestionList div");
-    if (!items.length) return;
-
-    items[activeSuggestionIndex]?.classList.remove("bg-gray-200");
-
-    activeSuggestionIndex =
-        (activeSuggestionIndex + dir + items.length) % items.length;
-
-    items[activeSuggestionIndex].classList.add("bg-gray-200");
-}
-
-/* ================= REPLACE ================= */
-function replaceWord(selected) {
-
-    if (!activeInput || !activeWordRange) return;
-
-    const {start, end} = activeWordRange;
-    const text = activeInput.value;
-
-    const newText = text.slice(0, start) + selected + text.slice(end);
-    activeInput.value = newText;
-
-    const pos = start + selected.length;
-    activeInput.setSelectionRange(pos, pos);
-    activeInput.focus();
-
-    hideSuggestions();
-}
-
-/* ================= HIDE ================= */
-function hideSuggestions() {
-    document.getElementById("suggestionBox")?.classList.add("hidden");
 }

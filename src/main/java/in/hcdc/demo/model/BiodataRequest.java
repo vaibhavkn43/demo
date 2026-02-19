@@ -33,6 +33,7 @@ public class BiodataRequest extends TemplateForm {
     private String caste;
     private String subCaste;
     private String gotra;
+    private String kuldaivat;
 
     // ======================
     // Horoscope (optional)
@@ -69,6 +70,8 @@ public class BiodataRequest extends TemplateForm {
     private String brothers;
     private String sisters;
 
+    private String Relatives;
+
     // ======================
     // Address & Contact
     // ======================
@@ -77,8 +80,8 @@ public class BiodataRequest extends TemplateForm {
     private String alternateMobile;
     private String email;
 
-    private String godImage = "ganesh";
-    private String mantra = "श्री गणेशाय नमः";
+    private String godImage;
+    private String mantra;
 
     /**
      * Stored profile image path on disk

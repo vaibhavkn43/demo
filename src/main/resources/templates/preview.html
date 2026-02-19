@@ -1,41 +1,7 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link rel="stylesheet" th:href="@{/css/tailwind.css}">
-</head>
+<div th:fragment="content">
 
-<body class="bg-gray-200 p-6">
-
-<div class="text-center mb-4">
-    <button onclick="downloadPdf()"
-            class="bg-blue-600 text-white px-4 py-2 rounded">
-        Download PDF
-    </button>
-</div>
-
-<div id="previewArea" class="flex justify-center">
-
-    <!-- LOAD TEMPLATE DYNAMICALLY -->
-    <div th:replace="templates/${templateId} :: content"></div>
+    <div th:switch="${templateId}">
+        <div th:case="'t1'" th:replace="templates/t1 :: content"></div>
+    </div>
 
 </div>
-
-<script src="/js/html2canvas.min.js"></script>
-<script src="/js/jspdf.umd.min.js"></script>
-
-<script>
-function downloadPdf() {
-    html2canvas(document.getElementById("previewArea")).then(canvas => {
-        const img = canvas.toDataURL("image/png");
-
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF('p','mm','a4');
-
-        pdf.addImage(img, 'PNG', 0, 0, 210, 297);
-        pdf.save("biodata.pdf");
-    });
-}
-</script>
-
-</body>
-</html>

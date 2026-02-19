@@ -2,14 +2,16 @@ package in.hcdc.demo.util;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author vaibhav
  */
 public class ValidationResult {
-    
-     private boolean valid = true;
+
+    private boolean valid = true;
     private List<String> missingKeys = new ArrayList<>();
+    private List<String> invalidKeys = new ArrayList<>();
 
     public void addMissing(String messageKey) {
         valid = false;
@@ -22,5 +24,13 @@ public class ValidationResult {
 
     public List<String> getMissingKeys() {
         return missingKeys;
+    }
+
+    public void addInvalid(String key) {
+        invalidKeys.add(key);
+    }
+
+    public List<String> getInvalidKeys() {
+        return invalidKeys;
     }
 }

@@ -1,6 +1,6 @@
 =============================== 
 PROJECT SNAPSHOT 
-Generated on Mon 02/16/2026 22:00:32.36 
+Generated on Thu 02/19/2026 20:08:05.97 
 =============================== 
  
  
@@ -222,7 +222,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class DashboardController {
 
-@GetMapping("/dashboard")
+@GetMapping({"/","/dashboard"})
 public String dashboard(Model model) {
     List<String> templates = List.of("t1", "t2", "t3", "t4", "t5", "t6");
     model.addAttribute("templates", templates);
@@ -298,6 +298,7 @@ public class BiodataRequest extends TemplateForm {
     private String caste;
     private String subCaste;
     private String gotra;
+    private String kuldaivat;
 
     // ======================
     // Horoscope (optional)
@@ -615,13 +616,13 @@ spring.messages.encoding=UTF-8
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\messages.properties" 
 -------------------------------------------------- 
 # =====================================================
-# App
+# APP
 # =====================================================
 app.title=Marathi Biodata Maker
 
 
 # =====================================================
-# Navigation
+# NAVIGATION
 # =====================================================
 nav.home=Home
 nav.templates=Templates
@@ -630,18 +631,34 @@ nav.contact=Contact
 
 
 # =====================================================
-# Buttons / Common Labels
+# COMMON BUTTONS & LABELS
 # =====================================================
 button.useTemplate=Use Template
 button.loadMore=Load More
 button.submit=Submit
 button.back=\u2190 Back
+
 label.comingSoon=Coming Soon
 form.required.note=Required fields
 
 
 # =====================================================
-# Homepage \u2013 Hero
+# HERO SECTION
+# =====================================================
+hero.title.line1=Create a beautiful
+hero.title.line2=Marriage Biodata
+hero.title.in=in
+hero.title.time=2 minutes
+hero.subtitle=Ready-to-use biodata templates for marriage
+hero.cta=Create Biodata
+
+hero.point1=\u2714 PDF Download
+hero.point2=\u2714 Print-ready biodata
+hero.point3=\u2714 No login required
+
+
+# =====================================================
+# HOME - HERO (LEGACY SUPPORT)
 # =====================================================
 home.hero.title=Create a beautiful Marriage Biodata in 2 minutes
 home.hero.subtitle=Ready-to-use biodata templates for marriage
@@ -654,7 +671,7 @@ home.hero.point.nologin=No login required
 
 
 # =====================================================
-# Homepage \u2013 Templates
+# HOME - TEMPLATES
 # =====================================================
 home.templates.title=Marriage Biodata Templates
 home.templates.subtitle=Traditional \u2022 Clean \u2022 Print-ready designs
@@ -664,7 +681,7 @@ home.templates.viewAll=View All Templates
 
 
 # =====================================================
-# Homepage \u2013 Trust / Why Us
+# HOME - TRUST / WHY US
 # =====================================================
 home.trust.title=Why Families Trust Us
 
@@ -680,9 +697,25 @@ home.trust.device.desc=Works smoothly on all devices
 home.trust.time.title=Just 2 Minutes
 home.trust.time.desc=Simple and fast process
 
+home.trust.privacy=We Don\u2019t Store Your Personal Data
+home.trust.nologin=No Login Required
+home.trust.safe=100% Safe & Private Biodata Generator
+
 
 # =====================================================
-# Testimonials
+# HOME - VIDEO TEMPLATES
+# =====================================================
+home.video.templates.title=Wedding Video Invitations
+home.video.templates.subtitle=Beautiful animated wedding invitation videos
+
+video.mantra=|| Shri Ganeshaya Namah ||
+video.invite=Wedding Invitation
+video.closing=Your gracious presence will make the occasion truly special
+video.end=Save the Date
+
+
+# =====================================================
+# TESTIMONIALS
 # =====================================================
 home.testimonial.title=What Users Say
 home.testimonial.one=Very clean and easy to use.
@@ -701,7 +734,7 @@ home.faq.a2=Yes, you can regenerate anytime.
 
 
 # =====================================================
-# Categories
+# CATEGORY
 # =====================================================
 category.wedding=Wedding Biodata
 category.birthday=Birthday Cards
@@ -709,15 +742,19 @@ category.hero.subtitle=Choose a template and create your biodata in minutes
 
 
 # =====================================================
-# Editor \u2013 General
+# EDITOR - GENERAL
 # =====================================================
-editor.title=Customize Biodata
+editor.title=Create Your Marriage Biodata
+editor.subtitle=Fill the details below to generate a professional biodata in minutes
 editor.toggle.marathiTyping=Marathi Typing (English \u2192 Marathi)
 editor.toggle.hint=Type in English, it will convert to Marathi
 
+editor.header.title=\ud83d\uded5 Biodata Title
+editor.start.hint=Start filling your biodata details below. Only required fields are necessary. Optional fields will be skipped if left empty.
+
 
 # =====================================================
-# Editor Sections
+# EDITOR SECTIONS
 # =====================================================
 editor.section.personal=Personal Details
 editor.section.birth=Birth & Horoscope
@@ -729,7 +766,7 @@ editor.section.custom=Other Information
 
 
 # =====================================================
-# Editor Form Fields \u2013 Personal
+# EDITOR - PERSONAL FIELDS
 # =====================================================
 editor.form.name=Name
 editor.form.gender=Gender
@@ -738,10 +775,11 @@ editor.form.religion=Religion
 editor.form.caste=Caste
 editor.form.subCaste=Sub Caste
 editor.form.gotra=Gotra
+editor.form.kuldaivat=Family Deity (Kuldaivat)
 
 
 # =====================================================
-# Editor Form Fields \u2013 Birth & Horoscope
+# EDITOR - BIRTH & HOROSCOPE
 # =====================================================
 editor.form.birthDate=Birth Date
 editor.form.birthTime=Birth Time
@@ -749,10 +787,12 @@ editor.form.birthPlace=Birth Place
 editor.form.rashi=Rashi
 editor.form.nakshatra=Nakshatra
 editor.form.mangal=Mangal
+editor.form.gan=Gan
+editor.form.nadi=Nadi
 
 
 # =====================================================
-# Editor Form Fields \u2013 Physical
+# EDITOR - PHYSICAL
 # =====================================================
 editor.form.height=Height
 editor.form.weight=Weight
@@ -762,7 +802,7 @@ editor.form.disability=Disability
 
 
 # =====================================================
-# Editor Form Fields \u2013 Education & Profession
+# EDITOR - EDUCATION & PROFESSION
 # =====================================================
 editor.form.education=Education
 editor.form.profession=Profession
@@ -770,16 +810,20 @@ editor.form.income=Annual Income
 
 
 # =====================================================
-# Editor Form Fields \u2013 Family
+# EDITOR - FAMILY
 # =====================================================
 editor.form.fatherName=Father's Name
 editor.form.motherName=Mother's Name
 editor.form.brothers=Brothers
 editor.form.sisters=Sisters
+editor.form.familyIncome=Annual Family Income
+editor.form.familyType=Family Type
+editor.form.fatherOccupation=Father's Occupation
+editor.form.motherOccupation=Mother's Occupation
 
 
 # =====================================================
-# Editor Form Fields \u2013 Contact
+# EDITOR - CONTACT
 # =====================================================
 editor.form.address=Address
 editor.form.mobile=Mobile Number
@@ -789,7 +833,18 @@ editor.form.submit=Generate Biodata
 
 
 # =====================================================
-# Editor Instructions / Placeholders
+# EDITOR - PROFILE PHOTO
+# =====================================================
+editor.profile.title=Profile Photo (Optional)
+editor.profile.hint=You may upload a passport size photo. This is optional.
+editor.profile.remove=Remove photo
+editor.profile.upload=Upload Photo
+
+editor.photo.optional.note=Adding a photo is optional. Even without a photo, your biodata will look good.
+
+
+# =====================================================
+# EDITOR - INSTRUCTIONS / PLACEHOLDERS
 # =====================================================
 editor.instruction.name=Enter name here
 editor.instruction.birthDate=Select date of birth
@@ -799,29 +854,40 @@ editor.instruction.religion=Enter religion
 editor.instruction.caste=Enter caste
 editor.instruction.subCaste=Enter sub-caste if applicable
 editor.instruction.gotra=Enter gotra if applicable
+editor.instruction.kuldaivat=Enter Family Deity (Kuldaivat)
+
 editor.instruction.education=Enter education details
 editor.instruction.profession=Enter profession details
 editor.instruction.mobile=Enter mobile number
 editor.instruction.address=Enter full address
+
 editor.instruction.fatherName=Enter father's full name
 editor.instruction.motherName=Enter mother's full name
+editor.instruction.motherOccupation=Enter Mother's Occupation
+editor.instruction.familyIncome=Enter Annual Family Income
+editor.instruction.familyType=Select Family Type
+editor.instruction.fatherOccupation=Enter Father's Occupation
+
+editor.instruction.gan=Select Gan
+editor.instruction.nadi=Select Nadi
 
 editor.placeholder.brotherName=Brother Name
 editor.placeholder.sisterName=Sister Name
 
 
 # =====================================================
-# Dropdown \u2013 Common
+# DROPDOWNS - COMMON
 # =====================================================
 dropdown.select=-- Select --
 dropdown.count.select=Count
+
 dropdown.marital.select=Status
 dropdown.marital.married=Married
 dropdown.marital.unmarried=Unmarried
 
 
 # =====================================================
-# Religion
+# DROPDOWNS - RELIGION
 # =====================================================
 dropdown.religion.select=Choose your religion
 dropdown.religion.hindu=Hindu
@@ -834,37 +900,58 @@ dropdown.religion.other=Other
 
 
 # =====================================================
-# Rashi
+# DROPDOWNS - RASHI
 # =====================================================
 dropdown.rashi.select=Choose Rashi
 dropdown.rashi.mesh=Aries
 dropdown.rashi.vrushabh=Taurus
 dropdown.rashi.mithun=Gemini
 dropdown.rashi.kark=Cancer
-dropdown.rashi.singh=Leo
+dropdown.rashi.sinh=Leo
 dropdown.rashi.kanya=Virgo
 dropdown.rashi.tula=Libra
-dropdown.rashi.vrushchik=Scorpio
+dropdown.rashi.vrishchik=Scorpio
 dropdown.rashi.dhanu=Sagittarius
 dropdown.rashi.makar=Capricorn
 dropdown.rashi.kumbh=Aquarius
-dropdown.rashi.min=Pisces
+dropdown.rashi.meen=Pisces
 
 
 # =====================================================
-# Nakshatra
+# DROPDOWNS - NAKSHATRA
 # =====================================================
 dropdown.nakshatra.select=Choose Nakshatra
 dropdown.nakshatra.ashwini=Ashwini
 dropdown.nakshatra.bharani=Bharani
 dropdown.nakshatra.krittika=Krittika
 dropdown.nakshatra.rohini=Rohini
-dropdown.nakshatra.mrug=Mrigashirsha
+dropdown.nakshatra.mrigashira=Mrigashira
 dropdown.nakshatra.ardra=Ardra
+dropdown.nakshatra.punarvasu=Punarvasu
+dropdown.nakshatra.pushya=Pushya
+dropdown.nakshatra.ashlesha=Ashlesha
+dropdown.nakshatra.magha=Magha
+dropdown.nakshatra.purvaPhalguni=Purva Phalguni
+dropdown.nakshatra.uttaraPhalguni=Uttara Phalguni
+dropdown.nakshatra.hasta=Hasta
+dropdown.nakshatra.chitra=Chitra
+dropdown.nakshatra.swati=Swati
+dropdown.nakshatra.vishakha=Vishakha
+dropdown.nakshatra.anuradha=Anuradha
+dropdown.nakshatra.jyeshtha=Jyeshtha
+dropdown.nakshatra.mula=Mula
+dropdown.nakshatra.purvashada=Purvashada
+dropdown.nakshatra.uttarashada=Uttarashada
+dropdown.nakshatra.shravana=Shravana
+dropdown.nakshatra.dhanishta=Dhanishta
+dropdown.nakshatra.shatabhisha=Shatabhisha
+dropdown.nakshatra.purvaBhadrapada=Purva Bhadrapada
+dropdown.nakshatra.uttaraBhadrapada=Uttara Bhadrapada
+dropdown.nakshatra.revati=Revati
 
 
 # =====================================================
-# Mangal
+# DROPDOWNS - MANGAL
 # =====================================================
 dropdown.mangal.select=Choose Mangal
 dropdown.mangal.yes=Yes
@@ -873,22 +960,43 @@ dropdown.mangal.unknown=Unknown
 
 
 # =====================================================
-# Height
+# DROPDOWNS - GAN
 # =====================================================
-dropdown.height.select=Choose height
-dropdown.height.4_10=4 ft 10 in
-dropdown.height.5_0=5 ft
+dropdown.gan.select=Choose Gan
+dropdown.gan.dev=Dev Gan
+dropdown.gan.manushya=Manushya Gan
+dropdown.gan.rakshas=Rakshas Gan
+
+
+# =====================================================
+# DROPDOWNS - NADI
+# =====================================================
+dropdown.nadi.select=Choose Nadi
+dropdown.nadi.adi=Adi Nadi
+dropdown.nadi.madhya=Madhya Nadi
+dropdown.nadi.antya=Antya Nadi
+
+
+# =====================================================
+# DROPDOWNS - HEIGHT
+# =====================================================
+dropdown.height.select=Select Height
+dropdown.height.4_6=4 ft 6 in
+dropdown.height.4_8=4 ft 8 in
+dropdown.height.5_0=5 ft 0 in
 dropdown.height.5_2=5 ft 2 in
 dropdown.height.5_4=5 ft 4 in
 dropdown.height.5_6=5 ft 6 in
 dropdown.height.5_8=5 ft 8 in
-dropdown.height.6_0=6 ft
+dropdown.height.5_10=5 ft 10 in
+dropdown.height.6_0=6 ft 0 in
+dropdown.height.6_2=6 ft 2 in
 
 
 # =====================================================
-# Blood Group
+# DROPDOWNS - BLOOD GROUP
 # =====================================================
-dropdown.blood.select=Choose blood group
+dropdown.blood.select=Select Blood Group
 dropdown.blood.a_pos=A+
 dropdown.blood.a_neg=A-
 dropdown.blood.b_pos=B+
@@ -900,7 +1008,7 @@ dropdown.blood.o_neg=O-
 
 
 # =====================================================
-# Complexion
+# DROPDOWNS - COMPLEXION
 # =====================================================
 dropdown.complexion.select=Choose complexion
 dropdown.complexion.fair=Fair
@@ -910,14 +1018,47 @@ dropdown.complexion.veryFair=Very Fair
 
 
 # =====================================================
-# Marathi Suggestions
+# DROPDOWNS - FAMILY TYPE
 # =====================================================
+dropdown.familyType.select=Choose Family Type
+dropdown.familyType.nuclear=Nuclear Family
+dropdown.familyType.joint=Joint Family
+dropdown.familyType.extended=Extended Family
+
+
+# =====================================================
+# DROPDOWNS - DATE
+# =====================================================
+dropdown.month.select=Month
+dropdown.date.select=Date
+dropdown.year.select=Year
+
+dropdown.month.01=Jan
+dropdown.month.02=Feb
+dropdown.month.03=Mar
+dropdown.month.04=Apr
+dropdown.month.05=May
+dropdown.month.06=Jun
+dropdown.month.07=Jul
+dropdown.month.08=Aug
+dropdown.month.09=Sep
+dropdown.month.10=Oct
+dropdown.month.11=Nov
+dropdown.month.12=Dec
+
+
+# =====================================================
+# MARATHI TYPING & SUGGESTIONS
+# =====================================================
+marathi.typing.title=Marathi Typing
+marathi.typing.desc=Type in English to get Marathi word suggestions automatically
+
 suggestions.title=Marathi Suggestions
 suggestions.hint=Click a word or press Space / Enter to replace it
 
 
 # =====================================================
-# Preview
+# PREVIEW
 # =====================================================
 preview.title=Biodata Preview
 preview.header=Biodata
@@ -925,7 +1066,7 @@ preview.customSection=Other Information
 
 
 # =====================================================
-# Validation \u2013 Biodata
+# VALIDATION
 # =====================================================
 validation.minimum.title=Insufficient Information
 validation.minimum.message=Please fill the minimum required information to generate biodata.
@@ -944,7 +1085,35 @@ validation.required.address=Address
 
 
 # =====================================================
-# Footer
+# GUIDE
+# =====================================================
+guide.title=How to use Biodata Maker
+guide.hide=Hide instructions
+guide.show=Show instructions
+
+guide.language=You can switch between English and Marathi anytime.
+guide.typing=Enable Marathi typing and type in English to get Marathi suggestions.
+guide.photo=Adding a photo is optional. You can upload it later.
+guide.relatives=You can add relatives like Mama, Kaka, Mavshi using Custom Fields.
+guide.download=You can download or print the biodata after generation.
+
+guide.mandatory=Fields marked with (*) are mandatory.
+guide.optional=All other information is optional.
+guide.hideOptional=Empty fields will not appear in the final biodata.
+
+guide.privacy=Your data is not stored. Everything stays in your browser.
+guide.tip=Tip: Fill only required fields to keep biodata clean and professional.
+
+
+# =====================================================
+# ACTIONS
+# =====================================================
+action.changeGodImage=Change God Image
+action.changeMantra=Change Mantra
+
+
+# =====================================================
+# FOOTER
 # =====================================================
 footer.brand=Biodata Maker
 footer.desc=Create beautiful marriage biodata in just a few minutes.
@@ -963,7 +1132,7 @@ footer.copyright=\u00a9 2026 Biodata Maker. All rights reserved.
 
 
 # =====================================================
-# Static Pages
+# STATIC PAGES
 # =====================================================
 about.title=About Us
 about.content=We help families create clean, printable and professional marriage biodata easily.
@@ -976,76 +1145,18 @@ contact.content=For any queries, please reach out to us via email.
 
 terms.title=Terms & Conditions
 terms.content=This service is provided as-is for personal use.
-
-
-# ======================
-# Months
-# ======================
-dropdown.month.select=Month
-dropdown.month.01=Jan
-dropdown.month.02=Feb
-dropdown.month.03=Mar
-dropdown.month.04=Apr
-dropdown.month.05=May
-dropdown.month.06=Jun
-dropdown.month.07=Jul
-dropdown.month.08=Aug
-dropdown.month.09=Sep
-dropdown.month.10=Oct
-dropdown.month.11=Nov
-dropdown.month.12=Dec
-
-# Profile Photo
-editor.profile.title=Profile Photo (Optional)
-editor.profile.hint=You may upload a passport size photo. This is optional.
-editor.profile.remove=Remove photo
-editor.profile.upload=Upload Photo
-
-
-guide.title=How to use Biodata Maker
-guide.hide=Hide instructions
-guide.show=Show instructions
-
-guide.god=You can change or remove the God image.
-guide.photo=You can add a photograph or leave it blank.
-guide.mantra=The mantra text can be edited as per your preference.
-guide.mandatory=Fields marked with (*) are mandatory.
-guide.optional=All other information is optional.
-guide.hideOptional=Optional fields left empty will not appear in the final biodata.
-guide.auto=Biodata layout will automatically adjust based on the information you provide.
-action.changeGodImage=Change God Image
-action.changeMantra=Change Mantra
-
-editor.header.title=\ud83d\uded5 Biodata Title
-editor.photo.optional.note=Adding a photo is optional. Even without a photo, your biodata will look good.
-
-#####
-home.video.templates.title=Wedding Video Invitations
-home.video.templates.subtitle=Beautiful animated wedding invitation videos
-
-
-video.mantra=|| Shri Ganeshaya Namah ||
-video.invite=Wedding Invitation
-video.closing=Your gracious presence will make the occasion truly special
-video.end=Save the Date
-
-editor.bride.placeholder=Bride Name
-editor.groom.placeholder=Groom Name
-editor.date.placeholder=Wedding Date
-editor.place.placeholder=Venue
-
  
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\messages_mr.properties" 
 -------------------------------------------------- 
 # =====================================================
-# App
+# APP
 # =====================================================
 app.title=\u092e\u0930\u093e\u0920\u0940 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u092e\u0947\u0915\u0930
 
 
 # =====================================================
-# Navigation
+# NAVIGATION
 # =====================================================
 nav.home=\u092e\u0941\u0916\u094d\u092f\u092a\u0943\u0937\u094d\u0920
 nav.templates=\u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f\u094d\u0938
@@ -1054,18 +1165,34 @@ nav.contact=\u0938\u0902\u092a\u0930\u094d\u0915
 
 
 # =====================================================
-# Buttons / Common Labels
+# COMMON BUTTONS & LABELS
 # =====================================================
 button.useTemplate=\u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f \u0935\u093e\u092a\u0930\u093e
 button.loadMore=\u0906\u0923\u0916\u0940 \u0926\u093e\u0916\u0935\u093e
 button.submit=\u0938\u092c\u092e\u093f\u091f
 button.back=\u2190 \u092e\u093e\u0917\u0947 \u091c\u093e
+
 label.comingSoon=\u0932\u0935\u0915\u0930\u091a \u092f\u0947\u0924 \u0906\u0939\u0947
 form.required.note=\u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u092e\u093e\u0939\u093f\u0924\u0940
 
 
 # =====================================================
-# Dashboard / Homepage \u2013 Hero
+# HERO SECTION
+# =====================================================
+hero.title.line1=\u0938\u0941\u0902\u0926\u0930
+hero.title.line2=\u0935\u093f\u0935\u093e\u0939 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e
+hero.title.in=\u092b\u0915\u094d\u0924
+hero.title.time=\u0968 \u092e\u093f\u0928\u093f\u091f\u093e\u0902\u0924
+hero.subtitle=\u0935\u093f\u0935\u093e\u0939\u093e\u0938\u093e\u0920\u0940 \u0924\u092f\u093e\u0930 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f\u094d\u0938
+hero.cta=\u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u0924\u092f\u093e\u0930 \u0915\u0930\u093e
+
+hero.point1=\u2714 PDF \u0921\u093e\u0909\u0928\u0932\u094b\u0921
+hero.point2=\u2714 \u092a\u094d\u0930\u093f\u0902\u091f\u0938\u093e\u0920\u0940 \u092f\u094b\u0917\u094d\u092f \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e
+hero.point3=\u2714 \u0932\u0949\u0917\u093f\u0928 \u0906\u0935\u0936\u094d\u092f\u0915 \u0928\u093e\u0939\u0940
+
+
+# =====================================================
+# HOME - HERO (LEGACY SUPPORT)
 # =====================================================
 home.hero.title=\u0968 \u092e\u093f\u0928\u093f\u091f\u093e\u0902\u0924 \u0938\u0941\u0902\u0926\u0930 \u0935\u093f\u0935\u093e\u0939 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0924\u092f\u093e\u0930 \u0915\u0930\u093e
 home.hero.subtitle=\u0935\u093f\u0935\u093e\u0939\u093e\u0938\u093e\u0920\u0940 \u0924\u092f\u093e\u0930 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f\u094d\u0938
@@ -1078,7 +1205,7 @@ home.hero.point.nologin=\u0915\u094b\u0923\u0924\u0947\u0939\u0940 \u0932\u0949\
 
 
 # =====================================================
-# Homepage \u2013 Templates
+# HOME - TEMPLATES
 # =====================================================
 home.templates.title=\u0935\u093f\u0935\u093e\u0939 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f\u094d\u0938
 home.templates.subtitle=\u092a\u093e\u0930\u0902\u092a\u0930\u093f\u0915 \u2022 \u0938\u0941\u092c\u0915 \u2022 \u092a\u094d\u0930\u093f\u0902\u091f\u0938\u093e\u0920\u0940 \u092f\u094b\u0917\u094d\u092f
@@ -1088,7 +1215,7 @@ home.templates.viewAll=\u0938\u0930\u094d\u0935 \u091f\u0947\u092e\u094d\u092a\u
 
 
 # =====================================================
-# Homepage \u2013 Trust / Why Us
+# HOME - TRUST / WHY US
 # =====================================================
 home.trust.title=\u0915\u0941\u091f\u0941\u0902\u092c\u0947 \u0906\u092e\u094d\u0939\u093e\u0932\u093e\u091a \u0915\u093e \u0928\u093f\u0935\u0921\u0924\u093e\u0924
 
@@ -1104,9 +1231,25 @@ home.trust.device.desc=\u0938\u0930\u094d\u0935 \u0909\u092a\u0915\u0930\u0923\u
 home.trust.time.title=\u092b\u0915\u094d\u0924 \u0968 \u092e\u093f\u0928\u093f\u091f\u093e\u0902\u0924
 home.trust.time.desc=\u0938\u094b\u092a\u0947 \u0935 \u091c\u0932\u0926 \u092a\u094d\u0930\u0915\u094d\u0930\u093f\u092f\u093e
 
+home.trust.privacy=\u0924\u0941\u092e\u091a\u0940 \u0935\u0948\u092f\u0915\u094d\u0924\u093f\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u0906\u092e\u094d\u0939\u0940 \u0938\u093e\u0920\u0935\u0924 \u0928\u093e\u0939\u0940
+home.trust.nologin=\u0932\u0949\u0917\u093f\u0928\u091a\u0940 \u0917\u0930\u091c \u0928\u093e\u0939\u0940
+home.trust.safe=100% \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0906\u0923\u093f \u0916\u093e\u091c\u0917\u0940 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u091c\u0928\u0930\u0947\u091f\u0930
+
 
 # =====================================================
-# Testimonials
+# HOME - VIDEO TEMPLATES
+# =====================================================
+home.video.templates.title=\u0932\u0917\u094d\u0928 \u0935\u094d\u0939\u093f\u0921\u093f\u0913 \u0906\u092e\u0902\u0924\u094d\u0930\u0923
+home.video.templates.subtitle=\u0938\u0941\u0902\u0926\u0930 \u0905\u200d\u0945\u0928\u093f\u092e\u0947\u091f\u0947\u0921 \u0932\u0917\u094d\u0928 \u0906\u092e\u0902\u0924\u094d\u0930\u0923 \u0935\u094d\u0939\u093f\u0921\u093f\u0913
+
+video.mantra=\u0965 \u0936\u094d\u0930\u0940 \u0917\u0923\u0947\u0936\u093e\u092f \u0928\u092e\u0903 \u0965
+video.invite=\u0935\u093f\u0935\u093e\u0939 \u0928\u093f\u092e\u0902\u0924\u094d\u0930\u0923
+video.closing=\u0906\u092a\u0932\u0940 \u0909\u092a\u0938\u094d\u0925\u093f\u0924\u0940 \u0938\u094b\u0939\u0933\u094d\u092f\u093e\u091a\u0940 \u0936\u094b\u092d\u093e \u0935\u093e\u0922\u0935\u0947\u0932
+video.end=\u0924\u093e\u0930\u0940\u0916 \u0932\u0915\u094d\u0937\u093e\u0924 \u0920\u0947\u0935\u093e
+
+
+# =====================================================
+# TESTIMONIALS
 # =====================================================
 home.testimonial.title=\u0935\u093e\u092a\u0930\u0915\u0930\u094d\u0924\u094d\u092f\u093e\u0902\u091a\u0947 \u0905\u0928\u0941\u092d\u0935
 home.testimonial.one=\u0916\u0942\u092a\u091a \u0938\u0941\u092c\u0915 \u0906\u0923\u093f \u0935\u093e\u092a\u0930\u0923\u094d\u092f\u093e\u0938 \u0938\u094b\u092a\u0947.
@@ -1125,7 +1268,7 @@ home.faq.a2=\u0939\u094b\u092f, \u0924\u0941\u092e\u094d\u0939\u0940 \u092a\u094
 
 
 # =====================================================
-# Categories
+# CATEGORY
 # =====================================================
 category.wedding=\u0935\u093f\u0935\u093e\u0939 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e
 category.birthday=\u0935\u093e\u0922\u0926\u093f\u0935\u0938 \u0915\u093e\u0930\u094d\u0921
@@ -1133,15 +1276,20 @@ category.hero.subtitle=\u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f \u0928\u
 
 
 # =====================================================
-# Editor \u2013 General
+# EDITOR - GENERAL
 # =====================================================
-editor.title=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0938\u093e\u0928\u0941\u0915\u0942\u0932 \u0915\u0930\u093e
+editor.title=\u0906\u092a\u0932\u093e \u0938\u0941\u0902\u0926\u0930 \u0935\u093f\u0935\u093e\u0939 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0907\u0925\u0947 \u0924\u092f\u093e\u0930 \u0915\u0930\u093e
+
+editor.subtitle=\u0915\u093e\u0939\u0940 \u092e\u093f\u0928\u093f\u091f\u093e\u0902\u0924 \u0906\u0915\u0930\u094d\u0937\u0915 \u0906\u0923\u093f \u0935\u094d\u092f\u0935\u0938\u094d\u0925\u093f\u0924 \u0935\u093f\u0935\u093e\u0939 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0924\u092f\u093e\u0930 \u0915\u0930\u0923\u094d\u092f\u093e\u0938\u093e\u0920\u0940 \u0916\u093e\u0932\u0940\u0932 \u092e\u093e\u0939\u093f\u0924\u0940 \u092d\u0930\u093e
 editor.toggle.marathiTyping=\u092e\u0930\u093e\u0920\u0940 \u091f\u093e\u092f\u092a\u093f\u0902\u0917 (English \u2192 \u092e\u0930\u093e\u0920\u0940)
 editor.toggle.hint=\u0907\u0902\u0917\u094d\u0930\u091c\u0940\u0924 \u091f\u093e\u0907\u092a \u0915\u0930\u093e, \u0924\u0947 \u0906\u092a\u094b\u0906\u092a \u092e\u0930\u093e\u0920\u0940\u0924 \u092c\u0926\u0932\u0947\u0932
 
+editor.header.title=\ud83d\uded5 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0936\u0940\u0930\u094d\u0937\u0915
+editor.start.hint=\u0916\u093e\u0932\u0940 \u0906\u092a\u0932\u0940 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u092e\u093e\u0939\u093f\u0924\u0940 \u092d\u0930\u093e\u092f\u0932\u093e \u0938\u0941\u0930\u0941\u0935\u093e\u0924 \u0915\u0930\u093e. \u092b\u0915\u094d\u0924 \u0906\u0935\u0936\u094d\u092f\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u092d\u0930\u0932\u0940 \u0924\u0930\u0940 \u091a\u093e\u0932\u0947\u0932. \u0907\u0924\u0930 \u092e\u093e\u0939\u093f\u0924\u0940 \u0910\u091a\u094d\u091b\u093f\u0915 \u0906\u0939\u0947.
+
 
 # =====================================================
-# Editor Sections
+# EDITOR SECTIONS
 # =====================================================
 editor.section.personal=\u0935\u0948\u092f\u0915\u094d\u0924\u093f\u0915 \u092e\u093e\u0939\u093f\u0924\u0940
 editor.section.birth=\u091c\u0928\u094d\u092e \u0935 \u0915\u0941\u0902\u0921\u0932\u0940
@@ -1153,7 +1301,7 @@ editor.section.custom=\u0907\u0924\u0930 \u092e\u093e\u0939\u093f\u0924\u0940
 
 
 # =====================================================
-# Editor Form Fields \u2013 Personal
+# EDITOR - PERSONAL FIELDS
 # =====================================================
 editor.form.name=\u0928\u093e\u0935
 editor.form.gender=\u0932\u093f\u0902\u0917
@@ -1162,10 +1310,11 @@ editor.form.religion=\u0927\u0930\u094d\u092e
 editor.form.caste=\u091c\u093e\u0924
 editor.form.subCaste=\u0909\u092a\u091c\u093e\u0924
 editor.form.gotra=\u0917\u094b\u0924\u094d\u0930
+editor.form.kuldaivat=\u0915\u0941\u0933\u0926\u0948\u0935\u0924
 
 
 # =====================================================
-# Editor Form Fields \u2013 Birth & Horoscope
+# EDITOR - BIRTH & HOROSCOPE
 # =====================================================
 editor.form.birthDate=\u091c\u0928\u094d\u092e \u0924\u093e\u0930\u0940\u0916
 editor.form.birthTime=\u091c\u0928\u094d\u092e \u0935\u0947\u0933
@@ -1173,10 +1322,12 @@ editor.form.birthPlace=\u091c\u0928\u094d\u092e \u0938\u094d\u0925\u0933
 editor.form.rashi=\u0930\u093e\u0936\u0940
 editor.form.nakshatra=\u0928\u0915\u094d\u0937\u0924\u094d\u0930
 editor.form.mangal=\u092e\u0902\u0917\u0933
+editor.form.gan=\u0917\u0923
+editor.form.nadi=\u0928\u093e\u0921\u0940
 
 
 # =====================================================
-# Editor Form Fields \u2013 Physical
+# EDITOR - PHYSICAL
 # =====================================================
 editor.form.height=\u0909\u0902\u091a\u0940
 editor.form.weight=\u0935\u091c\u0928
@@ -1186,7 +1337,7 @@ editor.form.disability=\u0905\u092a\u0902\u0917\u0924\u094d\u0935
 
 
 # =====================================================
-# Editor Form Fields \u2013 Education & Profession
+# EDITOR - EDUCATION & PROFESSION
 # =====================================================
 editor.form.education=\u0936\u093f\u0915\u094d\u0937\u0923
 editor.form.profession=\u0935\u094d\u092f\u0935\u0938\u093e\u092f
@@ -1194,16 +1345,20 @@ editor.form.income=\u0935\u093e\u0930\u094d\u0937\u093f\u0915 \u0909\u0924\u094d
 
 
 # =====================================================
-# Editor Form Fields \u2013 Family
+# EDITOR - FAMILY
 # =====================================================
 editor.form.fatherName=\u0935\u0921\u093f\u0932\u093e\u0902\u091a\u0947 \u0928\u093e\u0935
 editor.form.motherName=\u0906\u0908\u091a\u0947 \u0928\u093e\u0935
 editor.form.brothers=\u092d\u093e\u090a
 editor.form.sisters=\u092c\u0939\u093f\u0923\u0940
+editor.form.familyType=\u0915\u0941\u091f\u0941\u0902\u092c \u092a\u094d\u0930\u0915\u093e\u0930
+editor.form.familyIncome=\u0935\u093e\u0930\u094d\u0937\u093f\u0915 \u0909\u0924\u094d\u092a\u0928\u094d\u0928
+editor.form.fatherOccupation=\u0935\u0921\u093f\u0932\u093e\u0902\u091a\u093e \u0935\u094d\u092f\u0935\u0938\u093e\u092f
+editor.form.motherOccupation=\u0906\u0908\u091a\u093e \u0935\u094d\u092f\u0935\u0938\u093e\u092f
 
 
 # =====================================================
-# Editor Form Fields \u2013 Contact
+# EDITOR - CONTACT
 # =====================================================
 editor.form.address=\u092a\u0924\u094d\u0924\u093e
 editor.form.mobile=\u092e\u094b\u092c\u093e\u0908\u0932 \u0928\u0902\u092c\u0930
@@ -1213,7 +1368,18 @@ editor.form.submit=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0924\u092f
 
 
 # =====================================================
-# Editor Placeholders / Instructions
+# EDITOR - PROFILE PHOTO
+# =====================================================
+editor.profile.title=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 (\u0910\u091a\u094d\u091b\u093f\u0915)
+editor.profile.hint=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u091c\u094b\u0921\u0932\u094d\u092f\u093e\u0938 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u0905\u0927\u093f\u0915 \u0906\u0915\u0930\u094d\u0937\u0915 \u0926\u093f\u0938\u0924\u094b.
+editor.profile.remove=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u0915\u093e\u0922\u093e
+editor.profile.upload=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u093e
+
+editor.photo.optional.note=\u092b\u094b\u091f\u094b \u091f\u093e\u0915\u0923\u0947 \u0906\u092a\u0932\u094d\u092f\u093e \u0907\u091a\u094d\u091b\u0947\u0928\u0941\u0938\u093e\u0930 \u0906\u0939\u0947. \u0928 \u091f\u093e\u0915\u0932\u094d\u092f\u093e\u0938\u0939\u0940 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0938\u0941\u0902\u0926\u0930 \u0926\u093f\u0938\u0947\u0932.
+
+
+# =====================================================
+# EDITOR - INSTRUCTIONS / PLACEHOLDERS
 # =====================================================
 editor.instruction.name=\u092f\u0947\u0925\u0947 \u0928\u093e\u0935 \u091f\u093e\u0915\u093e
 editor.instruction.birthDate=\u091c\u0928\u094d\u092e\u0924\u093e\u0930\u0940\u0916 \u0928\u093f\u0935\u0921\u093e
@@ -1223,19 +1389,31 @@ editor.instruction.religion=\u092f\u0947\u0925\u0947 \u0927\u0930\u094d\u092e \u
 editor.instruction.caste=\u092f\u0947\u0925\u0947 \u091c\u093e\u0924 \u0932\u093f\u0939\u093e
 editor.instruction.subCaste=\u0909\u092a\u091c\u093e\u0924 \u0905\u0938\u0932\u094d\u092f\u093e\u0938 \u0932\u093f\u0939\u093e
 editor.instruction.gotra=\u0917\u094b\u0924\u094d\u0930 \u0905\u0938\u0932\u094d\u092f\u093e\u0938 \u0932\u093f\u0939\u093e
+editor.instruction.kuldaivat=\u0915\u0941\u0933\u0926\u0948\u0935\u0924 \u0905\u0938\u0932\u094d\u092f\u093e\u0938 \u0932\u093f\u0939\u093e
+
 editor.instruction.education=\u0936\u093f\u0915\u094d\u0937\u0923\u093e\u091a\u0940 \u092e\u093e\u0939\u093f\u0924\u0940 \u0932\u093f\u0939\u093e
 editor.instruction.profession=\u0935\u094d\u092f\u0935\u0938\u093e\u092f\u093e\u091a\u0940 \u092e\u093e\u0939\u093f\u0924\u0940 \u0932\u093f\u0939\u093e
 editor.instruction.mobile=\u092e\u094b\u092c\u093e\u0908\u0932 \u0915\u094d\u0930\u092e\u093e\u0902\u0915 \u0932\u093f\u0939\u093e
 editor.instruction.address=\u092a\u0942\u0930\u094d\u0923 \u092a\u0924\u094d\u0924\u093e \u0932\u093f\u0939\u093e
+
 editor.instruction.fatherName=\u0935\u0921\u093f\u0932\u093e\u0902\u091a\u0947 \u092a\u0942\u0930\u094d\u0923 \u0928\u093e\u0935 \u0932\u093f\u0939\u093e
 editor.instruction.motherName=\u0906\u0908\u091a\u0947 \u092a\u0942\u0930\u094d\u0923 \u0928\u093e\u0935 \u0932\u093f\u0939\u093e
+editor.instruction.fatherOccupation=\u0935\u0921\u093f\u0932\u093e\u0902\u091a\u093e \u0935\u094d\u092f\u0935\u0938\u093e\u092f \u0932\u093f\u0939\u093e
+editor.instruction.motherOccupation=\u0906\u0908\u091a\u093e \u0935\u094d\u092f\u0935\u0938\u093e\u092f \u0932\u093f\u0939\u093e
+editor.instruction.familyIncome=\u0935\u093e\u0930\u094d\u0937\u093f\u0915 \u0909\u0924\u094d\u092a\u0928\u094d\u0928 \u0932\u093f\u0939\u093e
+editor.instruction.familyType=\u0915\u0941\u091f\u0941\u0902\u092c \u092a\u094d\u0930\u0915\u093e\u0930 \u0928\u093f\u0935\u0921\u093e
+
+editor.instruction.gan=\u0917\u0923 \u0928\u093f\u0935\u0921\u093e
+editor.instruction.nadi=\u0928\u093e\u0921\u0940 \u0928\u093f\u0935\u0921\u093e
 
 editor.placeholder.brotherName=\u092d\u093e\u0935\u093e\u091a\u0947 \u0928\u093e\u0935
 editor.placeholder.sisterName=\u092c\u0939\u093f\u0923\u0940\u091a\u0947 \u0928\u093e\u0935
 
+editor.instruction.email=\u0908\u092e\u0947\u0932 \u0932\u093f\u0939\u093e
+
 
 # =====================================================
-# Dropdown \u2013 Common
+# DROPDOWNS - COMMON
 # =====================================================
 dropdown.select=-- \u0928\u093f\u0935\u0921\u093e --
 dropdown.count.select=\u0938\u0902\u0916\u094d\u092f\u093e
@@ -1245,7 +1423,7 @@ dropdown.marital.unmarried=\u0905\u0935\u093f\u0935\u093e\u0939\u093f\u0924
 
 
 # =====================================================
-# Religion
+# DROPDOWNS - RELIGION
 # =====================================================
 dropdown.religion.select=\u0906\u092a\u0932\u093e \u0927\u0930\u094d\u092e \u0928\u093f\u0935\u0921\u093e
 dropdown.religion.hindu=\u0939\u093f\u0902\u0926\u0942
@@ -1258,37 +1436,58 @@ dropdown.religion.other=\u0907\u0924\u0930
 
 
 # =====================================================
-# Rashi
+# DROPDOWNS - RASHI
 # =====================================================
 dropdown.rashi.select=\u0930\u093e\u0936\u0940 \u0928\u093f\u0935\u0921\u093e
 dropdown.rashi.mesh=\u092e\u0947\u0937
 dropdown.rashi.vrushabh=\u0935\u0943\u0937\u092d
 dropdown.rashi.mithun=\u092e\u093f\u0925\u0941\u0928
 dropdown.rashi.kark=\u0915\u0930\u094d\u0915
-dropdown.rashi.singh=\u0938\u093f\u0902\u0939
+dropdown.rashi.sinh=\u0938\u093f\u0902\u0939
 dropdown.rashi.kanya=\u0915\u0928\u094d\u092f\u093e
 dropdown.rashi.tula=\u0924\u0941\u0933
-dropdown.rashi.vrushchik=\u0935\u0943\u0936\u094d\u091a\u093f\u0915
+dropdown.rashi.vrishchik=\u0935\u0943\u0936\u094d\u091a\u093f\u0915
 dropdown.rashi.dhanu=\u0927\u0928\u0941
 dropdown.rashi.makar=\u092e\u0915\u0930
 dropdown.rashi.kumbh=\u0915\u0941\u0902\u092d
-dropdown.rashi.min=\u092e\u0940\u0928
+dropdown.rashi.meen=\u092e\u0940\u0928
 
 
 # =====================================================
-# Nakshatra
+# DROPDOWNS - NAKSHATRA
 # =====================================================
 dropdown.nakshatra.select=\u0928\u0915\u094d\u0937\u0924\u094d\u0930 \u0928\u093f\u0935\u0921\u093e
 dropdown.nakshatra.ashwini=\u0905\u0936\u094d\u0935\u093f\u0928\u0940
 dropdown.nakshatra.bharani=\u092d\u0930\u0923\u0940
 dropdown.nakshatra.krittika=\u0915\u0943\u0924\u094d\u0924\u093f\u0915\u093e
 dropdown.nakshatra.rohini=\u0930\u094b\u0939\u093f\u0923\u0940
-dropdown.nakshatra.mrug=\u092e\u0943\u0917\u0936\u0940\u0930\u094d\u0937
+dropdown.nakshatra.mrigashira=\u092e\u0943\u0917\u0936\u093f\u0930\u093e
 dropdown.nakshatra.ardra=\u0906\u0930\u094d\u0926\u094d\u0930\u093e
+dropdown.nakshatra.punarvasu=\u092a\u0941\u0928\u0930\u094d\u0935\u0938\u0942
+dropdown.nakshatra.pushya=\u092a\u0941\u0937\u094d\u092f
+dropdown.nakshatra.ashlesha=\u0906\u0936\u094d\u0932\u0947\u0937\u093e
+dropdown.nakshatra.magha=\u092e\u0918\u093e
+dropdown.nakshatra.purvaPhalguni=\u092a\u0942\u0930\u094d\u0935\u093e \u092b\u093e\u0932\u094d\u0917\u0941\u0928\u0940
+dropdown.nakshatra.uttaraPhalguni=\u0909\u0924\u094d\u0924\u0930 \u092b\u093e\u0932\u094d\u0917\u0941\u0928\u0940
+dropdown.nakshatra.hasta=\u0939\u0938\u094d\u0924
+dropdown.nakshatra.chitra=\u091a\u093f\u0924\u094d\u0930\u093e
+dropdown.nakshatra.swati=\u0938\u094d\u0935\u093e\u0924\u0940
+dropdown.nakshatra.vishakha=\u0935\u093f\u0936\u093e\u0916\u093e
+dropdown.nakshatra.anuradha=\u0905\u0928\u0941\u0930\u093e\u0927\u093e
+dropdown.nakshatra.jyeshtha=\u091c\u094d\u092f\u0947\u0937\u094d\u0920\u093e
+dropdown.nakshatra.mula=\u092e\u0942\u0933
+dropdown.nakshatra.purvashada=\u092a\u0942\u0930\u094d\u0935\u093e\u0937\u093e\u0922\u093e
+dropdown.nakshatra.uttarashada=\u0909\u0924\u094d\u0924\u0930\u093e\u0937\u093e\u0922\u093e
+dropdown.nakshatra.shravana=\u0936\u094d\u0930\u0935\u0923
+dropdown.nakshatra.dhanishta=\u0927\u0928\u093f\u0937\u094d\u0920\u093e
+dropdown.nakshatra.shatabhisha=\u0936\u0924\u092d\u093f\u0937\u093e
+dropdown.nakshatra.purvaBhadrapada=\u092a\u0942\u0930\u094d\u0935\u093e\u092d\u093e\u0926\u094d\u0930\u092a\u0926\u093e
+dropdown.nakshatra.uttaraBhadrapada=\u0909\u0924\u094d\u0924\u0930\u093e\u092d\u093e\u0926\u094d\u0930\u092a\u0926\u093e
+dropdown.nakshatra.revati=\u0930\u0947\u0935\u0924\u0940
 
 
 # =====================================================
-# Mangal
+# DROPDOWNS - MANGAL
 # =====================================================
 dropdown.mangal.select=\u092e\u0902\u0917\u0933 \u0906\u0939\u0947 \u0915\u093e \u0924\u0947 \u0928\u093f\u0935\u0921\u093e
 dropdown.mangal.yes=\u0939\u094b\u092f
@@ -1297,20 +1496,41 @@ dropdown.mangal.unknown=\u092e\u093e\u0939\u093f\u0924 \u0928\u093e\u0939\u0940
 
 
 # =====================================================
-# Height
+# DROPDOWNS - GAN
+# =====================================================
+dropdown.gan.select=\u0917\u0923 \u0928\u093f\u0935\u0921\u093e
+dropdown.gan.dev=\u0926\u0947\u0935 \u0917\u0923
+dropdown.gan.manushya=\u092e\u0928\u0941\u0937\u094d\u092f \u0917\u0923
+dropdown.gan.rakshas=\u0930\u093e\u0915\u094d\u0937\u0938 \u0917\u0923
+
+
+# =====================================================
+# DROPDOWNS - NADI
+# =====================================================
+dropdown.nadi.select=\u0928\u093e\u0921\u0940 \u0928\u093f\u0935\u0921\u093e
+dropdown.nadi.adi=\u0906\u0926\u093f \u0928\u093e\u0921\u0940
+dropdown.nadi.madhya=\u092e\u0927\u094d\u092f \u0928\u093e\u0921\u0940
+dropdown.nadi.antya=\u0905\u0902\u0924\u094d\u092f \u0928\u093e\u0921\u0940
+
+
+# =====================================================
+# DROPDOWNS - HEIGHT
 # =====================================================
 dropdown.height.select=\u0909\u0902\u091a\u0940 \u0928\u093f\u0935\u0921\u093e
-dropdown.height.4_10=4 \u092b\u0942\u091f 10 \u0907\u0902\u091a
-dropdown.height.5_0=5 \u092b\u0942\u091f
+dropdown.height.4_6=4 \u092b\u0942\u091f 6 \u0907\u0902\u091a
+dropdown.height.4_8=4 \u092b\u0942\u091f 8 \u0907\u0902\u091a
+dropdown.height.5_0=5 \u092b\u0942\u091f 0 \u0907\u0902\u091a
 dropdown.height.5_2=5 \u092b\u0942\u091f 2 \u0907\u0902\u091a
 dropdown.height.5_4=5 \u092b\u0942\u091f 4 \u0907\u0902\u091a
 dropdown.height.5_6=5 \u092b\u0942\u091f 6 \u0907\u0902\u091a
 dropdown.height.5_8=5 \u092b\u0942\u091f 8 \u0907\u0902\u091a
-dropdown.height.6_0=6 \u092b\u0942\u091f
+dropdown.height.5_10=5 \u092b\u0942\u091f 10 \u0907\u0902\u091a
+dropdown.height.6_0=6 \u092b\u0942\u091f 0 \u0907\u0902\u091a
+dropdown.height.6_2=6 \u092b\u0942\u091f 2 \u0907\u0902\u091a
 
 
 # =====================================================
-# Blood Group
+# DROPDOWNS - BLOOD GROUP
 # =====================================================
 dropdown.blood.select=\u0930\u0915\u094d\u0924\u0917\u091f \u0928\u093f\u0935\u0921\u093e
 dropdown.blood.a_pos=A+
@@ -1324,7 +1544,7 @@ dropdown.blood.o_neg=O-
 
 
 # =====================================================
-# Complexion
+# DROPDOWNS - COMPLEXION
 # =====================================================
 dropdown.complexion.select=\u0935\u0930\u094d\u0923 \u0928\u093f\u0935\u0921\u093e
 dropdown.complexion.fair=\u0917\u094b\u0930\u093e
@@ -1334,14 +1554,47 @@ dropdown.complexion.veryFair=\u0928\u093f\u092e\u0917\u094b\u0930\u093e
 
 
 # =====================================================
-# Marathi Suggestions
+# DROPDOWNS - FAMILY TYPE
 # =====================================================
+dropdown.familyType.select=\u0915\u0941\u091f\u0941\u0902\u092c \u092a\u094d\u0930\u0915\u093e\u0930 \u0928\u093f\u0935\u0921\u093e
+dropdown.familyType.nuclear=\u090f\u0915\u0932 \u0915\u0941\u091f\u0941\u0902\u092c
+dropdown.familyType.joint=\u0938\u0902\u092f\u0941\u0915\u094d\u0924 \u0915\u0941\u091f\u0941\u0902\u092c
+dropdown.familyType.extended=\u0935\u093f\u0938\u094d\u0924\u093e\u0930\u093f\u0924 \u0915\u0941\u091f\u0941\u0902\u092c
+
+
+# =====================================================
+# DROPDOWNS - DATE
+# =====================================================
+dropdown.month.select=\u092e\u0939\u093f\u0928\u093e
+dropdown.date.select=\u0924\u093e\u0930\u0940\u0916
+dropdown.year.select=\u0935\u0930\u094d\u0937
+
+dropdown.month.01=\u091c\u093e\u0928\u0947\u0935\u093e\u0930\u0940
+dropdown.month.02=\u092b\u0947\u092c\u094d\u0930\u0941\u0935\u093e\u0930\u0940
+dropdown.month.03=\u092e\u093e\u0930\u094d\u091a
+dropdown.month.04=\u090f\u092a\u094d\u0930\u093f\u0932
+dropdown.month.05=\u092e\u0947
+dropdown.month.06=\u091c\u0942\u0928
+dropdown.month.07=\u091c\u0941\u0932\u0948
+dropdown.month.08=\u0911\u0917\u0938\u094d\u091f
+dropdown.month.09=\u0938\u092a\u094d\u091f\u0947\u0902\u092c\u0930
+dropdown.month.10=\u0911\u0915\u094d\u091f\u094b\u092c\u0930
+dropdown.month.11=\u0928\u094b\u0935\u094d\u0939\u0947\u0902\u092c\u0930
+dropdown.month.12=\u0921\u093f\u0938\u0947\u0902\u092c\u0930
+
+
+# =====================================================
+# MARATHI TYPING & SUGGESTIONS
+# =====================================================
+marathi.typing.title=\u092e\u0930\u093e\u0920\u0940 \u091f\u093e\u092f\u092a\u093f\u0902\u0917
+marathi.typing.desc=\u0907\u0902\u0917\u094d\u0930\u091c\u0940 \u091f\u093e\u0907\u092a \u0915\u0930\u093e \u0906\u0923\u093f \u092e\u0930\u093e\u0920\u0940 \u0936\u092c\u094d\u0926 \u0938\u0941\u091a\u0935\u0932\u0947 \u091c\u093e\u0924\u0940\u0932
+
 suggestions.title=\u092e\u0930\u093e\u0920\u0940 \u092a\u0930\u094d\u092f\u093e\u092f
 suggestions.hint=\u0936\u092c\u094d\u0926 \u092c\u0926\u0932\u0923\u094d\u092f\u093e\u0938\u093e\u0920\u0940 \u0936\u092c\u094d\u0926\u093e\u0935\u0930 \u0915\u094d\u0932\u093f\u0915 \u0915\u0930\u093e \u0915\u093f\u0902\u0935\u093e Space / Enter \u092c\u091f\u0923 \u0926\u093e\u092c\u093e.
 
 
 # =====================================================
-# Preview
+# PREVIEW
 # =====================================================
 preview.title=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u092a\u0942\u0930\u094d\u0935\u0926\u0943\u0936\u094d\u092f
 preview.header=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e
@@ -1349,7 +1602,7 @@ preview.customSection=\u0907\u0924\u0930 \u092e\u093e\u0939\u093f\u0924\u0940
 
 
 # =====================================================
-# Validation \u2013 Biodata
+# VALIDATION
 # =====================================================
 validation.minimum.title=\u0905\u092a\u0941\u0930\u0940 \u092e\u093e\u0939\u093f\u0924\u0940
 validation.minimum.message=\u0915\u0943\u092a\u092f\u093e \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0924\u092f\u093e\u0930 \u0915\u0930\u0923\u094d\u092f\u093e\u0938\u093e\u0920\u0940 \u0906\u0935\u0936\u094d\u092f\u0915 \u0915\u093f\u092e\u093e\u0928 \u092e\u093e\u0939\u093f\u0924\u0940 \u092d\u0930\u093e.
@@ -1366,60 +1619,68 @@ validation.required.profession=\u0935\u094d\u092f\u0935\u0938\u093e\u092f
 validation.required.mobile=\u092e\u094b\u092c\u093e\u0908\u0932 \u0928\u0902\u092c\u0930
 validation.required.address=\u092a\u0924\u094d\u0924\u093e
 
-# ======================
-# Months
-# ======================
-dropdown.month.select=\u092e\u0939\u093f\u0928\u093e
-dropdown.month.01=\u091c\u093e\u0928\u0947\u0935\u093e\u0930\u0940
-dropdown.month.02=\u092b\u0947\u092c\u094d\u0930\u0941\u0935\u093e\u0930\u0940
-dropdown.month.03=\u092e\u093e\u0930\u094d\u091a
-dropdown.month.04=\u090f\u092a\u094d\u0930\u093f\u0932
-dropdown.month.05=\u092e\u0947
-dropdown.month.06=\u091c\u0942\u0928
-dropdown.month.07=\u091c\u0941\u0932\u0948
-dropdown.month.08=\u0911\u0917\u0938\u094d\u091f
-dropdown.month.09=\u0938\u092a\u094d\u091f\u0947\u0902\u092c\u0930
-dropdown.month.10=\u0911\u0915\u094d\u091f\u094b\u092c\u0930
-dropdown.month.11=\u0928\u094b\u0935\u094d\u0939\u0947\u0902\u092c\u0930
-dropdown.month.12=\u0921\u093f\u0938\u0947\u0902\u092c\u0930
 
-# Profile Photo
-editor.profile.title=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 (\u0910\u091a\u094d\u091b\u093f\u0915)
-editor.profile.remove=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u0915\u093e\u0922\u093e
-editor.profile.upload=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u093e
-editor.profile.hint=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u091c\u094b\u0921\u0932\u094d\u092f\u093e\u0938 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u0905\u0927\u093f\u0915 \u0906\u0915\u0930\u094d\u0937\u0915 \u0926\u093f\u0938\u0924\u094b.
-
-
-guide.title=\u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u0915\u0938\u093e \u0924\u092f\u093e\u0930 \u0915\u0930\u093e\u0935\u093e
+# =====================================================
+# GUIDE
+# =====================================================
+guide.title=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0915\u0938\u093e \u0924\u092f\u093e\u0930 \u0915\u0930\u093e\u0935\u093e
 guide.hide=\u0938\u0942\u091a\u0928\u093e \u0932\u092a\u0935\u093e
 guide.show=\u0938\u0942\u091a\u0928\u093e \u0926\u093e\u0916\u0935\u093e
 
-guide.god=\u0926\u0947\u0935\u093e\u091a\u0947 \u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u092c\u0926\u0932\u0942 \u0915\u093f\u0902\u0935\u093e \u0915\u093e\u0922\u0942 \u0936\u0915\u0924\u093e.
-guide.photo=\u091b\u093e\u092f\u093e\u091a\u093f\u0924\u094d\u0930 \u0926\u0947\u0923\u0947 \u0910\u091a\u094d\u091b\u093f\u0915 \u0906\u0939\u0947, \u0928 \u0926\u093f\u0932\u094d\u092f\u093e\u0938 \u0930\u093f\u0915\u093e\u092e\u0947 \u0930\u093e\u0939\u0940\u0932.
-guide.mantra=\u092e\u0902\u0924\u094d\u0930\u093e\u091a\u093e \u092e\u091c\u0915\u0942\u0930 \u0906\u092a\u0932\u094d\u092f\u093e \u092a\u0938\u0902\u0924\u0940\u0928\u0941\u0938\u093e\u0930 \u092c\u0926\u0932\u0942 \u0936\u0915\u0924\u093e.
-guide.mandatory=(*) \u0905\u0938\u0932\u0947\u0932\u0940 \u092e\u093e\u0939\u093f\u0924\u0940 \u0905\u0928\u093f\u0935\u093e\u0930\u094d\u092f \u0906\u0939\u0947.
-guide.optional=\u0909\u0930\u094d\u0935\u0930\u093f\u0924 \u0938\u0930\u094d\u0935 \u092e\u093e\u0939\u093f\u0924\u0940 \u0910\u091a\u094d\u091b\u093f\u0915 \u0906\u0939\u0947.
-guide.hideOptional=\u0910\u091a\u094d\u091b\u093f\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u0928 \u0926\u093f\u0932\u094d\u092f\u093e\u0938 \u0924\u0940 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e\u092e\u0927\u094d\u092f\u0947 \u0926\u093f\u0938\u0923\u093e\u0930 \u0928\u093e\u0939\u0940.
-guide.auto=\u0906\u092a\u0923 \u0926\u093f\u0932\u0947\u0932\u094d\u092f\u093e \u092e\u093e\u0939\u093f\u0924\u0940\u0928\u0941\u0938\u093e\u0930 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e\u091a\u093e \u0932\u0947\u0906\u0909\u091f \u0906\u092a\u094b\u0906\u092a \u091c\u0941\u0933\u0935\u0942\u0928 \u0918\u0947\u0924\u0932\u093e \u091c\u093e\u0908\u0932.
+guide.language=\u0906\u092a\u0923 \u0915\u0927\u0940\u0939\u0940 \u0907\u0902\u0917\u094d\u0930\u091c\u0940 \u0935 \u092e\u0930\u093e\u0920\u0940 \u092d\u093e\u0937\u093e \u092c\u0926\u0932\u0942 \u0936\u0915\u0924\u093e.
+guide.typing=\u092e\u0930\u093e\u0920\u0940 \u091f\u093e\u092f\u092a\u093f\u0902\u0917 \u0938\u0941\u0930\u0942 \u0915\u0930\u0942\u0928 \u0907\u0902\u0917\u094d\u0930\u091c\u0940\u0924 \u0932\u093f\u0939\u093e \u0906\u0923\u093f \u092e\u0930\u093e\u0920\u0940 \u0936\u092c\u094d\u0926 \u0938\u0941\u091a\u0935\u0932\u0947 \u091c\u093e\u0924\u0940\u0932.
+guide.photo=\u092b\u094b\u091f\u094b \u091c\u094b\u0921\u0923\u0947 \u0910\u091a\u094d\u091b\u093f\u0915 \u0906\u0939\u0947. \u0924\u0941\u092e\u094d\u0939\u0940 \u0928\u0902\u0924\u0930\u0939\u0940 \u0905\u092a\u0932\u094b\u0921 \u0915\u0930\u0942 \u0936\u0915\u0924\u093e.
+guide.relatives=\u092e\u093e\u092e\u093e, \u0915\u093e\u0915\u093e, \u092e\u093e\u0935\u0936\u0940 \u0907. \u0928\u093e\u0924\u0947\u0935\u093e\u0908\u0915\u093e\u0902\u091a\u0940 \u092e\u093e\u0939\u093f\u0924\u0940 "Custom Field" \u092e\u0927\u094d\u092f\u0947 \u091c\u094b\u0921\u0942 \u0936\u0915\u0924\u093e.
+guide.download=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0924\u092f\u093e\u0930 \u091d\u093e\u0932\u094d\u092f\u093e\u0935\u0930 \u0924\u0941\u092e\u094d\u0939\u0940 \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u093f\u0902\u0935\u093e \u092a\u094d\u0930\u093f\u0902\u091f \u0915\u0930\u0942 \u0936\u0915\u0924\u093e.
+
+guide.mandatory=(*) \u0905\u0938\u0932\u0947\u0932\u0940 \u092e\u093e\u0939\u093f\u0924\u0940 \u0906\u0935\u0936\u094d\u092f\u0915 \u0906\u0939\u0947.
+guide.optional=\u0907\u0924\u0930 \u0938\u0930\u094d\u0935 \u092e\u093e\u0939\u093f\u0924\u0940 \u0910\u091a\u094d\u091b\u093f\u0915 \u0906\u0939\u0947.
+guide.hideOptional=\u0930\u093f\u0915\u093e\u092e\u0940 \u0920\u0947\u0935\u0932\u0947\u0932\u0940 \u092e\u093e\u0939\u093f\u0924\u0940 \u0905\u0902\u0924\u093f\u092e \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e\u0924 \u0926\u093f\u0938\u0923\u093e\u0930 \u0928\u093e\u0939\u0940.
+
+guide.privacy=\u0906\u092a\u0932\u0940 \u0935\u0948\u092f\u0915\u094d\u0924\u093f\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u0938\u093e\u0920\u0935\u0932\u0940 \u091c\u093e\u0924 \u0928\u093e\u0939\u0940. \u0938\u0930\u094d\u0935 \u092e\u093e\u0939\u093f\u0924\u0940 \u0906\u092a\u0932\u094d\u092f\u093e \u092c\u094d\u0930\u093e\u0909\u091d\u0930\u092e\u0927\u094d\u092f\u0947\u091a \u0930\u093e\u0939\u0924\u0947.
+guide.tip=\u091f\u093f\u092a: \u092b\u0915\u094d\u0924 \u0906\u0935\u0936\u094d\u092f\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u092d\u0930\u0932\u094d\u092f\u093e\u0938 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0938\u094d\u0935\u091a\u094d\u091b \u0906\u0923\u093f \u0935\u094d\u092f\u093e\u0935\u0938\u093e\u092f\u093f\u0915 \u0926\u093f\u0938\u0924\u094b.
+
+
+# =====================================================
+# ACTIONS
+# =====================================================
 action.changeGodImage=\u0926\u0947\u0935\u093e\u091a\u0947 \u091a\u093f\u0924\u094d\u0930 \u092c\u0926\u0932\u093e
 action.changeMantra=\u092e\u0902\u0924\u094d\u0930 \u092c\u0926\u0932\u093e
 
-editor.header.title=\ud83d\uded5 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0936\u0940\u0930\u094d\u0937\u0915
-editor.photo.optional.note=\u092b\u094b\u091f\u094b \u091f\u093e\u0915\u0923\u0947 \u0906\u092a\u0932\u094d\u092f\u093e \u0907\u091a\u094d\u091b\u0947\u0928\u0941\u0938\u093e\u0930 \u0906\u0939\u0947. \u0928 \u091f\u093e\u0915\u0932\u094d\u092f\u093e\u0938\u0939\u0940 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0938\u0941\u0902\u0926\u0930 \u0926\u093f\u0938\u0947\u0932.
 
-home.video.templates.title=\u0932\u0917\u094d\u0928 \u0935\u094d\u0939\u093f\u0921\u093f\u0913 \u0906\u092e\u0902\u0924\u094d\u0930\u0923
-home.video.templates.subtitle=\u0938\u0941\u0902\u0926\u0930 \u0905\u200d\u0945\u0928\u093f\u092e\u0947\u091f\u0947\u0921 \u0932\u0917\u094d\u0928 \u0906\u092e\u0902\u0924\u094d\u0930\u0923 \u0935\u094d\u0939\u093f\u0921\u093f\u0913
+# =====================================================
+# FOOTER
+# =====================================================
+footer.brand=Biodata Maker
+footer.desc=\u0915\u093e\u0939\u0940 \u092e\u093f\u0928\u093f\u091f\u093e\u0902\u0924 \u0938\u0941\u0902\u0926\u0930 \u0935\u093f\u0935\u093e\u0939 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0924\u092f\u093e\u0930 \u0915\u0930\u093e.
 
-video.mantra=\u0965 \u0936\u094d\u0930\u0940 \u0917\u0923\u0947\u0936\u093e\u092f \u0928\u092e\u0903 \u0965
-video.invite=\u0935\u093f\u0935\u093e\u0939 \u0928\u093f\u092e\u0902\u0924\u094d\u0930\u0923
-video.closing=\u0906\u092a\u0932\u0940 \u0909\u092a\u0938\u094d\u0925\u093f\u0924\u0940 \u0938\u094b\u0939\u0933\u094d\u092f\u093e\u091a\u0940 \u0936\u094b\u092d\u093e \u0935\u093e\u0922\u0935\u0947\u0932
-video.end=\u0924\u093e\u0930\u0940\u0916 \u0932\u0915\u094d\u0937\u093e\u0924 \u0920\u0947\u0935\u093e
+footer.links.title=\u0924\u094d\u0935\u0930\u093f\u0924 \u0926\u0941\u0935\u0947
+footer.links.home=\u092e\u0941\u0916\u094d\u092f\u092a\u0943\u0937\u094d\u0920
+footer.links.templates=\u091f\u0947\u092e\u094d\u092a\u0932\u0947\u091f\u094d\u0938
+footer.links.how=\u0915\u0938\u0947 \u0935\u093e\u092a\u0930\u093e\u0935\u0947
+footer.links.contact=\u0938\u0902\u092a\u0930\u094d\u0915
 
-editor.bride.placeholder=\u0935\u0927\u0942\u091a\u0947 \u0928\u093e\u0935
-editor.groom.placeholder=\u0935\u0930\u093e\u091a\u0947 \u0928\u093e\u0935
-editor.date.placeholder=\u0932\u0917\u094d\u0928\u093e\u091a\u0940 \u0924\u093e\u0930\u0940\u0916
-editor.place.placeholder=\u0938\u094d\u0925\u0933
+footer.legal.title=\u0915\u093e\u092f\u0926\u0947\u0936\u0940\u0930
+footer.legal.privacy=\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0927\u094b\u0930\u0923
+footer.legal.terms=\u0905\u091f\u0940 \u0935 \u0936\u0930\u094d\u0924\u0940
 
+footer.copyright=\u00a9 2026 Biodata Maker. \u0938\u0930\u094d\u0935 \u0939\u0915\u094d\u0915 \u0930\u093e\u0916\u0940\u0935.
+
+
+# =====================================================
+# STATIC PAGES
+# =====================================================
+about.title=\u0906\u092e\u091a\u094d\u092f\u093e\u092c\u0926\u094d\u0926\u0932
+about.content=\u0906\u092e\u094d\u0939\u0940 \u0915\u0941\u091f\u0941\u0902\u092c\u093e\u0902\u0928\u093e \u0938\u094d\u0935\u091a\u094d\u091b, \u092a\u094d\u0930\u093f\u0902\u091f\u0938\u093e\u0920\u0940 \u092f\u094b\u0917\u094d\u092f \u0906\u0923\u093f \u0935\u094d\u092f\u093e\u0935\u0938\u093e\u092f\u093f\u0915 \u0935\u093f\u0935\u093e\u0939 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0938\u0939\u091c \u0924\u092f\u093e\u0930 \u0915\u0930\u0923\u094d\u092f\u093e\u0938 \u092e\u0926\u0924 \u0915\u0930\u0924\u094b.
+
+privacy.title=\u0917\u094b\u092a\u0928\u0940\u092f\u0924\u093e \u0927\u094b\u0930\u0923
+privacy.content=\u0906\u092e\u094d\u0939\u0940 \u0924\u0941\u092e\u091a\u0940 \u0935\u0948\u092f\u0915\u094d\u0924\u093f\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u0938\u093e\u0920\u0935\u0924 \u0915\u093f\u0902\u0935\u093e \u0936\u0947\u0905\u0930 \u0915\u0930\u0924 \u0928\u093e\u0939\u0940.
+
+contact.title=\u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u093e
+contact.content=\u0915\u093e\u0939\u0940 \u092a\u094d\u0930\u0936\u094d\u0928 \u0905\u0938\u0932\u094d\u092f\u093e\u0938 \u0915\u0943\u092a\u092f\u093e \u0906\u092e\u094d\u0939\u093e\u0932\u093e \u0908-\u092e\u0947\u0932\u0926\u094d\u0935\u093e\u0930\u0947 \u0938\u0902\u092a\u0930\u094d\u0915 \u0915\u0930\u093e.
+
+terms.title=\u0905\u091f\u0940 \u0935 \u0936\u0930\u094d\u0924\u0940
+terms.content=\u0939\u0940 \u0938\u0947\u0935\u093e \u0935\u0948\u092f\u0915\u094d\u0924\u093f\u0915 \u0935\u093e\u092a\u0930\u093e\u0938\u093e\u0920\u0940 \u092a\u094d\u0930\u0926\u093e\u0928 \u0915\u0947\u0932\u0940 \u0906\u0939\u0947.
  
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\base.js" 
@@ -1508,120 +1769,121 @@ function showToast(msg) {
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\biodata-editor.js" 
 -------------------------------------------------- 
-/* =====================================================
- I18N MESSAGES (from data-* bridge)
- ===================================================== */
-const msgContainer = document.getElementById("familyMessages");
+/* =========================================================
+ GLOBAL STATE
+========================================================= */
+let customIndex = 0;
 
-const msgBrotherName = msgContainer.dataset.brotherName;
-const msgSisterName = msgContainer.dataset.sisterName;
-const msgStatusSelect = msgContainer.dataset.statusSelect;
-const msgMarried = msgContainer.dataset.married;
-const msgUnmarried = msgContainer.dataset.unmarried;
-const msgBrotherLabel = msgContainer.dataset.brotherLabel;
-const msgSisterLabel = msgContainer.dataset.sisterLabel;
+/* =========================================================
+ SAFE INIT
+========================================================= */
+document.addEventListener("DOMContentLoaded", function () {
 
-document.getElementById("submitBtn").addEventListener("click", function () {
+    const msgContainer = document.getElementById("familyMessages");
+    if (!msgContainer) return;
 
-    updateFamily("brothers", msgBrotherLabel, "brotherInputs");
-    updateFamily("sisters", msgSisterLabel, "sisterInputs");
+    window.msgBrotherName = msgContainer.dataset.brotherName;
+    window.msgSisterName = msgContainer.dataset.sisterName;
+    window.msgStatusSelect = msgContainer.dataset.statusSelect;
+    window.msgMarried = msgContainer.dataset.married;
+    window.msgUnmarried = msgContainer.dataset.unmarried;
+    window.msgBrotherLabel = msgContainer.dataset.brotherLabel;
+    window.msgSisterLabel = msgContainer.dataset.sisterLabel;
 
-    if (!runValidation()) {
-        return;
-    }
-    document.getElementById("biodataForm").submit();
-});
+    /* ================= SUBMIT ================= */
+    document.getElementById("submitBtn")?.addEventListener("click", function () {
 
-function runValidation() {
+        updateFamily("brothers", msgBrotherLabel, "brotherInputs");
+        updateFamily("sisters", msgSisterLabel, "sisterInputs");
 
-    const requiredFields = [
-        {name: "name", labelKey: "validation.required.name"},
-        {name: "birthDate", labelKey: "validation.required.birth"},
-        {name: "religion", labelKey: "validation.required.religion"},
-        {name: "caste", labelKey: "validation.required.caste"},
-        {name: "height", labelKey: "validation.required.height"},
-        {name: "education", labelKey: "validation.required.education"},
-        {name: "mobile", labelKey: "validation.required.mobile"},
-        {name: "address", labelKey: "validation.required.address"}
-    ];
+        if (!runValidation()) return;
 
-    const missing = [];
-
-    requiredFields.forEach(field => {
-        const input = document.querySelector(`[name="${field.name}"]`);
-        if (!input || !input.value.trim()) {
-            missing.push(field.labelKey);
-        }
+        document.getElementById("biodataForm").submit();
     });
 
-    if (missing.length > 0) {
-        const box = document.getElementById("validationBox");
-        const list = document.getElementById("validationList");
+    /* ================= DATE ================= */
+    ["birthDay", "birthMonth", "birthYear"].forEach(id => {
+        document.getElementById(id)?.addEventListener("change", updateBirthDate);
+    });
 
-        list.innerHTML = "";
-        missing.forEach(key => {
-            const li = document.createElement("li");
-            li.innerText = getMessage(key);
-            list.appendChild(li);
-        });
+    ["birthHour", "birthMinute"].forEach(id => {
+        document.getElementById(id)?.addEventListener("change", updateBirthTime);
+    });
 
-        box.classList.remove("d-none");
-        box.scrollIntoView({behavior: "smooth"});
+    /* ================= FAMILY ================= */
+    document.getElementById("brotherCount")?.addEventListener("change", e => {
+        renderPersonInputs(e.target.value, "brotherInputs", true);
+    });
+
+    document.getElementById("sisterCount")?.addEventListener("change", e => {
+        renderPersonInputs(e.target.value, "sisterInputs", false);
+    });
+
+});
+
+/* =========================================================
+ VALIDATION
+========================================================= */
+function runValidation() {
+
+    const required = ["name", "birthDate", "religion", "caste", "height", "education", "mobile", "address"];
+
+    let missing = [];
+
+    required.forEach(name => {
+        const input = document.querySelector(`[name="${name}"]`);
+        if (!input || !input.value.trim()) missing.push(name);
+    });
+
+    if (missing.length) {
+        alert("Please fill required fields: " + missing.join(", "));
         return false;
     }
     return true;
 }
 
-
-function getMessage(key) {
-    const el = document.querySelector(`[data-msg-key="${key}"]`);
-    return el ? el.innerText : key;
-}
-
+/* =========================================================
+ DATE / TIME
+========================================================= */
 function updateBirthDate() {
-    const d = document.getElementById("birthDay").value;
-    const m = document.getElementById("birthMonth").value;
-    const y = document.getElementById("birthYear").value;
+    const d = document.getElementById("birthDay")?.value;
+    const m = document.getElementById("birthMonth")?.value;
+    const y = document.getElementById("birthYear")?.value;
 
     if (d && m && y) {
         document.getElementById("birthDate").value = `${d}/${m}/${y}`;
     }
 }
 
-["birthDay", "birthMonth", "birthYear"]
-        .forEach(id => document.getElementById(id)
-                    .addEventListener("change", updateBirthDate));
-
-
 function updateBirthTime() {
-    const h = document.getElementById("birthHour").value;
-    const m = document.getElementById("birthMinute").value;
+    const h = document.getElementById("birthHour")?.value;
+    const m = document.getElementById("birthMinute")?.value;
 
     if (h !== "" && m !== "") {
         document.getElementById("birthTime").value = `${h}:${m}`;
     }
 }
 
-["birthHour", "birthMinute"]
-        .forEach(id => document.getElementById(id)
-                    .addEventListener("change", updateBirthTime));
-
-
+/* =========================================================
+ FAMILY
+========================================================= */
 function renderPersonInputs(count, containerId, isBrother) {
 
     const container = document.getElementById(containerId);
+    if (!container) return;
+
     container.innerHTML = "";
 
     for (let i = 1; i <= count; i++) {
         container.insertAdjacentHTML("beforeend", `
-            <div class="row g-2 mb-2">
-                <div class="col-7">
-                    <input class="form-control ime-marathi"
+            <div class="grid grid-cols-12 gap-2 mb-2">
+                <div class="col-span-7">
+                    <input class="w-full border p-2 ime-marathi"
                            data-name
                            placeholder="${isBrother ? msgBrotherName : msgSisterName}">
                 </div>
-                <div class="col-5">
-                    <select class="form-select" data-status>
+                <div class="col-span-5">
+                    <select class="w-full border p-2" data-status>
                         <option value="">${msgStatusSelect}</option>
                         <option value="Married">${msgMarried}</option>
                         <option value="Unmarried">${msgUnmarried}</option>
@@ -1639,204 +1901,103 @@ function updateFamily(hiddenFieldId, labelText, containerId) {
 
     rows.forEach(input => {
         const name = input.value.trim();
-        const status = input.closest(".row")
-                .querySelector("[data-status]").value || msgUnmarried;
+        const status = input.closest("div").querySelector("[data-status]").value || msgUnmarried;
 
-        if (name) {
-            values.push(`${name}(${status})`);
-        }
+        if (name) values.push(`${name}(${status})`);
     });
 
-    document.getElementById(hiddenFieldId).value =
-            values.length ? values.join(", ") : "";
-
+    document.getElementById(hiddenFieldId).value = values.join(", ");
 }
 
+/* =========================================================
+ CUSTOM FIELD
+========================================================= */
+function addCustomField() {
 
-/* Brothers */
-document.getElementById("brotherCount").addEventListener("change", e => {
-    renderPersonInputs(e.target.value, "brotherInputs", true);
-    updateFamily("brothers", msgBrotherLabel, "brotherInputs");
-});
+    const container = document.getElementById("customFields");
 
-/* Sisters */
-document.getElementById("sisterCount").addEventListener("change", e => {
-    renderPersonInputs(e.target.value, "sisterInputs", false);
-    updateFamily("sisters", msgSisterLabel, "sisterInputs");
-});
+    const row = document.createElement("div");
+    row.className = "grid grid-cols-12 gap-2 mb-2";
 
-/* Update family text on input change */
-document.addEventListener("input", () => {
-    updateFamily("brothers", msgBrotherLabel, "brotherInputs");
-    updateFamily("sisters", msgSisterLabel, "sisterInputs");
-});
+    row.innerHTML = `
+        <div class="col-span-5">
+            <input class="w-full border p-2 ime-marathi"
+                   name="customFields[${customIndex}].label"
+                   placeholder="Label">
+        </div>
+        <div class="col-span-6">
+            <input class="w-full border p-2 ime-marathi"
+                   name="customFields[${customIndex}].value"
+                   placeholder="Value">
+        </div>
+        <div class="col-span-1 text-right">
+            <button type="button"
+                    onclick="this.closest('.grid').remove()"
+                    class="text-red-500">✕</button>
+        </div>
+    `;
 
-function selectGod(god) {
-    document.querySelector("input[name='godImage']").value = god;
-    document.querySelector(".god-preview img").src =
-            "/images/gods/" + god + ".png";
-
-    bootstrap.Modal.getInstance(
-            document.getElementById('godModal')
-            ).hide();
+    container.appendChild(row);
+    customIndex++;
 }
 
-const profileInput = document.getElementById("profileImage");
-const profilePreview = document.getElementById("profilePreview");
+/* =========================================================
+ PROFILE PREVIEW
+========================================================= */
+document.getElementById("profileImage")?.addEventListener("change", function () {
+    const preview = document.getElementById("profilePreview");
+    const file = this.files[0];
 
-if (profileInput) {
-    profileInput.addEventListener("change", function () {
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                profilePreview.src = e.target.result;
-                profilePreview.style.display = "block";
-            };
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-}
-
-function removeProfilePhoto() {
-    profileInput.value = "";
-    profilePreview.style.display = "none";
-    document.getElementById("removePhotoBtn")?.classList.add("d-none");
-    updatePhotoButtons(false);
-
-}
-
-function updatePhotoButtons(hasPhoto) {
-    const uploadBtn = document.getElementById("uploadPhotoBtn");
-    if (!uploadBtn) return;
-
-    uploadBtn.innerText = hasPhoto ? "Replace Photo" : "Upload Photo";
-}
-
-function adjustGodPreview(hasProfile) {
-    const godImg = document.getElementById("godPreview");
-    if (!godImg)
-        return;
-
-    godImg.style.maxHeight = hasProfile ? "80px" : "120px";
-}
-
-function toggleGuide(btn) {
-    const content = document.getElementById("biodataGuideContent");
-    const isHidden = content.style.display === "none";
-
-    content.style.display = isHidden ? "block" : "none";
-
-    const hideText = btn.getAttribute("data-hide");
-    const showText = btn.getAttribute("data-show");
-
-    btn.querySelector("span").innerText = isHidden ? hideText : showText;
-}
-
-let cropper;
-let cropImageEl = document.getElementById("cropperImage");
-let cropModalEl = document.getElementById("photoCropModal");
-let originalFile = null;
-function openCropper(event) {
-    const file = event.target.files[0];
-    if (!file)
-        return;
-    originalFile = file;
-    // Set image source
-    cropImageEl.src = URL.createObjectURL(file);
-
-    // Show modal
-    const modal = new bootstrap.Modal(cropModalEl);
-    modal.show();
-}
-
-// 🔑 INIT CROPper AFTER modal is visible
-cropModalEl.addEventListener('shown.bs.modal', function () {
-
-    if (cropper) {
-        cropper.destroy();
-        cropper = null;
-    }
-
-    cropper = new Cropper(cropImageEl, {
-        aspectRatio: 1,
-        viewMode: 1,
-
-        dragMode: 'move',
-        cropBoxMovable: false,
-        cropBoxResizable: false,
-
-        movable: true,
-        zoomable: true,
-        rotatable: false,
-
-        background: false,
-        responsive: true,
-        autoCropArea: 1,
-
-        zoomOnTouch: true,
-        zoomOnWheel: true,
-        wheelZoomRatio: 0.08,
-
-        toggleDragModeOnDblclick: false
-    });
-});
-
-// Cleanup on close
-cropModalEl.addEventListener('hidden.bs.modal', function () {
-    if (cropper) {
-        cropper.destroy();
-        cropper = null;
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
     }
 });
 
 
-function applyCroppedPhoto() {
+function toggleSection(sectionId, iconId) {
+    const section = document.getElementById(sectionId);
+    const icon = document.getElementById(iconId);
 
-    if (!cropper || !originalFile)
-        return;
+    section.classList.toggle("hidden");
 
-    const canvas = cropper.getCroppedCanvas({
-        width: 400,
-        height: 400,
-        imageSmoothingQuality: "high"
-    });
-
-    canvas.toBlob(blob => {
-
-        const croppedFile = new File(
-                [blob],
-                originalFile.name || "profile.png",
-                {type: "image/png"}
-        );
-
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(croppedFile);
-        document.getElementById("profileImage").files = dataTransfer.files;
-
-        const preview = document.getElementById("profilePreview");
-        preview.src = URL.createObjectURL(croppedFile);
-        preview.style.display = "inline-block";
-
-        cropper.destroy();
-        cropper = null;
-
-        bootstrap.Modal
-                .getInstance(document.getElementById("photoCropModal"))
-                .hide();
-    });
-    document.getElementById("removePhotoBtn")?.classList.remove("d-none");
-    updatePhotoButtons(true);
-
-}
-function toggleGuideFromContainer(event) {
-    // Prevent double trigger if user clicks button itself
-    if (event.target.closest("button")) return;
-
-    const btn = document.querySelector(".biodata-guide button");
-    if (btn) {
-        toggleGuide(btn);
+    if (section.classList.contains("hidden")) {
+        icon.textContent = "+";
+    } else {
+        icon.textContent = "−";
     }
 }
+
+
+
+function toggleGuide() {
+    const box = document.getElementById("guideContent");
+    const text = document.getElementById("guideToggleText");
+
+    const isHidden = box.classList.toggle("hidden");
+
+    const showText = text.dataset.show;
+    const hideText = text.dataset.hide;
+
+    text.innerText = isHidden ? showText : hideText;
+
+    localStorage.setItem("guideHidden", isHidden);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    const hidden = localStorage.getItem("guideHidden") === "true";
+
+    if (hidden) {
+        document.getElementById("guideContent")?.classList.add("hidden");
+        document.getElementById("guideToggleText").innerText =
+            document.getElementById("guideToggleText").dataset.show;
+    }
+});
+
  
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\cropper.js" 
@@ -5156,29 +5317,69 @@ document.addEventListener("DOMContentLoaded", () => {
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\transliteration.js" 
 -------------------------------------------------- 
-// ================= GLOBAL STATE =================
-let marathiEnabled = true;
-let activeInput = null;
-let activeWordRange = null;
-let activeSuggestion = null;
-let activeSuggestionIndex = -1;
-let suggestionList = [];
+/* ============================================================
+ Marathi Transliteration + Inline Suggestions
+ ------------------------------------------------------------
+ Features:
+ ✔ English → Marathi transliteration
+ ✔ Inline dropdown suggestions under input
+ ✔ Arrow key navigation (↑ ↓)
+ ✔ Enter / Space selection
+ ✔ Auto hide on outside click
+ ✔ Works with multiple inputs (.ime-marathi)
+ ============================================================ */
 
-// ================= TOGGLE =================
-document.getElementById("marathiToggle")?.addEventListener("change", e => {
-    marathiEnabled = e.target.checked;
-    hideSuggestions();
+
+/* ================= GLOBAL STATE ================= */
+
+let marathiEnabled = true;            // toggle for enabling/disabling IME
+let activeInput = null;               // currently focused input
+let activeWordRange = null;           // start & end index of active word
+let activeSuggestionIndex = -1;       // keyboard navigation index
+
+
+/* ================= TOGGLE INIT ================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const toggle = document.getElementById("marathiToggle");
+
+    if (toggle) {
+        toggle.addEventListener("change", (e) => {
+            marathiEnabled = e.target.checked;
+            hideSuggestions();
+        });
+    }
+
 });
 
-// ================= KEYUP =================
+
+/* ================= CLICK OUTSIDE ================= */
+
+document.addEventListener("click", function (e) {
+    if (!e.target.closest(".ime-wrapper")) {
+        hideSuggestions();
+    }
+});
+
+
+/* ============================================================
+ KEYUP EVENT  (Fetch suggestions while typing)
+ ============================================================ */
+
 document.addEventListener("keyup", async function (e) {
 
     const input = e.target;
 
-    if (!input.classList.contains("ime-marathi")) return;
-    if (!marathiEnabled) return;
+    if (!input.classList.contains("ime-marathi"))
+        return;
+    if (!marathiEnabled)
+        return;
 
-    if (e.key === " " || e.key === "Enter") return;
+    // 🚀 FIX: ignore navigation keys
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
+        return;
+    }
 
     const cursor = input.selectionStart;
     const text = input.value || "";
@@ -5196,176 +5397,189 @@ document.addEventListener("keyup", async function (e) {
     const end = cursor;
 
     activeInput = input;
-    activeWordRange = { start, end };
+    activeWordRange = {start, end};
+
+    activeSuggestionIndex = -1;
 
     const suggestions = await fetchSuggestions(word);
-    showSuggestions(suggestions);
+    showInlineSuggestions(input, suggestions);
 });
 
-// ================= KEYDOWN =================
+
+
+/* ============================================================
+ KEYDOWN EVENT  (Arrow navigation + select)
+ ============================================================ */
+
 document.addEventListener("keydown", function (e) {
 
-    const input = e.target;
+    if (!activeInput)
+        return;
 
-    if (!input.classList.contains("ime-marathi")) return;
-    if (!marathiEnabled || !activeSuggestion) return;
+    const wrapper = activeInput.closest(".ime-wrapper");
+    const dropdown = wrapper.querySelector(".suggestion-dropdown");
 
+    if (!dropdown)
+        return;
+
+    const items = dropdown.querySelectorAll("div");
+
+    if (!items.length)
+        return;
+
+
+    /* ---------- ARROW DOWN ---------- */
     if (e.key === "ArrowDown") {
         e.preventDefault();
-        moveSelection(1);
+
+        activeSuggestionIndex =
+                (activeSuggestionIndex + 1) % items.length;
+
+        updateHighlight(items);
     }
 
-    if (e.key === "ArrowUp") {
+
+    /* ---------- ARROW UP ---------- */
+    else if (e.key === "ArrowUp") {
         e.preventDefault();
-        moveSelection(-1);
+
+        activeSuggestionIndex =
+                (activeSuggestionIndex - 1 + items.length) % items.length;
+
+        updateHighlight(items);
     }
 
-    if (e.key === " " || e.key === "Enter") {
 
-        if (activeSuggestionIndex < 0 || !suggestionList.length) return;
+    /* ---------- ENTER ---------- */
+    else if (e.key === "Enter") {
+        if (activeSuggestionIndex >= 0) {
+            e.preventDefault();
 
-        e.preventDefault();
+            items[activeSuggestionIndex].click();
 
-        const selected = suggestionList[activeSuggestionIndex];
-        replaceWord(selected + " ");
+            hideSuggestions();
+        }
+    }
 
-        activeSuggestion = null;
-        activeSuggestionIndex = -1;
+
+    /* ---------- SPACE ---------- */
+    else if (e.key === " ") {
+        if (activeSuggestionIndex >= 0) {
+            e.preventDefault();
+
+            items[activeSuggestionIndex].click();
+
+            activeInput.value += " ";
+
+            hideSuggestions();
+        }
     }
 });
 
-// ================= MOVE SELECTION =================
-function moveSelection(dir) {
-    const items = document.querySelectorAll(".suggestion-item");
-    if (!items.length) return;
 
-    items[activeSuggestionIndex]?.classList.remove("bg-gray-200");
+/* ============================================================
+ FETCH SUGGESTIONS (Google Input Tools API)
+ ============================================================ */
 
-    activeSuggestionIndex =
-        (activeSuggestionIndex + dir + items.length) % items.length;
-
-    items[activeSuggestionIndex].classList.add("bg-gray-200");
-    activeSuggestion = items[activeSuggestionIndex].textContent;
-}
-
-// ================= FETCH =================
 async function fetchSuggestions(word) {
+
     const url =
-        `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=mr-t-i0-und&num=6&cp=0&cs=1&ie=utf-8&oe=utf-8`;
+            `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=mr-t-i0-und&num=6`;
 
     try {
         const res = await fetch(url);
         const data = await res.json();
+
         return data?.[1]?.[0]?.[1] || [];
-    } catch {
+
+    } catch (err) {
+        console.error("Suggestion fetch error:", err);
         return [];
     }
 }
 
-// ================= SHOW =================
-function showSuggestions(list) {
 
-    const box = document.getElementById("suggestionBox");
-    const container = document.getElementById("suggestionList");
+/* ============================================================
+ SHOW INLINE DROPDOWN UNDER INPUT
+ ============================================================ */
 
-    container.innerHTML = "";
-    suggestionList = list.slice(0, 9);
-    activeSuggestionIndex = 0;
+function showInlineSuggestions(input, suggestions) {
 
-    if (!suggestionList.length) {
-        hideSuggestions();
+    const wrapper = input.closest(".ime-wrapper");
+    const dropdown = wrapper.querySelector(".suggestion-dropdown");
+
+    dropdown.innerHTML = "";
+
+    // no suggestions → hide
+    if (!suggestions || suggestions.length === 0) {
+        dropdown.classList.add("hidden");
         return;
     }
 
-    suggestionList.forEach((word, index) => {
+    // build dropdown items
+    suggestions.slice(0, 6).forEach((word, index) => {
 
         const div = document.createElement("div");
 
         div.className =
-            "suggestion-item px-3 py-1 cursor-pointer hover:bg-gray-100";
+                "px-3 py-2 cursor-pointer hover:bg-gray-100";
 
-        div.textContent = word;
+        div.innerText = word;
 
-        if (index === 0) {
-            div.classList.add("bg-gray-200");
-            activeSuggestion = word;
-        }
-
+        // click handler
         div.onclick = () => {
-            activeSuggestionIndex = index;
-            activeSuggestion = word;
-            replaceWord(word + " ");
+
+            const {start, end} = activeWordRange;
+            const text = input.value;
+
+            const newText =
+                    text.slice(0, start) + word + text.slice(end);
+
+            input.value = newText;
+
+            // set cursor position after inserted word
+            const pos = start + word.length;
+
+            input.setSelectionRange(pos, pos);
+            input.focus();
+
+            dropdown.classList.add("hidden");
         };
 
-        container.appendChild(div);
+        dropdown.appendChild(div);
     });
 
-    box.classList.remove("hidden");
+    dropdown.classList.remove("hidden");
 }
 
-// ================= HIDE =================
+
+/* ============================================================
+ HIDE ALL DROPDOWNS
+ ============================================================ */
+
 function hideSuggestions() {
-    document.getElementById("suggestionBox")?.classList.add("hidden");
+
+    document.querySelectorAll(".suggestion-dropdown")
+            .forEach(d => d.classList.add("hidden"));
+
+    activeSuggestionIndex = -1;
 }
 
-// ================= REPLACE =================
-function replaceWord(selected) {
-    if (!activeInput || !activeWordRange) return;
 
-    const { start, end } = activeWordRange;
-    const text = activeInput.value;
+/* ============================================================
+ UPDATE HIGHLIGHT DURING KEY NAVIGATION
+ ============================================================ */
 
-    const newText =
-        text.slice(0, start) + selected + text.slice(end);
+function updateHighlight(items) {
 
-    activeInput.value = newText;
+    items.forEach((el, i) => {
+        el.classList.remove("bg-gray-200");
 
-    const cursorPos = start + selected.length;
-    activeInput.setSelectionRange(cursorPos, cursorPos);
+        if (i === activeSuggestionIndex) {
+            el.classList.add("bg-gray-200");
+        }
+    });
 
-    activeInput.focus();
-    hideSuggestions();
-}
-
-// ================= CUSTOM FIELDS =================
-let customIndex = 0;
-
-function addCustomField() {
-
-    const container = document.getElementById("customFields");
-
-    const row = document.createElement("div");
-
-    row.className = "grid grid-cols-12 gap-2 mb-2 items-center";
-
-    row.innerHTML = `
-        <div class="col-span-5">
-            <input type="text"
-                   class="w-full border rounded px-2 py-1 ime-marathi"
-                   name="customFields[${customIndex}].label"
-                   placeholder="माहिती नाव"
-                   autocomplete="off">
-        </div>
-
-        <div class="col-span-6">
-            <input type="text"
-                   class="w-full border rounded px-2 py-1 ime-marathi"
-                   name="customFields[${customIndex}].value"
-                   placeholder="माहिती"
-                   autocomplete="off">
-        </div>
-
-        <div class="col-span-1 text-right">
-            <button type="button"
-                    class="text-red-500 text-sm"
-                    onclick="this.closest('div.grid').remove()">
-                ✕
-            </button>
-        </div>
-    `;
-
-    container.appendChild(row);
-    customIndex++;
 }
  
 -------------------------------------------------- 
@@ -5373,41 +5587,97 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\das
 -------------------------------------------------- 
 <div th:fragment="content">
 
-    <!-- =========================
-         HERO SECTION
-    ========================= -->
-    <section class="bg-gradient-to-r from-red-50 to-yellow-50 py-10">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+    <!-- ================= HERO SECTION ================= -->
+    <section class="relative h-[75vh] md:h-[90vh] overflow-hidden">
 
-            <!-- LEFT -->
-            <div>
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-800"
-                    th:text="#{home.hero.title}"></h1>
+        <!-- Background Image -->
+        <img src="/images/hero-couple.jpg"
+             class="absolute inset-0 w-full h-full object-cover object-center md:object-[center_20%]"
+             alt="Happy couple">
 
-                <p class="text-gray-600 mt-3"
-                   th:text="#{home.hero.subtitle}"></p>
+        <!-- Gradient overlay -->
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
 
-                <a href="/dashboard"
-                   class="inline-block mt-5 bg-red-600 text-white px-6 py-3 rounded shadow hover:bg-red-700"
-                   th:text="#{home.hero.cta.primary}">
+        <!-- Content -->
+        <div class="relative z-10 max-w-7xl mx-auto px-6 h-full flex items-start pt-16 md:pt-24 lg:pt-28">
+
+            <div class="text-white max-w-sm md:max-w-md lg:max-w-lg space-y-2 md:space-y-4">
+
+                <!-- Heading -->
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-snug md:leading-tight">
+                    <span th:text="#{hero.title.line1}">Create a beautiful</span>
+                    <br class="hidden md:block">
+                    <span th:text="#{hero.title.line2}">Marriage Biodata</span>
+                    <br class="hidden md:block">
+                    <span>
+                        <span th:text="#{hero.title.in}">in</span>
+                        <span class="text-red-500 drop-shadow-sm" th:text="#{hero.title.time}">2 minutes</span>
+                    </span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-base md:text-lg text-gray-200 mt-4"
+                   th:text="#{hero.subtitle}">
+                    Ready-to-use biodata templates for marriage
+                </p>
+
+                <!-- CTA -->
+                <a href="/templates"
+                   class="mt-5 inline-block bg-red-600 bg-red-600 shadow-xl ring-1 ring-white/20 hover:bg-red-700 text-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg shadow-lg transition font-semibold tracking-wide"
+                   th:text="#{hero.cta}">
+                    Create Biodata
                 </a>
 
-                <ul class="mt-4 space-y-2 text-gray-700">
-                    <li th:text="#{home.hero.point.pdf}"></li>
-                    <li th:text="#{home.hero.point.print}"></li>
-                    <li th:text="#{home.hero.point.nologin}"></li>
+                <!-- Benefits -->
+                <ul class="mt-4 space-y-1.5 text-sm text-gray-200">
+                    <li th:text="#{hero.point1}">✔ PDF Download</li>
+                    <li th:text="#{hero.point2}">✔ Print-ready biodata</li>
+                    <li th:text="#{hero.point3}">✔ No login required</li>
                 </ul>
-            </div>
 
-            <!-- RIGHT IMAGE -->
-            <div class="text-center">
-                <img src="/images/biodata_templates/t1.png"
-                     class="mx-auto rounded shadow max-h-[450px] object-contain"
-                     alt="Preview">
             </div>
-
         </div>
     </section>
+
+
+<!-- TRUST BAR -->
+<section class="bg-black text-white text-sm py-2 tracking-wide">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-6 text-center">
+
+        <!-- Item 1 -->
+        <div class="flex items-center gap-2">
+            <span>🔐</span>
+            <span th:text="#{home.trust.privacy}">
+                We Don’t Store Your Personal Data
+            </span>
+        </div>
+
+        <!-- Divider -->
+        <div class="hidden md:block text-gray-500">|</div>
+
+        <!-- Item 2 -->
+        <div class="flex items-center gap-2">
+            <span>🚫</span>
+            <span th:text="#{home.trust.nologin}">
+                No Login Required
+            </span>
+        </div>
+
+        <!-- Divider -->
+        <div class="hidden md:block text-gray-500">|</div>
+
+        <!-- Item 3 -->
+        <div class="flex items-center gap-2">
+            <span>📄</span>
+            <span th:text="#{home.trust.safe}">
+                100% Safe & Private Biodata Generator
+            </span>
+        </div>
+
+    </div>
+</section>
+
+
 
 
     <!-- =========================
@@ -5424,20 +5694,23 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\das
                th:text="#{home.templates.subtitle}">
             </p>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 
                 <div th:each="tpl : ${templates}"
-                     class="border rounded-lg shadow-sm hover:shadow-md transition bg-white p-3">
+                     class="bg-white rounded-xl shadow-md hover:shadow-xl hover:scale-[1.02] transition p-4">
 
-                    <img th:src="@{'/images/biodata_templates/' + ${tpl} + '.png'}"
-                         class="w-full h-60 object-contain border rounded"/>
+                    <div class="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
+                        <img th:src="@{'/images/biodata_templates/' + ${tpl} + '.png'}"
+                             class="max-h-full object-contain border rounded"/></div>
 
-                    <div class="text-center mt-3">
+                    <div class="mt-3">
                         <a th:href="@{'/editor/' + ${tpl}}"
-                           class="bg-red-600 text-white px-4 py-2 rounded text-sm hover:bg-red-700"
-                           th:text="#{home.templates.use}">
+                           class="block w-full text-center bg-red-600 text-white py-2.5 rounded-md text-sm font-medium tracking-wide
+                           hover:bg-red-700 active:scale-95 transition-all duration-150">
+                            <span th:text="#{home.templates.use}"></span>
                         </a>
                     </div>
+
 
                 </div>
 
@@ -5487,14 +5760,91 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 -------------------------------------------------- 
 <div th:fragment="content">
 
-    <section class="max-w-7xl mx-auto p-6">
-
+    <section class="max-w-6xl mx-auto px-4 md:px-6 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+
+
 
             <!-- =========================================================
              LEFT FORM
             ========================================================= -->
-            <div class="lg:col-span-2 bg-white shadow rounded p-6">
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-5 md:p-6">
+                <div class="mb-6 text-center">
+                    <h2 class="text-2xl font-bold text-gray-800"
+                        th:text="#{editor.title}">
+                        Create Your Marriage Biodata
+                    </h2>
+
+                    <p class="text-gray-500 text-sm mt-1"
+                       th:text="#{editor.subtitle}">
+                        Fill the details below to generate a professional biodata in minutes
+                    </p>
+                </div>
+
+
+                <!-- ================= GUIDE SECTION ================= -->
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-300 rounded-xl p-3 md:p-4 mb-5 shadow-sm">
+                    <!-- HEADER -->
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-medium text-gray-800 text-sm md:text-base">
+                            💡 <span th:text="#{guide.title}">How to use Biodata Maker</span>
+                        </h3>
+
+                        <button onclick="toggleGuide()" class="text-xs md:text-sm text-blue-600 hover:underline">
+                            <span id="guideToggleText"
+                                  th:data-show="#{guide.show}"
+                                  th:data-hide="#{guide.hide}"
+                                  th:text="#{guide.hide}">
+                                Hide instructions
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div id="guideContent" class="text-sm text-gray-700 leading-relaxed space-y-1">
+
+                        <ul class="list-none space-y-1">
+
+                            <li>🌐 <span th:text="#{guide.language}">You can switch between English and Marathi anytime.</span></li>
+
+                            <li>⌨️ <span th:text="#{guide.typing}">Enable Marathi typing and type in English to get Marathi suggestions.</span></li>
+
+                            <li>📷 <span th:text="#{guide.photo}">Adding a photo is optional. You can upload it later.</span></li>
+
+                            <li>👪 <span th:text="#{guide.relatives}">You can add relatives like Mama, Kaka, Mavshi using Custom Fields.</span></li>
+
+                            <li>📄 <span th:text="#{guide.download}">You can download or print the biodata after generation.</span></li>
+
+                            <li class="text-red-600 font-medium">
+                                <span th:text="#{guide.mandatory}">Fields marked with (*) are mandatory.</span>
+                            </li>
+
+                            <li class="text-gray-600">
+                                <span th:text="#{guide.optional}">All other information is optional.</span>
+                            </li>
+
+                            <li class="text-gray-600">
+                                <span th:text="#{guide.hideOptional}">Empty fields will not appear in the final biodata.</span>
+                            </li>
+
+                            <li class="text-green-700 font-semibold">
+                                🔒 <span th:text="#{guide.privacy}">Your data is not stored. Everything stays in your browser.</span>
+                            </li>
+
+                            <li class="text-blue-700 font-medium">
+                                💡 <span th:text="#{guide.tip}">Tip: Fill only required fields to keep biodata clean and professional.</span>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 mb-4"></div>
+
+                <div class="text-sm text-gray-600 text-center mt-2 mb-3">
+                    <div th:text="#{editor.start.hint}"></div>
+                </div>
 
                 <form id="biodataForm"
                       th:action="@{/preview}"
@@ -5504,234 +5854,735 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                     <input type="hidden" name="templateId" th:value="${templateId}"/>
 
-                    <!-- ================= TOGGLE ================= -->
-                    <div class="flex justify-between items-center mb-4">
-                        <label class="font-semibold" th:text="#{editor.toggle.marathiTyping}"></label>
-                        <input type="checkbox" id="marathiToggle" checked class="h-4 w-4">
+
+                    <div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-4">
+
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800"
+                               th:text="#{marathi.typing.title}"></p>
+
+                            <p class="text-xs text-gray-500"
+                               th:text="#{marathi.typing.desc}"></p>
+                        </div>
+
+                        <!-- Toggle Switch -->
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="marathiToggle" class="sr-only peer" checked>
+
+                            <div class="w-11 h-6 bg-gray-300 rounded-full peer 
+                                 peer-checked:bg-red-500 
+                                 relative transition">
+
+                                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition
+                                     peer-checked:translate-x-5"></div>
+                            </div>
+                        </label>
                     </div>
 
-                    <!-- ================= PERSONAL ================= -->
-                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.personal}"></h3>
-
-                    <input class="w-full border p-2 mb-2 ime-marathi"
-                           th:field="*{name}"
-                           th:placeholder="#{editor.instruction.name}"/>
-
-                    <select class="w-full border p-2 mb-2" th:field="*{religion}">
-                        <option value="" th:text="#{dropdown.religion.select}"></option>
-
-                        <option th:value="#{dropdown.religion.hindu}"
-                                th:text="#{dropdown.religion.hindu}"></option>
-
-                        <option th:value="#{dropdown.religion.muslim}"
-                                th:text="#{dropdown.religion.muslim}"></option>
-
-                        <option th:value="#{dropdown.religion.christian}"
-                                th:text="#{dropdown.religion.christian}"></option>
-
-                        <option th:value="#{dropdown.religion.buddhist}"
-                                th:text="#{dropdown.religion.buddhist}"></option>
-
-                        <option th:value="#{dropdown.religion.jain}"
-                                th:text="#{dropdown.religion.jain}"></option>
-                    </select>
 
 
-                    <input class="w-full border p-2 mb-2 ime-marathi"
-                           th:field="*{caste}"
-                           th:placeholder="#{editor.instruction.caste}"/>
 
-                    <input class="w-full border p-2 mb-2 ime-marathi"
-                           th:field="*{subCaste}"
-                           th:placeholder="#{editor.instruction.subCaste}"/>
+                    <!-- ================= PERSONAL SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
 
-                    <input class="w-full border p-2 mb-4 ime-marathi"
-                           th:field="*{gotra}"
-                           th:placeholder="#{editor.instruction.gotra}"/>
+                        <!-- Header -->
+                        <button type="button"
+                                onclick="toggleSection('personalSection', 'iconPersonal')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
 
-                    <!-- ================= BIRTH ================= -->
-                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.birth}"></h3>
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">👤</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.personal}">
+                                    Personal Details
+                                </span>
+                                <span class="text-sm text-gray-400">(5 fields)</span>
+                            </div>
 
-                    <div class="grid grid-cols-3 gap-2 mb-2">
-                        <select id="birthDay" class="border p-2">
-                            <option value="">Day</option>
-                            <option th:each="d : ${#numbers.sequence(1,31)}"
-                                    th:value="${d}"
-                                    th:text="${d}"></option>
-                        </select>
+                            <span id="iconPersonal" class="text-gray-500 text-xl">−</span>
+                        </button>
 
-                        <select id="birthMonth" class="border p-2">
-                            <option value="" th:text="#{dropdown.month.select}"></option>
-                            <option value="01" th:text="#{dropdown.month.01}"></option>
-                            <option value="02" th:text="#{dropdown.month.02}"></option>
-                            <option value="03" th:text="#{dropdown.month.03}"></option>
-                        </select>
+                        <!-- Body -->
+                        <div id="personalSection" class=" px-4 py-4 bg-white">
 
-                        <select id="birthYear" class="border p-2">
-                            <option value="">Year</option>
-                            <option th:each="y : ${#numbers.sequence(1960,2010)}"
-                                    th:value="${y}"
-                                    th:text="${y}"></option>
-                        </select>
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.name}"></span>
+                                <span class="text-red-500">*</span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-6">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{name}"
+                                       th:placeholder="#{editor.instruction.name}"/>
+
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+
+                            </div>
+
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.religion}"></span>
+                            </label>
+
+                            <!-- Religion -->
+                            <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3 
+                                    focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                    th:field="*{religion}">
+                                <option value="" th:text="#{dropdown.religion.select}"></option>
+
+                                <option th:value="#{dropdown.religion.hindu}" th:text="#{dropdown.religion.hindu}"></option>
+                                <option th:value="#{dropdown.religion.muslim}" th:text="#{dropdown.religion.muslim}"></option>
+                                <option th:value="#{dropdown.religion.christian}" th:text="#{dropdown.religion.christian}"></option>
+                                <option th:value="#{dropdown.religion.buddhist}" th:text="#{dropdown.religion.buddhist}"></option>
+                                <option th:value="#{dropdown.religion.jain}" th:text="#{dropdown.religion.jain}"></option>
+                            </select>
+
+                            <!-- Caste -->
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.caste}"></span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{caste}"
+                                       th:placeholder="#{editor.instruction.caste}"/>
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.subCaste}"></span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{subCaste}"
+                                       th:placeholder="#{editor.instruction.subCaste}"/>
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
+
+                            <!-- Gotra -->
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.gotra}"></span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{gotra}"
+                                       th:placeholder="#{editor.instruction.gotra}"/>
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.kuldaivat}"></span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{kuldaivat}"
+                                       th:placeholder="#{editor.instruction.kuldaivat}" />
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <input type="hidden" th:field="*{birthDate}" id="birthDate"/>
 
-                    <input class="w-full border p-2 mb-2 ime-marathi"
-                           th:field="*{birthPlace}"
-                           th:placeholder="#{editor.instruction.birthPlace}"/>
+                    <!-- ================= BIRTH SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
 
-                    <select class="w-full border p-2 mb-2" th:field="*{rashi}">
-                        <option value="" th:text="#{dropdown.rashi.select}"></option>
+                        <!-- Header -->
+                        <button type="button"
+                                onclick="toggleSection('birthSection', 'iconBirth')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
 
-                        <option th:value="#{dropdown.rashi.mesh}"
-                                th:text="#{dropdown.rashi.mesh}"></option>
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🎂</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.birth}">
+                                    Birth & Kundli
+                                </span>
+                                <span class="text-sm text-gray-400">(5 fields)</span>
+                            </div>
 
-                        <option th:value="#{dropdown.rashi.vrushabh}"
-                                th:text="#{dropdown.rashi.vrushabh}"></option>
-                    </select>
+                            <span id="iconBirth" class="text-gray-500 text-xl">−</span>
+                        </button>
+
+                        <!-- Body -->
+                        <div id="birthSection" class="hidden px-4 py-4 bg-white">
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.birthDate}"></span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <!-- Date of Birth -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+
+                                <select id="birthDay"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                    <option value="" th:text="#{dropdown.date.select}" >Day</option>
+                                    <option th:each="d : ${#numbers.sequence(1,31)}"
+                                            th:value="${d}"
+                                            th:text="${d}"></option>
+                                </select>
+
+                                <!-- Month -->
+                                <select id="birthMonth"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+
+                                    <option value="" th:text="#{dropdown.month.select}"></option>
+                                    <option value="01" th:text="#{dropdown.month.01}"></option>
+                                    <option value="02" th:text="#{dropdown.month.02}"></option>
+                                    <option value="03" th:text="#{dropdown.month.03}"></option>
+                                    <option value="04" th:text="#{dropdown.month.04}"></option>
+                                    <option value="05" th:text="#{dropdown.month.05}"></option>
+                                    <option value="06" th:text="#{dropdown.month.06}"></option>
+                                    <option value="07" th:text="#{dropdown.month.07}"></option>
+                                    <option value="08" th:text="#{dropdown.month.08}"></option>
+                                    <option value="09" th:text="#{dropdown.month.09}"></option>
+                                    <option value="10" th:text="#{dropdown.month.10}"></option>
+                                    <option value="11" th:text="#{dropdown.month.11}"></option>
+                                    <option value="12" th:text="#{dropdown.month.12}"></option>
+                                </select>
+
+                                <!-- Year -->
+                                <select id="birthYear"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+
+                                    <option value="" th:text="#{dropdown.year.select}" >Year</option>
+                                    <option th:each="y : ${#numbers.sequence(1960,2010)}"
+                                            th:value="${y}"
+                                            th:text="${y}"></option>
+                                </select>
+                            </div>
+
+                            <!-- Hidden Date -->
+                            <input type="hidden" th:field="*{birthDate}" id="birthDate"/>
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.birthTime}"></span>
+                            </label>
+                            <!-- Birth Time -->
+                            <input type="time"
+                                   class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
+                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                   th:field="*{birthTime}"
+                                   th:placeholder="#{editor.instruction.birthTime}" />
 
 
-                    <select class="w-full border p-2 mb-2" th:field="*{nakshatra}">
-                        <option value="" th:text="#{dropdown.nakshatra.select}"></option>
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.birthPlace}"></span>
+                            </label>
 
-                        <option th:value="#{dropdown.nakshatra.ashwini}"
-                                th:text="#{dropdown.nakshatra.ashwini}"></option>
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{birthPlace}"
+                                       th:placeholder="#{editor.instruction.birthPlace}"/>
 
-                        <option th:value="#{dropdown.nakshatra.bharani}"
-                                th:text="#{dropdown.nakshatra.bharani}"></option>
-                    </select>
-
-
-                    <!-- ================= PHYSICAL ================= -->
-                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.physical}"></h3>
-
-                    <select class="w-full border p-2 mb-2" th:field="*{height}">
-                        <option value="" th:text="#{dropdown.height.select}"></option>
-
-                        <option th:value="#{dropdown.height.5_4}"
-                                th:text="#{dropdown.height.5_4}"></option>
-
-                        <option th:value="#{dropdown.height.5_6}"
-                                th:text="#{dropdown.height.5_6}"></option>
-                    </select>
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
 
 
-                    <select class="w-full border p-2 mb-2" th:field="*{bloodGroup}">
-                        <option value="" th:text="#{dropdown.blood.select}"></option>
 
-                        <option th:value="#{dropdown.blood.a_pos}"
-                                th:text="#{dropdown.blood.a_pos}"></option>
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.rashi}"></span>
+                            </label>
 
-                        <option th:value="#{dropdown.blood.b_pos}"
-                                th:text="#{dropdown.blood.b_pos}"></option>
-                    </select>
+                            <!-- Rashi -->
+                            <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                    focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                    th:field="*{rashi}">
+
+                                <option value="" th:text="#{dropdown.rashi.select}"></option>
+
+                                <option th:value="#{dropdown.rashi.mesh}" th:text="#{dropdown.rashi.mesh}"></option>
+                                <option th:value="#{dropdown.rashi.vrushabh}" th:text="#{dropdown.rashi.vrushabh}"></option>
+                                <option th:value="#{dropdown.rashi.mithun}" th:text="#{dropdown.rashi.mithun}"></option>
+                                <option th:value="#{dropdown.rashi.kark}" th:text="#{dropdown.rashi.kark}"></option>
+                                <option th:value="#{dropdown.rashi.sinh}" th:text="#{dropdown.rashi.sinh}"></option>
+                                <option th:value="#{dropdown.rashi.kanya}" th:text="#{dropdown.rashi.kanya}"></option>
+                                <option th:value="#{dropdown.rashi.tula}" th:text="#{dropdown.rashi.tula}"></option>
+                                <option th:value="#{dropdown.rashi.vrishchik}" th:text="#{dropdown.rashi.vrishchik}"></option>
+                                <option th:value="#{dropdown.rashi.dhanu}" th:text="#{dropdown.rashi.dhanu}"></option>
+                                <option th:value="#{dropdown.rashi.makar}" th:text="#{dropdown.rashi.makar}"></option>
+                                <option th:value="#{dropdown.rashi.kumbh}" th:text="#{dropdown.rashi.kumbh}"></option>
+                                <option th:value="#{dropdown.rashi.meen}" th:text="#{dropdown.rashi.meen}"></option>
+                            </select>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1">
+                                    <span th:text="#{editor.form.nakshatra}"></span>
+                                </label>
+                                <!-- Nakshatra -->
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{nakshatra}">
+
+                                    <option value="" th:text="#{dropdown.nakshatra.select}"></option>
+
+                                    <option th:value="#{dropdown.nakshatra.ashwini}" th:text="#{dropdown.nakshatra.ashwini}"></option>
+                                    <option th:value="#{dropdown.nakshatra.bharani}" th:text="#{dropdown.nakshatra.bharani}"></option>
+                                    <option th:value="#{dropdown.nakshatra.krittika}" th:text="#{dropdown.nakshatra.krittika}"></option>
+                                    <option th:value="#{dropdown.nakshatra.rohini}" th:text="#{dropdown.nakshatra.rohini}"></option>
+                                    <option th:value="#{dropdown.nakshatra.mrigashira}" th:text="#{dropdown.nakshatra.mrigashira}"></option>
+                                    <option th:value="#{dropdown.nakshatra.ardra}" th:text="#{dropdown.nakshatra.ardra}"></option>
+                                    <option th:value="#{dropdown.nakshatra.punarvasu}" th:text="#{dropdown.nakshatra.punarvasu}"></option>
+                                    <option th:value="#{dropdown.nakshatra.pushya}" th:text="#{dropdown.nakshatra.pushya}"></option>
+                                    <option th:value="#{dropdown.nakshatra.ashlesha}" th:text="#{dropdown.nakshatra.ashlesha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.magha}" th:text="#{dropdown.nakshatra.magha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.purvaPhalguni}" th:text="#{dropdown.nakshatra.purvaPhalguni}"></option>
+                                    <option th:value="#{dropdown.nakshatra.uttaraPhalguni}" th:text="#{dropdown.nakshatra.uttaraPhalguni}"></option>
+                                    <option th:value="#{dropdown.nakshatra.hasta}" th:text="#{dropdown.nakshatra.hasta}"></option>
+                                    <option th:value="#{dropdown.nakshatra.chitra}" th:text="#{dropdown.nakshatra.chitra}"></option>
+                                    <option th:value="#{dropdown.nakshatra.swati}" th:text="#{dropdown.nakshatra.swati}"></option>
+                                    <option th:value="#{dropdown.nakshatra.vishakha}" th:text="#{dropdown.nakshatra.vishakha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.anuradha}" th:text="#{dropdown.nakshatra.anuradha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.jyeshtha}" th:text="#{dropdown.nakshatra.jyeshtha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.mula}" th:text="#{dropdown.nakshatra.mula}"></option>
+                                    <option th:value="#{dropdown.nakshatra.purvashada}" th:text="#{dropdown.nakshatra.purvashada}"></option>
+                                    <option th:value="#{dropdown.nakshatra.uttarashada}" th:text="#{dropdown.nakshatra.uttarashada}"></option>
+                                    <option th:value="#{dropdown.nakshatra.shravana}" th:text="#{dropdown.nakshatra.shravana}"></option>
+                                    <option th:value="#{dropdown.nakshatra.dhanishta}" th:text="#{dropdown.nakshatra.dhanishta}"></option>
+                                    <option th:value="#{dropdown.nakshatra.shatabhisha}" th:text="#{dropdown.nakshatra.shatabhisha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.purvaBhadrapada}" th:text="#{dropdown.nakshatra.purvaBhadrapada}"></option>
+                                    <option th:value="#{dropdown.nakshatra.uttaraBhadrapada}" th:text="#{dropdown.nakshatra.uttaraBhadrapada}"></option>
+                                    <option th:value="#{dropdown.nakshatra.revati}" th:text="#{dropdown.nakshatra.revati}"></option>
+                                </select>
+
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.mangal}"></label>
+
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{mangal}">
+
+                                    <!-- default -->
+                                    <option value="" th:text="#{dropdown.mangal.select}"></option>
+
+                                    <option th:value="yes" th:text="#{dropdown.mangal.yes}"></option>
+                                    <option th:value="no" th:text="#{dropdown.mangal.no}"></option>
+                                    <option th:value="unknown" th:text="#{dropdown.mangal.unknown}"></option>
+
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.gan}">
+                                </label>
+
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{gan}">
+
+                                    <option value=""  th:text="#{dropdown.gan.select}">  </option>
+
+                                    <option th:value="dev"
+                                            th:text="#{dropdown.gan.dev}">
+                                    </option>
+
+                                    <option th:value="manushya"
+                                            th:text="#{dropdown.gan.manushya}">
+                                    </option>
+
+                                    <option th:value="rakshas"
+                                            th:text="#{dropdown.gan.rakshas}">
+                                    </option>
+
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.nadi}">
+                                </label>
+
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{nadi}">
+
+                                    <option value=""  th:text="#{dropdown.nadi.select}"> </option>
+
+                                    <option th:value="adi"
+                                            th:text="#{dropdown.nadi.adi}">
+                                    </option>
+
+                                    <option th:value="madhya"
+                                            th:text="#{dropdown.nadi.madhya}">
+                                    </option>
+
+                                    <option th:value="antya"
+                                            th:text="#{dropdown.nadi.antya}">
+                                    </option>
+
+                                </select>
+                            </div>
 
 
-                    <!-- ================= EDUCATION ================= -->
-                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.education}"></h3>
-
-                    <input class="w-full border p-2 mb-2"
-                           th:field="*{education}"
-                           th:placeholder="#{editor.instruction.education}"/>
-
-                    <input class="w-full border p-2 mb-4"
-                           th:field="*{profession}"
-                           th:placeholder="#{editor.instruction.profession}"/>
-
-                    <!-- ================= FAMILY ================= -->
-                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.family}"></h3>
-
-                    <input class="w-full border p-2 mb-2 ime-marathi"
-                           th:field="*{fatherName}"
-                           th:placeholder="#{editor.instruction.fatherName}"/>
-
-                    <input class="w-full border p-2 mb-3 ime-marathi"
-                           th:field="*{motherName}"
-                           th:placeholder="#{editor.instruction.motherName}"/>
-
-                    <!-- Brother Count -->
-                    <select id="brotherCount" class="w-full border p-2 mb-2">
-                        <option value="" th:text="#{dropdown.count.select}"></option>
-                        <option th:each="n : ${#numbers.sequence(0,5)}"
-                                th:value="${n}" th:text="${n}"></option>
-                    </select>
-
-                    <div id="brotherInputs"></div>
-                    <input type="hidden" th:field="*{brothers}" id="brothers"/>
-
-                    <!-- Sister Count -->
-                    <select id="sisterCount" class="w-full border p-2 mb-2">
-                        <option value="" th:text="#{dropdown.count.select}"></option>
-                        <option th:each="n : ${#numbers.sequence(0,5)}"
-                                th:value="${n}" th:text="${n}"></option>
-                    </select>
-
-                    <div id="sisterInputs"></div>
-                    <input type="hidden" th:field="*{sisters}" id="sisters"/>
-
-                    <!-- dataset for JS -->
-                    <div id="familyMessages"
-                         th:data-brother-name="#{editor.placeholder.brotherName}"
-                         th:data-sister-name="#{editor.placeholder.sisterName}"
-                         th:data-status-select="#{dropdown.marital.select}"
-                         th:data-married="#{dropdown.marital.married}"
-                         th:data-unmarried="#{dropdown.marital.unmarried}">
+                        </div>
                     </div>
 
-                    <!-- ================= CONTACT ================= -->
-                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.contact}"></h3>
+                    <!-- ================= PHYSICAL SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
 
-                    <input class="w-full border p-2 mb-2"
-                           th:field="*{mobile}"
-                           th:placeholder="#{editor.instruction.mobile}"/>
+                        <!-- Header -->
+                        <button type="button"
+                                onclick="toggleSection('physicalSection', 'iconPhysical')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
 
-                    <textarea class="w-full border p-2 mb-4 ime-marathi"
-                              th:field="*{address}"
-                              th:placeholder="#{editor.instruction.address}"></textarea>
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🧍</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.physical}">
+                                    Physical Details
+                                </span>
+                                <span class="text-sm text-gray-400">(2 fields)</span>
+                            </div>
 
-                    <!-- ================= CUSTOM ================= -->
-                    <h3 class="font-semibold text-lg mb-2" th:text="#{editor.section.custom}"></h3>
+                            <span id="iconPhysical" class="text-gray-500 text-xl">−</span>
+                        </button>
 
-                    <div id="customFields"></div>
+                        <!-- Body -->
+                        <div id="physicalSection" class="hidden px-4 py-4 bg-white">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1">
+                                    <span th:text="#{editor.form.height}"></span>
+                                </label>
+                                <!-- Height -->
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{height}">
 
-                    <button type="button"
-                            onclick="addCustomField()"
-                            class="text-blue-600 underline text-sm">
-                        + Add Custom Field
-                    </button>
+                                    <option value="" th:text="#{dropdown.height.select}"></option>
 
+                                    <option th:value="#{dropdown.height.4_6}" th:text="#{dropdown.height.4_6}"></option>
+                                    <option th:value="#{dropdown.height.4_8}" th:text="#{dropdown.height.4_8}"></option>
+                                    <option th:value="#{dropdown.height.5_0}" th:text="#{dropdown.height.5_0}"></option>
+                                    <option th:value="#{dropdown.height.5_2}" th:text="#{dropdown.height.5_2}"></option>
+                                    <option th:value="#{dropdown.height.5_4}" th:text="#{dropdown.height.5_4}"></option>
+                                    <option th:value="#{dropdown.height.5_6}" th:text="#{dropdown.height.5_6}"></option>
+                                    <option th:value="#{dropdown.height.5_8}" th:text="#{dropdown.height.5_8}"></option>
+                                    <option th:value="#{dropdown.height.5_10}" th:text="#{dropdown.height.5_10}"></option>
+                                    <option th:value="#{dropdown.height.6_0}" th:text="#{dropdown.height.6_0}"></option>
+                                    <option th:value="#{dropdown.height.6_2}" th:text="#{dropdown.height.6_2}"></option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1">
+                                    <span th:text="#{editor.form.bloodGroup}"></span>
+                                </label>
+                                <!-- Blood Group -->
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{bloodGroup}">
+                                    <option value="" th:text="#{dropdown.blood.select}"></option>
+                                    <option th:value="#{dropdown.blood.a_pos}" th:text="#{dropdown.blood.a_pos}"></option>
+                                    <option th:value="#{dropdown.blood.a_neg}" th:text="#{dropdown.blood.a_neg}"></option>
+                                    <option th:value="#{dropdown.blood.b_pos}" th:text="#{dropdown.blood.b_pos}"></option>
+                                    <option th:value="#{dropdown.blood.b_neg}" th:text="#{dropdown.blood.b_neg}"></option>
+                                    <option th:value="#{dropdown.blood.ab_pos}" th:text="#{dropdown.blood.ab_pos}"></option>
+                                    <option th:value="#{dropdown.blood.ab_neg}" th:text="#{dropdown.blood.ab_neg}"></option>
+                                    <option th:value="#{dropdown.blood.o_pos}" th:text="#{dropdown.blood.o_pos}"></option>
+                                    <option th:value="#{dropdown.blood.o_neg}" th:text="#{dropdown.blood.o_neg}"></option>
+                                </select> 
+                            </div>
+                            <!-- Complexion -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.complexion}">
+                                </label>
+
+
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{complexion}">
+
+                                    <!-- Default placeholder -->
+                                    <option value="" th:text="#{dropdown.complexion.select}"> </option>
+
+
+                                    <option th:value="veryFair"
+                                            th:text="#{dropdown.complexion.veryFair}">
+                                    </option>
+
+                                    <option th:value="fair"
+                                            th:text="#{dropdown.complexion.fair}">
+                                    </option>
+
+                                    <option th:value="wheatish"
+                                            th:text="#{dropdown.complexion.wheatish}">
+                                    </option>
+
+                                    <option th:value="dark"
+                                            th:text="#{dropdown.complexion.dark}">
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- ================= EDUCATION SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                        <button type="button"
+                                onclick="toggleSection('educationSection', 'iconEducation')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🎓</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.education}">
+                                    Education & Profession
+                                </span>
+                                <span class="text-sm text-gray-400">(2 fields)</span>
+                            </div>
+                            <span id="iconEducation" class="text-gray-500 text-xl">−</span>
+                        </button>
+                        <div id="educationSection" class="hidden px-4 py-4 bg-white">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Education -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.education}"></label>
+                                    <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                           th:field="*{education}"
+                                           th:placeholder="#{editor.instruction.education}"/>
+                                </div>
+                                <!-- Profession -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.profession}"></label>
+
+                                    <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                           th:field="*{profession}"
+                                           th:placeholder="#{editor.instruction.profession}"/>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ================= FAMILY SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                        <button type="button"
+                                onclick="toggleSection('familySection', 'iconFamily')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">👪</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.family}">
+                                    Family Details
+                                </span>
+                                <span class="text-sm text-gray-400">(Parents & Siblings)</span>
+                            </div>
+                            <span id="iconFamily" class="text-gray-500 text-xl">−</span>
+                        </button>
+                        <div id="familySection" class="hidden px-4 py-4 bg-white space-y-5">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.fatherName}"></label>
+
+                                    <div class="ime-wrapper relative mb-4">
+                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               th:field="*{fatherName}"
+                                               th:placeholder="#{editor.instruction.fatherName}"/>
+
+                                        <!-- Inline Suggestions Dropdown -->
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.fatherOccupation}"></label>
+
+                                    <div class="ime-wrapper relative">
+                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               th:field="*{fatherOccupation}"
+                                               th:placeholder="#{editor.instruction.fatherOccupation}"/>
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Mother -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.motherName}"></label>
+
+                                    <div class="ime-wrapper relative mb-4">
+                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               th:field="*{motherName}"
+                                               th:placeholder="#{editor.instruction.motherName}"/>
+
+                                        <!-- Inline Suggestions Dropdown -->
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- 🔸 Brothers -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.brothers}"></label>
+                                <select id="brotherCount"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                                    <option value="" th:text="#{dropdown.count.select}"></option>
+                                    <option th:each="n : ${#numbers.sequence(0,5)}"
+                                            th:value="${n}" th:text="${n}"></option>
+                                </select>
+                                <!-- dynamic inputs -->
+                                <div id="brotherInputs" class="space-y-2"></div>
+                                <input type="hidden" th:field="*{brothers}" id="brothers"/>
+                            </div>
+                            <!-- 🔸 Sisters -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.sisters}"></label>
+                                <select id="sisterCount"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                                    <option value="" th:text="#{dropdown.count.select}"></option>
+                                    <option th:each="n : ${#numbers.sequence(0,5)}"
+                                            th:value="${n}" th:text="${n}"></option>
+                                </select>
+                                <!-- dynamic inputs -->
+                                <div id="sisterInputs" class="space-y-2"></div>
+                                <input type="hidden" th:field="*{sisters}" id="sisters"/>
+                            </div>
+                            <!-- dataset for JS -->
+                            <div id="familyMessages"
+                                 th:data-brother-name="#{editor.placeholder.brotherName}"
+                                 th:data-sister-name="#{editor.placeholder.sisterName}"
+                                 th:data-status-select="#{dropdown.marital.select}"
+                                 th:data-married="#{dropdown.marital.married}"
+                                 th:data-unmarried="#{dropdown.marital.unmarried}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ================= RELATIVES / CUSTOM SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                        <button type="button"
+                                onclick="toggleSection('customSection', 'iconCustom')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🧾</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.custom}">
+                                    Relatives & Additional Info
+                                </span>
+                                <span class="text-sm text-gray-400">(optional)</span>
+                            </div>
+                            <span id="iconCustom" class="text-gray-500 text-xl">+</span>
+                        </button>
+                        <div id="customSection" class="hidden px-4 py-4 bg-white mt-6">
+                            <div id="customFields" class="space-y-3"></div>
+                            <button type="button"
+                                    onclick="addCustomField()"
+                                    class="text-red-600 hover:text-red-700 text-sm font-medium">
+                                + Add Relative / Custom Field
+                            </button>
+                            <p class="text-xs text-gray-400">
+                                Example: Mama, Kaka, Mavshi, Atte, Maternal Uncle etc.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- ================= CONTACT SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+
+                        <!-- Header -->
+                        <button type="button"
+                                onclick="toggleSection('contactSection', 'iconContact')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">📞</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.contact}">
+                                    Contact Details
+                                </span>
+                                <span class="text-sm text-gray-400">(2 fields)</span>
+                            </div>
+
+                            <span id="iconContact" class="text-gray-500 text-xl">−</span>
+                        </button>
+
+                        <!-- Body -->
+                        <div id="contactSection" class="hidden px-4 py-4 bg-white space-y-4">
+
+                            <!-- Mobile -->
+                            <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                   th:field="*{mobile}"
+                                   th:placeholder="#{editor.instruction.mobile}"/>
+
+                            <!-- Address -->
+                            <textarea rows="3"
+                                      class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                      focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                      th:field="*{address}"
+                                      th:placeholder="#{editor.instruction.address}">
+                            </textarea>
+
+                        </div>
+                    </div>
                     <!-- ================= SUBMIT ================= -->
-                    <button type="submit"
-                            class="w-full bg-green-600 text-white py-3 mt-6 rounded"
-                            th:text="#{editor.form.submit}">
-                    </button>
-
+                    <div class="sticky bottom-0 bg-white pt-4 pb-2 border-t mt-6">
+                        <button type="submit"
+                                class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 mt-6 rounded-lg shadow-lg font-semibold text-lg transition"
+                                th:text="#{editor.form.submit}">
+                        </button>
+                    </div>
                 </form>
             </div>
-
-            <!-- =========================================================
-             RIGHT SIDE – SUGGESTIONS
-            ========================================================= -->
-            <div id="suggestionBox"
-                 class="hidden border rounded p-3 bg-white shadow h-fit">
-
-                <div class="flex justify-between mb-2">
-                    <b th:text="#{suggestions.title}"></b>
-                    <button onclick="closeSuggestions()">✕</button>
-                </div>
-
-                <div id="suggestionList"></div>
-
-                <div class="text-sm text-gray-500 mt-2"
-                     th:text="#{suggestions.hint}">
-                </div>
-
-            </div>
-
-        </div>
     </section>
-    <script th:src="@{/js/biodata-editor.js}" defer></script>
+    <script th:src="@{/js/transliteration.js}"></script>
+    <script th:src="@{/js/biodata-editor.js}"></script>
 </div>
  
 -------------------------------------------------- 
@@ -5785,67 +6636,93 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\lay
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title th:text="${pageTitle} ?: 'Biodata Maker'"></title>
+        <!-- SEO -->
+        <meta name="description"
+              content="Create beautiful marriage biodata online in Marathi and English. Free printable biodata templates. No login required. VivahPatra makes biodata creation easy.">
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
+        <title>
+            VivahPatra – Free Marriage Biodata Maker (Marathi & English)
+        </title>
 
-    <!-- Custom fonts (optional Marathi font later) -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet">
+        <!-- Tailwind CDN -->
+        <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Base styles -->
-    <style>
-        body {
-            font-family: 'Noto Serif Devanagari', serif;
-        }
-    </style>
+        <!-- Marathi Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet">
 
-</head>
+        <style>
+            body {
+                font-family: 'Noto Serif Devanagari', serif;
+            }
+        </style>
 
-<body class="bg-gray-50 text-gray-800">
+    </head>
 
-<!-- ================= NAVBAR ================= -->
-<nav class="bg-white shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+    <body class="bg-gray-50 text-gray-800">
 
-        <!-- Logo -->
-        <a href="/dashboard" class="text-xl font-bold text-red-600">
-            Biodata Maker
+<header class="bg-white border-b shadow-sm">
+
+    <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+
+        <!-- LOGO -->
+        <a href="/dashboard"
+           class="flex items-center gap-2 hover:opacity-90 transition">
+
+            <img th:src="${#locale.language == 'mr'} ? '/images/logo_mr.png' : '/images/logo.png'"
+                 alt="VivahPatra"
+                class="h-16 md:h-20 w-auto object-contain scale-110">
         </a>
 
-        <!-- Language switch -->
-        <div class="flex gap-3 text-sm">
-            <a href="?lang=en" class="hover:underline">EN</a>
-            <a href="?lang=mr" class="hover:underline">मराठी</a>
+        <!-- Language Switch -->
+        <div class="flex items-center gap-4 text-sm md:text-base">
+
+            <a href="?lang=en"
+               th:classappend="${#locale.language == 'en'} ? 'font-semibold text-red-600' : ''"
+               class="hover:text-red-600 transition">
+                EN
+            </a>
+
+            <span class="text-gray-300">|</span>
+
+            <a href="?lang=mr"
+               th:classappend="${#locale.language == 'mr'} ? 'font-semibold text-red-600' : ''"
+               class="hover:text-red-600 transition">
+                मराठी
+            </a>
+
         </div>
 
     </div>
-</nav>
 
-<!-- ================= PAGE CONTENT ================= -->
-<main class="min-h-screen">
+</header>
 
-    <!-- dynamic page content -->
-<main class="min-h-screen">
-    <div th:replace="~{ ${content} :: content }"></div>
-</main>
 
-<!-- ================= FOOTER ================= -->
-<footer class="bg-white border-t mt-10">
-    <div class="max-w-7xl mx-auto px-4 py-4 text-center text-sm text-gray-500">
-        © <span th:text="${#dates.year(#dates.createNow())}"></span>
-        Biodata Maker. All rights reserved.
-    </div>
-</footer>
 
-<!-- Base JS -->
-<script th:src="@{/js/base.js}"></script>
 
-</body>
+
+        <!-- ================= MAIN CONTENT ================= -->
+        <main class="min-h-screen">
+
+            <!-- dynamic page content -->
+            <div th:replace="~{ ${content} :: content }"></div>
+
+        </main>
+
+
+        <!-- ================= FOOTER ================= -->
+        <footer class="bg-gray-100 text-center text-sm text-gray-600 py-6 mt-10 border-t">
+            © 2026 VivahPatra • Made with ❤️ in India
+        </footer>
+
+
+        <!-- ================= BASE JS ================= -->
+        <script th:src="@{/js/base.js}" defer></script>
+
+    </body>
 </html>
  
 -------------------------------------------------- 

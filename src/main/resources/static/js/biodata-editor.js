@@ -1,15 +1,16 @@
 /* =========================================================
  GLOBAL STATE
-========================================================= */
+ ========================================================= */
 let customIndex = 0;
 
 /* =========================================================
  SAFE INIT
-========================================================= */
+ ========================================================= */
 document.addEventListener("DOMContentLoaded", function () {
 
     const msgContainer = document.getElementById("familyMessages");
-    if (!msgContainer) return;
+    if (!msgContainer)
+        return;
 
     window.msgBrotherName = msgContainer.dataset.brotherName;
     window.msgSisterName = msgContainer.dataset.sisterName;
@@ -25,7 +26,8 @@ document.addEventListener("DOMContentLoaded", function () {
         updateFamily("brothers", msgBrotherLabel, "brotherInputs");
         updateFamily("sisters", msgSisterLabel, "sisterInputs");
 
-        if (!runValidation()) return;
+        if (!runValidation())
+            return;
 
         document.getElementById("biodataForm").submit();
     });
@@ -52,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 /* =========================================================
  VALIDATION
-========================================================= */
+ ========================================================= */
 function runValidation() {
 
     const required = ["name", "birthDate", "religion", "caste", "height", "education", "mobile", "address"];
@@ -61,7 +63,8 @@ function runValidation() {
 
     required.forEach(name => {
         const input = document.querySelector(`[name="${name}"]`);
-        if (!input || !input.value.trim()) missing.push(name);
+        if (!input || !input.value.trim())
+            missing.push(name);
     });
 
     if (missing.length) {
@@ -73,7 +76,7 @@ function runValidation() {
 
 /* =========================================================
  DATE / TIME
-========================================================= */
+ ========================================================= */
 function updateBirthDate() {
     const d = document.getElementById("birthDay")?.value;
     const m = document.getElementById("birthMonth")?.value;
@@ -95,11 +98,12 @@ function updateBirthTime() {
 
 /* =========================================================
  FAMILY
-========================================================= */
+ ========================================================= */
 function renderPersonInputs(count, containerId, isBrother) {
 
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container)
+        return;
 
     container.innerHTML = "";
 
@@ -132,7 +136,8 @@ function updateFamily(hiddenFieldId, labelText, containerId) {
         const name = input.value.trim();
         const status = input.closest("div").querySelector("[data-status]").value || msgUnmarried;
 
-        if (name) values.push(`${name}(${status})`);
+        if (name)
+            values.push(`${name}(${status})`);
     });
 
     document.getElementById(hiddenFieldId).value = values.join(", ");
@@ -140,7 +145,7 @@ function updateFamily(hiddenFieldId, labelText, containerId) {
 
 /* =========================================================
  CUSTOM FIELD
-========================================================= */
+ ========================================================= */
 function addCustomField() {
 
     const container = document.getElementById("customFields");
@@ -172,7 +177,7 @@ function addCustomField() {
 
 /* =========================================================
  PROFILE PREVIEW
-========================================================= */
+ ========================================================= */
 document.getElementById("profileImage")?.addEventListener("change", function () {
     const preview = document.getElementById("profilePreview");
     const file = this.files[0];
@@ -185,4 +190,126 @@ document.getElementById("profileImage")?.addEventListener("change", function () 
         };
         reader.readAsDataURL(file);
     }
+});
+
+
+function toggleSection(sectionId, iconId) {
+    const section = document.getElementById(sectionId);
+    const icon = document.getElementById(iconId);
+
+    section.classList.toggle("hidden");
+
+    if (section.classList.contains("hidden")) {
+        icon.textContent = "+";
+    } else {
+        icon.textContent = "−";
+    }
+}
+
+
+
+function toggleGuide() {
+    const box = document.getElementById("guideContent");
+    const text = document.getElementById("guideToggleText");
+
+    const isHidden = box.classList.toggle("hidden");
+
+    const showText = text.dataset.show;
+    const hideText = text.dataset.hide;
+
+    text.innerText = isHidden ? showText : hideText;
+
+    localStorage.setItem("guideHidden", isHidden);
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    const hidden = localStorage.getItem("guideHidden") === "true";
+
+    if (hidden) {
+        document.getElementById("guideContent")?.classList.add("hidden");
+        document.getElementById("guideToggleText").innerText =
+                document.getElementById("guideToggleText").dataset.show;
+    }
+});
+
+
+// ===== GOD MODAL =====
+function openGodModal() {
+    document.getElementById("godModal").classList.remove("hidden");
+
+    const selected = document.getElementById("selectedGod").value;
+
+    document.querySelectorAll("#godModal img").forEach(img => {
+        if (img.getAttribute("data-value") === selected) {
+            img.classList.add("ring-2", "ring-red-500");
+        }
+    });
+}
+
+function closeGodModal() {
+    document.getElementById("godModal").classList.add("hidden");
+}
+
+// click select image
+document.querySelectorAll("#godModal img").forEach(img => {
+    img.addEventListener("click", function () {
+
+        const value = this.getAttribute("data-value");
+
+        document.getElementById("selectedGod").value = value;
+        document.getElementById("previewGodImage").src = "/images/gods/" + value + ".png";
+
+        // remove previous selection
+        document.querySelectorAll("#godModal img").forEach(i => {
+            i.classList.remove("ring-2", "ring-red-500");
+        });
+
+        // highlight selected
+        this.classList.add("ring-2", "ring-red-500");
+
+        closeGodModal();
+    });
+});
+
+
+
+// ===== MANTRA MODAL =====
+function openMantraModal() {
+    document.getElementById("mantraModal").classList.remove("hidden");
+}
+function closeMantraModal() {
+    document.getElementById("mantraModal").classList.add("hidden");
+}
+
+function selectMantra(text) {
+
+    document.getElementById("previewMantra").innerText = text;
+    document.getElementById("selectedMantra").value = text;
+
+    document.querySelectorAll(".mantra-option").forEach(el => {
+        el.classList.remove("bg-gray-200");
+    });
+
+    event.target.classList.add("bg-gray-200");
+
+    closeMantraModal();
+}
+
+
+function applyCustomMantra() {
+    const val = document.getElementById("customMantraInput").value;
+    if (!val)
+        return;
+
+    selectMantra(val);
+}
+
+document.addEventListener("click", function (e) {
+    const btn = e.target.closest("[data-value]");
+    if (!btn)
+        return;
+
+    const value = btn.getAttribute("data-value");
+
+    selectMantra(value);
 });
