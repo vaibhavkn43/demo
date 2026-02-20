@@ -1,0 +1,52 @@
+{
+  "templates": [
+    {
+      "id": "t1",
+      "name": "Classic Marathi Biodata",
+      "whichReligion": "HINDU",
+      "photo": true,
+      "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t1.png",
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t1.png"
+    },
+    {
+      "id": "t2",
+      "name": "Simple Biodata",
+      "whichReligion": "HINDU",
+      "photo": false,
+      "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t2.png",
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t2.png"
+    },
+    {
+      "id": "t3",
+      "name": "Marriage Biodata Style 1",
+      "whichReligion": "HINDU",
+      "photo": true,
+      "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t3.png",
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t3.png"
+    },
+    {
+      "id": "t4",
+      "name": "Marriage Biodata Style 2",
+      "whichReligion": "HINDU",
+      "photo": true,
+      "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t4.png",
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t4.png"
+    },
+    {
+      "id": "t5",
+      "name": "Modern Clean Biodata",
+      "whichReligion": "HINDU",
+      "photo": false,
+      "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t5.png",
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t5.png"
+    },
+    {
+      "id": "t6",
+      "name": "Traditional Family Biodata",
+      "whichReligion": "HINDU",
+      "photo": true,
+      "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t6.png",
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t6.png"
+    }
+  ]
+}

@@ -1,9 +1,10 @@
-package in.hcdc.demo.controller;
+package in.onlinebiodatamaker.controller;
 
-import in.hcdc.demo.model.BiodataRequest;
-import in.hcdc.demo.service.BiodataValidationService;
-import in.hcdc.demo.service.GodImageService;
-import in.hcdc.demo.util.ValidationResult;
+import in.onlinebiodatamaker.model.BiodataRequest;
+import in.onlinebiodatamaker.service.BiodataValidationService;
+import in.onlinebiodatamaker.service.GodImageService;
+import in.onlinebiodatamaker.service.TemplatesService;
+import in.onlinebiodatamaker.util.ValidationResult;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -28,13 +29,13 @@ public class DashboardController {
     private GodImageService godImageService;
     @Autowired
     private MessageSource messageSource;
+    @Autowired
+    private TemplatesService templatesService;
 
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
-        List<String> templates = List.of("t1", "t2", "t3", "t4", "t5", "t6");
-        model.addAttribute("templates", templates);
 
-        // Change this from "~{dashboard :: content}" to just "dashboard"
+        model.addAttribute("templates", templatesService.getTemplateIds());
         model.addAttribute("content", "dashboard");
         return "layout/base";
     }
@@ -63,23 +64,9 @@ public class DashboardController {
             model.addAttribute("content", "form");
             return "layout/base";
         }
-
         model.addAttribute("data", form);
         model.addAttribute("templateId", form.getTemplateId());
-
-        // 🔥 IMPORTANT FIX
         model.addAttribute("content", "preview");
-
         return "layout/base";
     }
-
-//    @GetMapping
-//    public String dashboard(Model model) {
-//        List<Category> categories = templateService.getDashboardCategories();
-//        Map<String, Category> categoryMap = categories.stream()
-//                .collect(Collectors.toMap(Category::getName, c -> c));
-//        model.addAttribute("categoryMap", categoryMap);
-//        model.addAttribute("content", "dashboard");
-//        return "layout/base";
-//    }
 }

@@ -1,7 +1,5 @@
-package in.hcdc.demo.model;
+package in.onlinebiodatamaker.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class BiodataRequest extends TemplateForm {
+public class BiodataRequest {
 
     private String templateId;
     // ======================

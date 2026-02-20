@@ -9,23 +9,11 @@
         <relativePath/>
     </parent>
     <groupId>in.hcdc</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>biodata-maker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>demo</name>
-    <description>Demo project for Spring Boot</description>
-    <url/>
-    <licenses>
-        <license/>
-    </licenses>
-    <developers>
-        <developer/>
-    </developers>
-    <scm>
-        <connection/>
-        <developerConnection/>
-        <tag/>
-        <url/>
-    </scm>
+    <name>online-biodata-maker</name>
+    <description>Biodata Maker Application</description>
+
     <properties>
         <java.version>17</java.version>
     </properties>

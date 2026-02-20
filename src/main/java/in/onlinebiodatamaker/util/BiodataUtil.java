@@ -1,6 +1,6 @@
-package in.hcdc.demo.util;
+package in.onlinebiodatamaker.util;
 
-import in.hcdc.demo.config.AppStorageConfig;
+import in.onlinebiodatamaker.config.AppStorageConfig;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

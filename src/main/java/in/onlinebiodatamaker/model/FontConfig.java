@@ -1,5 +1,6 @@
-package in.hcdc.demo.model;
+package in.onlinebiodatamaker.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,9 +16,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Template {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class FontConfig {
 
-    private String id;
-    private String group;
-    private String thumbnail; // image path
+    String family;
+    int size;
+    String color;
 }

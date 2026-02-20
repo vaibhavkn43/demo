@@ -29,41 +29,76 @@
 
     <body class="bg-gray-50 text-gray-800">
 
-<header class="bg-white border-b shadow-sm">
+        <header class="bg-white border-b shadow-sm">
 
-    <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+            <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
 
-        <!-- LOGO -->
-        <a href="/dashboard"
-           class="flex items-center gap-2 hover:opacity-90 transition">
+                <!-- LOGO -->
+                <a href="/dashboard"
+                   class="flex items-center gap-2 hover:opacity-90 transition">
 
-            <img th:src="${#locale.language == 'mr'} ? '/images/logo_mr.png' : '/images/logo.png'"
-                 alt="VivahPatra"
-                class="h-16 md:h-20 w-auto object-contain scale-110">
-        </a>
+                    <img th:src="${#locale.language == 'mr'} ? '/images/logo_mr.png' : '/images/logo.png'"
+                         alt="VivahPatra"
+                         class="h-16 md:h-20 w-auto object-contain scale-110">
+                </a>
 
-        <!-- Language Switch -->
-        <div class="flex items-center gap-4 text-sm md:text-base">
+                <div class="relative inline-block text-left" id="langDropdown">
 
-            <a href="?lang=en"
-               th:classappend="${#locale.language == 'en'} ? 'font-semibold text-red-600' : ''"
-               class="hover:text-red-600 transition">
-                EN
-            </a>
+                    <!-- Trigger Button -->
+                    <button onclick="toggleLangDropdown()"
+                            class="flex items-center gap-2 text-sm md:text-base font-medium text-red-700 border-b-2 border-red-700 pb-1">
 
-            <span class="text-gray-300">|</span>
+                        <!-- Globe icon -->
+                        <span>🌐</span>
 
-            <a href="?lang=mr"
-               th:classappend="${#locale.language == 'mr'} ? 'font-semibold text-red-600' : ''"
-               class="hover:text-red-600 transition">
-                मराठी
-            </a>
+                        <!-- Selected language -->
+                        <span id="selectedLangText"
+                              th:text="${#locale.language == 'mr'} ? 'मराठी' : 'English'">
+                        </span>
 
-        </div>
+                        <!-- Arrow -->
+                        <span>▾</span>
+                    </button>
 
-    </div>
+                    <!-- Dropdown -->
+                    <div id="langMenu"
+                         class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
 
-</header>
+                        <!-- English -->
+                        <div onclick="changeLanguage('en')"
+                             class="flex justify-between items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+
+                            <span>English (EN)</span>
+
+                            <span th:if="${#locale.language == 'en'}" class="text-red-600">✔</span>
+                        </div>
+
+                        <!-- Marathi -->
+                        <div onclick="changeLanguage('mr')"
+                             class="flex justify-between items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+
+                            <span>मराठी (MR)</span>
+
+                            <span th:if="${#locale.language == 'mr'}" class="text-red-600">✔</span>
+                        </div>
+
+                        <!-- Future example -->
+                        <div onclick="changeLanguage('hi')"
+                             class="flex justify-between items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+
+                            <span>Hindi (HI)</span>
+
+                            <span th:if="${#locale.language == 'hi'}" class="text-red-600">✔</span>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </header>
 
 
 

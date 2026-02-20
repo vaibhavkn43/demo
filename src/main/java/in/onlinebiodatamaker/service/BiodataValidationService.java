@@ -1,7 +1,7 @@
-package in.hcdc.demo.service;
+package in.onlinebiodatamaker.service;
 
-import in.hcdc.demo.model.BiodataRequest;
-import in.hcdc.demo.util.ValidationResult;
+import in.onlinebiodatamaker.model.BiodataRequest;
+import in.onlinebiodatamaker.util.ValidationResult;
 import org.springframework.stereotype.Service;
 /**
  *

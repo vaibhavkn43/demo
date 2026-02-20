@@ -1,13 +1,13 @@
-package in.hcdc.demo;
+package in.onlinebiodatamaker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DemoApplication {
+public class BiodataMakerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(BiodataMakerApplication.class, args);
 	}
 
 }

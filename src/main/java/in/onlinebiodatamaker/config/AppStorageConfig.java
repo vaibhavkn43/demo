@@ -1,4 +1,4 @@
-package in.hcdc.demo.config;
+package in.onlinebiodatamaker.config;
 
 
 import java.nio.file.Path;

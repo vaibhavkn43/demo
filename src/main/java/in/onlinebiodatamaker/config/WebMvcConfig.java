@@ -1,4 +1,4 @@
-package in.hcdc.demo.config;
+package in.onlinebiodatamaker.config;
 
 import java.util.Locale;
 import org.springframework.beans.factory.annotation.Value;

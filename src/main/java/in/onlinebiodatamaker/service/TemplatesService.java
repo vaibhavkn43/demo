@@ -1,0 +1,68 @@
+package in.onlinebiodatamaker.service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import in.onlinebiodatamaker.model.Template;
+import jakarta.annotation.PostConstruct;
+import java.io.InputStream;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.stereotype.Service;
+
+/**
+ *
+ * @author Vaibhav
+ */
+@Service
+@Getter
+@Setter
+public class TemplatesService {
+
+    private List<Template> templates;
+
+    @PostConstruct
+    public void loadTemplates() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+
+            InputStream is = getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("config/templates.json");
+
+            TemplatesWrapper wrapper = mapper.readValue(is, TemplatesWrapper.class);
+
+            this.templates = wrapper.getTemplates();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load templates.json", e);
+        }
+    }
+
+    public List<Template> getAllTemplates() {
+        return templates;
+    }
+
+    public Template getById(String id) {
+        return templates.stream()
+                .filter(t -> t.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<String> getTemplateIds() {
+        return templates.stream()
+                .map(Template::getId)
+                .toList();
+    }
+
+    // =========================
+    // 🔽 Inner Wrapper Class
+    // =========================
+    @Getter
+    @Setter
+    public static class TemplatesWrapper {
+
+        private List<Template> templates;
+    }
+
+}
