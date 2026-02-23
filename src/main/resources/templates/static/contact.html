@@ -1,0 +1,123 @@
+<div th:fragment="content">
+
+    <!-- HERO -->
+    <div class="bg-gradient-to-r from-red-600 to-pink-600 text-white py-14 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2"
+            th:text="#{contact.title}">Contact Us</h1>
+
+        <p class="text-white/90 max-w-2xl mx-auto"
+           th:text="#{contact.subtitle}">
+            We are here to help you create the perfect biodata.
+        </p>
+    </div>
+
+    <!-- FORM + CONTACT -->
+    <div class="max-w-6xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-10">
+
+        <!-- CONTACT FORM -->
+        <div class="bg-white shadow-lg rounded-xl p-6">
+
+            <form method="post" action="/contact/send">
+
+                <!-- Name -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1"
+                           th:text="#{contact.name}">Your Name</label>
+                    <input type="text" name="name" required
+                           class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-400 outline-none"/>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1"
+                           th:text="#{contact.email}">Your Email</label>
+                    <input type="email" name="email" required
+                           class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-400 outline-none"/>
+                </div>
+
+                <!-- Message -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1"
+                           th:text="#{contact.message}">Your Message</label>
+                    <textarea name="message" rows="5" required
+                              class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-400 outline-none"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit"
+                        class="w-full bg-gradient-to-r from-red-600 to-red-700 
+                               hover:from-red-700 hover:to-red-800 
+                               text-white py-3 rounded-lg shadow transition"
+                        th:text="#{contact.send}">
+                    Send Message
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- CONTACT DETAILS -->
+        <div class="space-y-5">
+
+            <!-- Address -->
+            <div class="bg-white shadow rounded-xl p-5">
+                <h3 class="font-semibold text-red-700 mb-2"
+                    th:text="#{contact.address.title}">Our Address</h3>
+                <p class="text-gray-600" th:text="#{contact.address.desc}"></p>
+            </div>
+
+            <!-- Email -->
+            <div class="bg-white shadow rounded-xl p-5">
+                <h3 class="font-semibold text-blue-700 mb-2"
+                    th:text="#{contact.email.title}">Email Address</h3>
+                <p class="text-gray-600">
+                    <a href="mailto:vaibhavkn43@gmail.com" class="text-blue-600 underline">
+                        vaibhavkn43@gmail.com
+                    </a>
+                </p>
+            </div>
+
+            <!-- Phone + WhatsApp -->
+            <div class="bg-white shadow rounded-xl p-5">
+                <h3 class="font-semibold text-green-700 mb-2"
+                    th:text="#{contact.phone.title}">Phone & WhatsApp</h3>
+
+                <p class="text-gray-600">
+                    <a href="tel:9022658566" class="text-green-600 font-medium">
+                        9022658566
+                    </a>
+                </p>
+
+                <p class="mt-2">
+                    <a href="https://wa.me/919022658566" target="_blank"
+                       class="inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm shadow">
+                        WhatsApp Chat
+                    </a>
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div class="bg-gray-50 py-14 text-center">
+
+        <h2 class="text-2xl font-bold mb-2"
+            th:text="#{contact.cta.title}">
+            Ready to create your biodata?
+        </h2>
+
+        <p class="text-gray-500 mb-6"
+           th:text="#{contact.cta.desc}">
+            Start creating your perfect marriage biodata in minutes.
+        </p>
+
+        <a href="/dashboard"
+           class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg shadow">
+            Create Biodata Now
+        </a>
+
+    </div>
+
+</div>

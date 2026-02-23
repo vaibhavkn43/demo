@@ -59,41 +59,65 @@ public class DashboardController {
         return "layout/base";
     }
 
-@PostMapping("/preview")
-public String preview(BiodataRequest form, Model model, Locale locale,
-                      @RequestParam(required = false, defaultValue = "false") boolean sample) {
+    @PostMapping("/preview")
+    public String preview(BiodataRequest form, Model model, Locale locale,
+            @RequestParam(required = false, defaultValue = "false") boolean sample) {
 
-    ValidationResult result = biodataValidationService.validate(form);
+        ValidationResult result = biodataValidationService.validate(form);
 
-    if (form.getBirthTime() != null && !form.getBirthTime().isEmpty()) {
-        LocalTime time = LocalTime.parse(form.getBirthTime());
-        form.setBirthTime(TimeHandlerUtil.toMarathiTime(time, locale));
-    }
+        if (form.getBirthTime() != null && !form.getBirthTime().isEmpty()) {
+            LocalTime time = LocalTime.parse(form.getBirthTime());
+            form.setBirthTime(TimeHandlerUtil.toMarathiTime(time, locale));
+        }
 
-    if (form.getGodImage() == null || form.getGodImage().isEmpty()) {
-        form.setGodImage("ganesh");
-    }
+        if (form.getGodImage() == null || form.getGodImage().isEmpty()) {
+            form.setGodImage("ganesh");
+        }
 
-    if (form.getMantra() == null || form.getMantra().isEmpty()) {
-        form.setMantra("|| श्री गणेशाय नमः ||");
-    }
+        if (form.getMantra() == null || form.getMantra().isEmpty()) {
+            form.setMantra("|| श्री गणेशाय नमः ||");
+        }
 
-    if (!result.isValid()) {
-        model.addAttribute("missingKeys", result.getMissingKeys());
-        model.addAttribute("invalidValues", result.getInvalidKeys());
-        model.addAttribute("form", form);
-        model.addAttribute("content", "form");
+        if (!result.isValid()) {
+            model.addAttribute("missingKeys", result.getMissingKeys());
+            model.addAttribute("invalidValues", result.getInvalidKeys());
+            model.addAttribute("form", form);
+            model.addAttribute("content", "form");
+            return "layout/base";
+        }
+
+        model.addAttribute("data", form);
+
+        // 🔥 use template object directly
+        Template template = templatesService.getById(form.getTemplateId());
+        model.addAttribute("template", template);
+
+        model.addAttribute("content", "preview");
         return "layout/base";
     }
 
-    model.addAttribute("data", form);
+    @GetMapping("/about")
+    public String about(Model model) {
+        model.addAttribute("content", "static/about");
+        return "layout/base";
+    }
 
-    // 🔥 use template object directly
-    Template template = templatesService.getById(form.getTemplateId());
-    model.addAttribute("template", template);
+    @GetMapping("/privacy")
+    public String privacy(Model model) {
+        model.addAttribute("content", "static/privacy");
+        return "layout/base";
+    }
 
-    model.addAttribute("content", "preview");
-    return "layout/base";
-}
+    @GetMapping("/terms")
+    public String terms(Model model) {
+        model.addAttribute("content", "static/terms");
+        return "layout/base";
+    }
+
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        model.addAttribute("content", "static/contact");
+        return "layout/base";
+    }
 
 }

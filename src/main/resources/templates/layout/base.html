@@ -1,122 +1,153 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:lang="${#locale.language}">
 
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <!-- SEO -->
-        <meta name="description"
-              content="Create beautiful marriage biodata online in Marathi and English. Free printable biodata templates. No login required. VivahPatra makes biodata creation easy.">
+        <!-- ================= SEO ================= -->
 
-        <title>
-            VivahPatra – Free Marriage Biodata Maker (Marathi & English)
+        <!-- Title -->
+        <title th:text="${pageTitle ?: 'VivahPatra – Free Marriage Biodata Maker (Marathi & English)'}">
+            VivahPatra – Free Marriage Biodata Maker
         </title>
 
-        <!-- Tailwind CDN -->
+        <!-- Description -->
+        <meta name="description"
+              th:content="${pageDescription ?: 'Create beautiful marriage biodata online in Marathi and English. Free printable biodata templates. No login required.'}"/>
+
+        <!-- Canonical -->
+        <link rel="canonical" href="https://vivahpatra.com"/>
+
+        <!-- Open Graph -->
+        <meta property="og:title"
+              th:content="${pageTitle ?: 'VivahPatra Biodata Maker'}"/>
+
+        <meta property="og:description"
+              th:content="${pageDescription ?: 'Free Marathi marriage biodata maker with modern templates and PDF download.'}"/>
+
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content="https://vivahpatra.com"/>
+
+        <!-- Multilingual SEO -->
+        <link rel="alternate" hreflang="en" href="https://vivahpatra.com/about?lang=en"/>
+        <link rel="alternate" hreflang="mr" href="https://vivahpatra.com/about?lang=mr"/>
+
+        <!-- Structured Data -->
+        <script type="application/ld+json">
+            {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "VivahPatra Biodata Maker",
+            "url": "https://vivahpatra.com",
+            "logo": "https://vivahpatra.com/images/logo.png",
+            "description": "Free online Marathi marriage biodata maker with PDF download and modern templates."
+            }
+        </script>
+
+        <!-- ================= STYLES ================= -->
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" th:href="@{/css/style.css}">
         <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-
     </head>
 
     <body class="bg-gray-50 text-gray-800">
 
+        <!-- ================= HEADER ================= -->
         <header class="bg-white border-b shadow-sm">
-
             <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
 
                 <!-- LOGO -->
-                <a href="/dashboard"
-                   class="flex items-center gap-2 hover:opacity-90 transition">
-
+                <a href="/dashboard" class="flex items-center gap-2">
                     <img th:src="${#locale.language == 'mr'} ? '/images/logo_mr.png' : '/images/logo.png'"
                          alt="VivahPatra"
                          class="h-16 md:h-20 w-auto object-contain scale-110">
                 </a>
 
-                <div class="relative inline-block text-left" id="langDropdown">
+                <!-- NAV LINKS -->
+                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
+                    <a href="/dashboard" class="hover:text-red-600" th:text="#{nav.home}">Home</a>
+                    <a href="/templates" class="hover:text-red-600" th:text="#{nav.templates}">Templates</a>
+                    <a href="/about" class="hover:text-red-600" th:text="#{nav.how}">How</a>
+                    <a href="/about" class="hover:text-red-600" th:text="#{about.title}">About</a>
+                    <a href="/contact" class="hover:text-red-600" th:text="#{nav.contact}">Contact</a>
+                </nav>
 
-                    <!-- Trigger Button -->
+                <!-- LANGUAGE SWITCH -->
+                <div class="relative inline-block text-left" id="langDropdown">
                     <button onclick="toggleLangDropdown()"
                             class="flex items-center gap-2 text-sm md:text-base font-medium text-red-700 border-b-2 border-red-700 pb-1">
-
-                        <!-- Globe icon -->
-                        <span>🌐</span>
-
-                        <!-- Selected language -->
-                        <span id="selectedLangText"
-                              th:text="${#locale.language == 'mr'} ? 'मराठी' : 'English'">
-                        </span>
-
-                        <!-- Arrow -->
-                        <span>▾</span>
+                        🌐
+                        <span th:text="${#locale.language == 'mr'} ? 'मराठी' : 'English'"></span>
+                        ▾
                     </button>
 
-                    <!-- Dropdown -->
                     <div id="langMenu"
-                         class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                         class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border z-50">
 
-                        <!-- English -->
-                        <div onclick="changeLanguage('en')"
-                             class="flex justify-between items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-
-                            <span>English (EN)</span>
-
-                            <span th:if="${#locale.language == 'en'}" class="text-red-600">✔</span>
+                        <div onclick="changeLanguage('en')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            English
                         </div>
 
-                        <!-- Marathi -->
-                        <div onclick="changeLanguage('mr')"
-                             class="flex justify-between items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-
-                            <span>मराठी (MR)</span>
-
-                            <span th:if="${#locale.language == 'mr'}" class="text-red-600">✔</span>
+                        <div onclick="changeLanguage('mr')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            मराठी
                         </div>
-
-                        <!-- Future example -->
-                        <div onclick="changeLanguage('hi')"
-                             class="flex justify-between items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-
-                            <span>Hindi (HI)</span>
-
-                            <span th:if="${#locale.language == 'hi'}" class="text-red-600">✔</span>
-                        </div>
-
                     </div>
                 </div>
 
+            </div>
+        </header>
 
+        <!-- ================= MAIN ================= -->
+        <main class="min-h-screen">
+            <div th:replace="~{ ${content} :: content }"></div>
+        </main>
+
+        <!-- ================= FOOTER ================= -->
+        <footer class="bg-white border-t mt-16">
+
+            <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8 text-sm">
+
+                <!-- BRAND -->
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">VivahPatra</h3>
+                    <p class="text-gray-600">
+                        Create beautiful marriage biodata in minutes. Free, simple and secure biodata maker for Indian families.
+                    </p>
+                </div>
+
+                <!-- QUICK LINKS -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/dashboard" class="hover:text-red-600">Home</a></li>
+                        <li><a href="/templates" class="hover:text-red-600">Templates</a></li>
+                        <li><a href="/about" class="hover:text-red-600">About</a></li>
+                        <li><a href="/contact" class="hover:text-red-600">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- LEGAL -->
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-3">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/privacy" class="hover:text-red-600">Privacy Policy</a></li>
+                        <li><a href="/terms" class="hover:text-red-600">Terms & Conditions</a></li>
+                    </ul>
+                </div>
 
             </div>
 
-        </header>
+            <div class="text-center text-gray-500 text-xs pb-6">
+                © 2026 VivahPatra • Made with ❤️ in India
+            </div>
 
-
-
-
-
-        <!-- ================= MAIN CONTENT ================= -->
-        <main class="min-h-screen">
-
-            <!-- dynamic page content -->
-            <div th:replace="~{ ${content} :: content }"></div>
-
-        </main>
-
-
-        <!-- ================= FOOTER ================= -->
-        <footer class="bg-gray-100 text-center text-sm text-gray-600 py-6 mt-10 border-t">
-            © 2026 VivahPatra • Made with ❤️ in India
         </footer>
 
-
-        <!-- ================= BASE JS ================= -->
+        <!-- ================= SCRIPTS ================= -->
         <script th:src="@{/js/base.js}" defer></script>
-        <script th:src="@{/js/html-to-image.min.js}" defer></script>
-        <script th:src="@{/js/html2pdf.bundle.min.js}" defer></script>
-        <script th:src="@{/js/dashboard.js}"></script>
+        <script th:src="@{/js/dashboard.js}" defer></script>
 
     </body>
 </html>
