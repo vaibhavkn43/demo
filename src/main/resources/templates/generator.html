@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template Generator</title>
+
+    <script src="/js/html-to-image.min.js"></script>
+</head>
+
+<body>
+
+<h2>Generating Template Previews...</h2>
+
+<div id="hidden-container" style="position:absolute; left:-9999px; top:0;"></div>
+
+<script>
+
+const templates = ["t1","t2","t3","t4","t5","t6"];
+
+async function generateAll() {
+
+    for (let t of templates) {
+
+        console.log("Generating:", t);
+
+        const iframe = document.createElement("iframe");
+
+        iframe.src = `/preview?templateId=${t}&sample=true`;
+        iframe.width = "794";
+        iframe.height = "1120";
+
+        document.getElementById("hidden-container").appendChild(iframe);
+
+        await new Promise(resolve => {
+            iframe.onload = resolve;
+        });
+
+        const element = iframe.contentDocument.getElementById("biodata-preview");
+
+        await new Promise(r => setTimeout(r, 500)); // wait for fonts
+
+        const dataUrl = await htmlToImage.toPng(element, {
+            pixelRatio: 2,
+            cacheBust: true
+        });
+
+        // download automatically
+        const link = document.createElement("a");
+        link.download = t + ".png";
+        link.href = dataUrl;
+        link.click();
+
+        console.log("Downloaded:", t);
+
+        iframe.remove();
+    }
+
+    alert("All templates generated successfully 🎉");
+}
+
+generateAll();
+
+</script>
+
+</body>
+</html>

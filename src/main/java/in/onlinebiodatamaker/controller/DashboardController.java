@@ -1,10 +1,16 @@
 package in.onlinebiodatamaker.controller;
 
 import in.onlinebiodatamaker.model.BiodataRequest;
+import in.onlinebiodatamaker.model.Template;
 import in.onlinebiodatamaker.service.BiodataValidationService;
 import in.onlinebiodatamaker.service.GodImageService;
 import in.onlinebiodatamaker.service.TemplatesService;
+import in.onlinebiodatamaker.util.TimeHandlerUtil;
 import in.onlinebiodatamaker.util.ValidationResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -15,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -35,7 +42,7 @@ public class DashboardController {
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
 
-        model.addAttribute("templates", templatesService.getTemplateIds());
+        model.addAttribute("templates", templatesService.getAllTemplates());
         model.addAttribute("content", "dashboard");
         return "layout/base";
     }
@@ -52,21 +59,41 @@ public class DashboardController {
         return "layout/base";
     }
 
-    @PostMapping("/preview")
-    public String preview(BiodataRequest form, Model model) {
+@PostMapping("/preview")
+public String preview(BiodataRequest form, Model model, Locale locale,
+                      @RequestParam(required = false, defaultValue = "false") boolean sample) {
 
-        ValidationResult result = biodataValidationService.validate(form);
+    ValidationResult result = biodataValidationService.validate(form);
 
-        if (!result.isValid()) {
-            model.addAttribute("missingKeys", result.getMissingKeys());
-            model.addAttribute("invalidValues", result.getInvalidKeys());
-            model.addAttribute("form", form);
-            model.addAttribute("content", "form");
-            return "layout/base";
-        }
-        model.addAttribute("data", form);
-        model.addAttribute("templateId", form.getTemplateId());
-        model.addAttribute("content", "preview");
+    if (form.getBirthTime() != null && !form.getBirthTime().isEmpty()) {
+        LocalTime time = LocalTime.parse(form.getBirthTime());
+        form.setBirthTime(TimeHandlerUtil.toMarathiTime(time, locale));
+    }
+
+    if (form.getGodImage() == null || form.getGodImage().isEmpty()) {
+        form.setGodImage("ganesh");
+    }
+
+    if (form.getMantra() == null || form.getMantra().isEmpty()) {
+        form.setMantra("|| श्री गणेशाय नमः ||");
+    }
+
+    if (!result.isValid()) {
+        model.addAttribute("missingKeys", result.getMissingKeys());
+        model.addAttribute("invalidValues", result.getInvalidKeys());
+        model.addAttribute("form", form);
+        model.addAttribute("content", "form");
         return "layout/base";
     }
+
+    model.addAttribute("data", form);
+
+    // 🔥 use template object directly
+    Template template = templatesService.getById(form.getTemplateId());
+    model.addAttribute("template", template);
+
+    model.addAttribute("content", "preview");
+    return "layout/base";
+}
+
 }

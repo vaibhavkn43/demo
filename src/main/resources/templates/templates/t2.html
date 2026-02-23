@@ -1,0 +1,149 @@
+<div th:fragment="content">
+    <div id="biodata-preview"
+         class="w-[794px] h-[1120px] mx-auto bg-white relative shadow"
+         style="font-family: 'NotoDevanagari', serif;"
+         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:cover;'">
+
+        <!-- INNER MARGIN -->
+        <div class="absolute inset-0 px-28 py-16">
+
+            <!-- 🔱 HEADER -->
+            <div class="text-center mb-6">
+                <div class="mb-2">
+                    <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="mx-auto h-16"/>
+                </div>
+
+                <h2 class="text-[18px] font-semibold " th:text="${data.mantra}"></h2>
+
+                <h1 class="text-[26px] font-bold mt-2 inline-block px-8 pb-1">
+                    <span th:text="#{preview.header}">Biodata</span>
+                </h1>
+            </div>
+
+
+            <div class="flex gap-6">
+
+                <!-- LEFT CONTENT -->
+                <div th:class="${data.profileImagePath != null and data.profileImagePath != ''} ? 'w-3/4 space-y-6 text-[16px] leading-7' : 'w-full space-y-6 text-[16px] leading-7'">
+
+                    <!-- ================= PERSONAL ================= -->
+                    <div>
+                        <h3 class="text-center font-semibold text-[18px] mb-2 text-[#7a1f1f]"
+                            th:text="#{editor.section.personal}"></h3>
+
+                        <div class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.name} + ' :'"></div>
+                            <div class="col-span-2 font-bold" th:text="${data.name}"></div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.birthDate} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.birthDate}"></div>
+                        </div>
+
+                        <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}"
+                             class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.birthTime} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.birthTime}"></div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.birthPlace} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.birthPlace}"></div>
+                        </div>
+
+                        <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}"
+                             class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.religion} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.religion}"></div>
+                        </div>
+
+                        <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}"
+                             class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.caste} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.caste}"></div>
+                        </div>
+
+                        <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}"
+                             class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.rashi} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.rashi}"></div>
+                        </div>
+
+                        <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}"
+                             class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.nakshatra} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.nakshatra}"></div>
+                        </div>
+
+                        <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}"
+                             class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.gan} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.gan}"></div>
+                        </div>
+
+                        <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}"
+                             class="grid grid-cols-3 gap-x-4">
+                            <div class="font-semibold" th:text="#{editor.form.nadi} + ' :'"></div>
+                            <div class="col-span-2" th:text="${data.nadi}"></div>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                    <!-- ================= EDUCATION ================= -->
+                    <div>
+                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase  text-[#7a1f1f]" th:text="#{editor.section.education}"></h3>
+
+                        <div class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.education} + ' :'"></div><div class="col-span-2" th:text="${data.education}"></div></div>
+
+                        <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.profession} + ' :'"></div><div class="col-span-2" th:text="${data.profession}"></div></div>
+
+                        <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.income} + ' :'"></div><div class="col-span-2" th:text="${data.income}"></div></div>
+                    </div>
+
+
+                    <!-- ================= FAMILY ================= -->
+                    <div>
+                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase  text-[#7a1f1f]" th:text="#{editor.section.family}"></h3>
+
+                        <div th:if="${data.fatherName != null and !#strings.isEmpty(#strings.trim(data.fatherName))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.fatherName} + ' :'"></div><div class="col-span-2" th:text="${data.fatherName}"></div></div>
+
+                        <div th:if="${data.motherName != null and !#strings.isEmpty(#strings.trim(data.motherName))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.motherName} + ' :'"></div><div class="col-span-2" th:text="${data.motherName}"></div></div>
+
+                        <div th:if="${data.brothers != null and !#strings.isEmpty(#strings.trim(data.brothers))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.brothers} + ' :'"></div><div class="col-span-2" th:text="${data.brothers}"></div></div>
+
+                        <div th:if="${data.sisters != null and !#strings.isEmpty(#strings.trim(data.sisters))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.sisters} + ' :'"></div><div class="col-span-2" th:text="${data.sisters}"></div></div>
+
+                        <div th:if="${data.relatives != null and !#strings.isEmpty(#strings.trim(data.relatives))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.relatives} + ' :'"></div><div class="col-span-2" th:text="${data.relatives}"></div></div>
+                    </div>
+
+
+                    <!-- ================= CONTACT ================= -->
+                    <div>
+                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase  text-[#7a1f1f]" th:text="#{editor.section.contact}"></h3>
+
+                        <div class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.mobile} + ' :'"></div><div class="col-span-2" th:text="${data.mobile}"></div></div>
+
+                        <div th:if="${data.address != null and !#strings.isEmpty(#strings.trim(data.address))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.address} + ' :'"></div><div class="col-span-2" th:text="${data.address}"></div></div>
+                    </div>
+
+                </div>
+
+
+                <!-- ================= PHOTO ================= -->
+                <div class="w-1/4 flex justify-center"
+                     th:if="${data.profileImagePath != null and data.profileImagePath != ''}">
+                    <div class="w-36 h-44 border border-gray-400 bg-white shadow-sm">
+                        <img th:src="@{'/generated/' + ${data.profileImagePath}}" class="object-cover w-full h-full"/>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

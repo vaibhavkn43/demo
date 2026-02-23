@@ -1,7 +1,36 @@
 <div th:fragment="content">
 
-    <div th:switch="${templateId}">
-        <div th:case="'t1'" th:replace="templates/t1 :: content"></div>
+    <!-- SCALE WRAPPER -->
+    <div class="preview-wrapper">
+        <div class="preview-scale">
+
+            <!-- template injected here -->
+         <div th:replace="~{|templates/${template.id}| :: content}"></div>
+
+        </div>
     </div>
 
+    <!-- ACTION BUTTONS BAR -->
+    <div class="action-buttons">
+
+        <!-- STATUS MESSAGE -->
+        <div id="action-status"
+             style="width:100%; text-align:center; font-weight:600; color:#444; display:none;">
+        </div>
+
+        <button class="bg-green-600 text-white px-4 py-2 rounded" onclick="downloadImage()">
+            📷 Download Image
+        </button>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded" onclick="downloadPDF()">
+            📄 Download PDF
+        </button>
+
+        <button class="bg-green-700 text-white px-4 py-2 rounded" onclick="shareOnWhatsApp()">
+            📲 WhatsApp वर पाठवा
+        </button>
+
+    </div>
+
+    <script th:src="@{/js/biodata-download.js}"></script>
 </div>

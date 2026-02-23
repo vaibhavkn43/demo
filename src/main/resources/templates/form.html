@@ -1,969 +1,1006 @@
 <div th:fragment="content">
 
-            <!-- REQUIRED ERRORS -->
-            <div th:if="${missingKeys}" class="bg-red-50 border border-red-300 text-red-700 p-4 rounded mb-4">
-                <ul class="list-disc pl-5">
-                    <li th:each="err : ${missingKeys}" th:text="#{${err}}"></li>
-                </ul>
-            </div>
+    <!-- REQUIRED ERRORS -->
+    <div th:if="${missingKeys}" class="bg-red-50 border border-red-300 text-red-700 p-4 rounded mb-4">
+        <ul class="list-disc pl-5">
+            <li th:each="err : ${missingKeys}" th:text="#{${err}}"></li>
+        </ul>
+    </div>
 
-            <!-- INVALID ERRORS -->
-            <div th:if="${invalidValues}" class="bg-yellow-50 border border-yellow-300 text-yellow-700 p-4 rounded mb-4">
-                <ul class="list-disc pl-5">
-                    <li th:each="err : ${invalidValues}" th:text="#{${err}}"></li>
-                </ul>
-            </div>
-
-
-
-            <section class="max-w-6xl mx-auto px-4 md:px-6 py-8">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- INVALID ERRORS -->
+    <div th:if="${invalidValues}" class="bg-yellow-50 border border-yellow-300 text-yellow-700 p-4 rounded mb-4">
+        <ul class="list-disc pl-5">
+            <li th:each="err : ${invalidValues}" th:text="#{${err}}"></li>
+        </ul>
+    </div>
 
 
 
+    <section class="max-w-6xl mx-auto px-4 md:px-6 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                    <!-- =========================================================
-                     LEFT FORM
-                    ========================================================= -->
-                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-5 md:p-6">
-                        <div class="mb-6 text-center">
-                            <h2 class="text-2xl font-bold text-gray-800"
-                                th:text="#{editor.title}">
-                                Create Your Marriage Biodata
-                            </h2>
 
-                            <p class="text-gray-500 text-sm mt-1"
-                               th:text="#{editor.subtitle}">
-                                Fill the details below to generate a professional biodata in minutes
+
+
+            <!-- =========================================================
+             LEFT FORM
+            ========================================================= -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-5 md:p-6">
+                <div class="mb-6 text-center">
+                    <h2 class="text-2xl font-bold text-gray-800"
+                        th:text="#{editor.title}">
+                        Create Your Marriage Biodata
+                    </h2>
+
+                    <p class="text-gray-500 text-sm mt-1"
+                       th:text="#{editor.subtitle}">
+                        Fill the details below to generate a professional biodata in minutes
+                    </p>
+                </div>
+
+
+                <!-- ================= GUIDE SECTION ================= -->
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-300 rounded-xl p-3 md:p-4 mb-5 shadow-sm">
+                    <!-- HEADER -->
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-medium text-gray-800 text-sm md:text-base">
+                            💡 <span th:text="#{guide.title}">How to use Biodata Maker</span>
+                        </h3>
+
+                        <button onclick="toggleGuide()" class="text-xs md:text-sm text-blue-600 hover:underline">
+                            <span id="guideToggleText"
+                                  th:data-show="#{guide.show}"
+                                  th:data-hide="#{guide.hide}"
+                                  th:text="#{guide.hide}">
+                                Hide instructions
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div id="guideContent" class="text-sm text-gray-700 leading-relaxed space-y-1">
+
+                        <ul class="list-none space-y-1">
+
+                            <li>🌐 <span th:text="#{guide.language}">You can switch between English and Marathi anytime.</span></li>
+
+                            <li>⌨️ <span th:text="#{guide.typing}">Enable Marathi typing and type in English to get Marathi suggestions.</span></li>
+
+                            <li>📷 <span th:text="#{guide.photo}">Adding a photo is optional. You can upload it later.</span></li>
+
+                            <li>👪 <span th:text="#{guide.relatives}">You can add relatives like Mama, Kaka, Mavshi using Custom Fields.</span></li>
+
+                            <li>📄 <span th:text="#{guide.download}">You can download or print the biodata after generation.</span></li>
+
+                            <li class="text-red-600 font-medium">
+                                <span th:text="#{guide.mandatory}">Fields marked with (*) are mandatory.</span>
+                            </li>
+
+                            <li class="text-gray-600">
+                                <span th:text="#{guide.optional}">All other information is optional.</span>
+                            </li>
+
+                            <li class="text-gray-600">
+                                <span th:text="#{guide.hideOptional}">Empty fields will not appear in the final biodata.</span>
+                            </li>
+
+                            <li class="text-green-700 font-semibold">
+                                🔒 <span th:text="#{guide.privacy}">Your data is not stored. Everything stays in your browser.</span>
+                            </li>
+
+                            <li class="text-blue-700 font-medium">
+                                💡 <span th:text="#{guide.tip}">Tip: Fill only required fields to keep biodata clean and professional.</span>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-200 mb-4"></div>
+
+                <div class="text-sm text-gray-600 text-center mt-2 mb-3">
+                    <div th:text="#{editor.start.hint}"></div>
+                </div>
+
+
+
+
+                <form id="biodataForm"
+                      th:object="${form}"
+                      method="post"
+                      action="/preview"
+                      enctype="multipart/form-data">
+
+                    <input type="hidden" name="templateId" th:value="${templateId}"/>
+
+                    <div class="border border-gray-200 rounded-xl p-4 bg-white space-y-4">
+
+                        <h3 class="font-semibold text-gray-700 text-center">
+                            God Image & Mantra
+                        </h3>
+
+
+                        <!-- CURRENT GOD IMAGE -->
+                        <div class="text-center">
+                            <img id="previewGodImage"
+                                 src="/images/gods/ganesh.png"
+                                 class="h-20 mx-auto mb-2 border p-2 rounded"/>
+
+                            <button type="button"
+                                    onclick="openGodModal()"
+                                    class="text-sm text-red-600 font-medium hover:underline">
+                                Change God Image
+                            </button>
+
+                            <input type="hidden" name="godImage" id="godImageHidden">
+                        </div>
+
+                        <!-- CURRENT MANTRA -->
+                        <div class="text-center mt-4">
+                            <p id="previewMantra" class="font-semibold text-gray-700">
+                                || श्री गणेशाय नमः ||
                             </p>
+
+                            <button type="button"
+                                    onclick="openMantraModal()"
+                                    class="text-sm text-red-600 font-medium hover:underline">
+                                Change Mantra
+                            </button>
+
+                            <input type="hidden" name="mantra" id="mantraHidden">
                         </div>
 
+                    </div>
 
-                        <!-- ================= GUIDE SECTION ================= -->
-                        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-300 rounded-xl p-3 md:p-4 mb-5 shadow-sm">
-                            <!-- HEADER -->
-                            <div class="flex justify-between items-center mb-2">
-                                <h3 class="font-medium text-gray-800 text-sm md:text-base">
-                                    💡 <span th:text="#{guide.title}">How to use Biodata Maker</span>
-                                </h3>
 
-                                <button onclick="toggleGuide()" class="text-xs md:text-sm text-blue-600 hover:underline">
-                                    <span id="guideToggleText"
-                                          th:data-show="#{guide.show}"
-                                          th:data-hide="#{guide.hide}"
-                                          th:text="#{guide.hide}">
-                                        Hide instructions
-                                    </span>
+                    <!-- GOD MODAL -->
+                    <div id="godModal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
+                        <div class="bg-white p-6 rounded shadow-lg w-[600px]">
+                            <h3 class="font-semibold mb-4">Select God Image</h3>
+                            <div class="grid grid-cols-4 gap-3">
+                                <img th:each="img : ${godImages}"
+                                     th:src="@{'/images/gods/' + ${img} + '.png'}"
+                                     th:attr="data-value=${img}"
+                                     class="cursor-pointer border p-1 hover:border-red-500"/>
+                            </div>
+                            <div class="text-right mt-4">
+                                <button type="button"
+                                        onclick="closeGodModal()"
+                                        class="border px-3 py-1 mt-2">
+                                    <span th:text="#{button.close}">Close</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- MANTRA MODAL -->
+
+                    <!-- ================= MANTRA MODAL ================= -->
+                    <div id="mantraModal"
+                         class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
+
+                        <div class="bg-white p-6 rounded shadow-lg w-[600px] space-y-4">
+
+                            <h3 class="font-semibold text-lg"
+                                th:text="#{label.selectMantra}">
+                                Select Mantra
+                            </h3>
+
+                            <!-- 🔁 Dynamic mantra list -->
+                            <div class="space-y-2 max-h-[80vh] overflow-auto">
+
+                                <button th:each="key : ${mantraKeys}"
+                                        type="button"
+                                        class="block w-full text-left px-3 py-2 hover:bg-gray-100 rounded mantra-option"
+                                        th:text="#{'mantra.' + ${key}}"
+                                        th:attr="data-mantra=#{'mantra.' + ${key}}">
+                                </button>
+
+
+                            </div>
+
+                            <hr>
+
+                            <!-- CUSTOM MANTRA -->
+                            <div>
+                                <input id="customMantraInput"
+                                       type="text"
+                                       th:placeholder="#{placeholder.customMantra}"
+                                       class="w-full border p-2 rounded ime-marathi"/>
+
+                                <button type="button"
+                                        onclick="applyCustomMantra()"
+                                        class="mt-2 bg-blue-500 text-white px-3 py-1 rounded">
+                                    <span th:text="#{button.applyCustom}">Apply Custom</span>
                                 </button>
                             </div>
 
-                            <!-- CONTENT -->
-                            <div id="guideContent" class="text-sm text-gray-700 leading-relaxed space-y-1">
-
-                                <ul class="list-none space-y-1">
-
-                                    <li>🌐 <span th:text="#{guide.language}">You can switch between English and Marathi anytime.</span></li>
-
-                                    <li>⌨️ <span th:text="#{guide.typing}">Enable Marathi typing and type in English to get Marathi suggestions.</span></li>
-
-                                    <li>📷 <span th:text="#{guide.photo}">Adding a photo is optional. You can upload it later.</span></li>
-
-                                    <li>👪 <span th:text="#{guide.relatives}">You can add relatives like Mama, Kaka, Mavshi using Custom Fields.</span></li>
-
-                                    <li>📄 <span th:text="#{guide.download}">You can download or print the biodata after generation.</span></li>
-
-                                    <li class="text-red-600 font-medium">
-                                        <span th:text="#{guide.mandatory}">Fields marked with (*) are mandatory.</span>
-                                    </li>
-
-                                    <li class="text-gray-600">
-                                        <span th:text="#{guide.optional}">All other information is optional.</span>
-                                    </li>
-
-                                    <li class="text-gray-600">
-                                        <span th:text="#{guide.hideOptional}">Empty fields will not appear in the final biodata.</span>
-                                    </li>
-
-                                    <li class="text-green-700 font-semibold">
-                                        🔒 <span th:text="#{guide.privacy}">Your data is not stored. Everything stays in your browser.</span>
-                                    </li>
-
-                                    <li class="text-blue-700 font-medium">
-                                        💡 <span th:text="#{guide.tip}">Tip: Fill only required fields to keep biodata clean and professional.</span>
-                                    </li>
-
-                                </ul>
+                            <div class="text-right">
+                                <button type="button"
+                                        onclick="closeMantraModal()"
+                                        class="border px-3 py-1 mt-2">
+                                    <span th:text="#{button.close}">Close</span>
+                                </button>
                             </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-4">
+
+                        <div>
+                            <p class="text-sm font-semibold text-gray-800"
+                               th:text="#{marathi.typing.title}"></p>
+
+                            <p class="text-xs text-gray-500"
+                               th:text="#{marathi.typing.desc}"></p>
                         </div>
 
-                        <div class="border-t border-gray-200 mb-4"></div>
+                        <!-- Toggle Switch -->
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="marathiToggle" class="sr-only peer" checked>
 
-                        <div class="text-sm text-gray-600 text-center mt-2 mb-3">
-                            <div th:text="#{editor.start.hint}"></div>
+                            <div class="w-11 h-6 bg-gray-300 rounded-full peer 
+                                 peer-checked:bg-red-500 
+                                 relative transition">
+
+                                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition
+                                     peer-checked:translate-x-5"></div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- ================= PERSONAL SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+
+                        <!-- Header -->
+                        <button type="button"
+                                onclick="toggleSection('personalSection', 'iconPersonal')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">👤</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.personal}">
+                                    Personal Details
+                                </span>
+                            </div>
+
+                            <span id="iconPersonal" class="text-gray-500 text-xl">−</span>
+                        </button>
+
+                        <!-- Body -->
+                        <div id="personalSection" class=" px-4 py-4 bg-white">
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.name}"></span>
+                                <span class="text-red-500">*</span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-6">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{name}"
+                                       th:placeholder="#{editor.instruction.name}"/>
+
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+
+                            </div>
+
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.religion}"></span>
+                            </label>
+
+                            <!-- Religion -->
+                            <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3 
+                                    focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                    th:field="*{religion}">
+                                <option value="" th:text="#{dropdown.religion.select}"></option>
+
+                                <option th:value="#{dropdown.religion.hindu}" th:text="#{dropdown.religion.hindu}"></option>
+                                <option th:value="#{dropdown.religion.muslim}" th:text="#{dropdown.religion.muslim}"></option>
+                                <option th:value="#{dropdown.religion.christian}" th:text="#{dropdown.religion.christian}"></option>
+                                <option th:value="#{dropdown.religion.buddhist}" th:text="#{dropdown.religion.buddhist}"></option>
+                                <option th:value="#{dropdown.religion.jain}" th:text="#{dropdown.religion.jain}"></option>
+                            </select>
+
+                            <!-- Caste -->
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.caste}"></span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{caste}"
+                                       th:placeholder="#{editor.instruction.caste}"/>
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.subCaste}"></span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{subCaste}"
+                                       th:placeholder="#{editor.instruction.subCaste}"/>
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
+
+                            <!-- Gotra -->
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.gotra}"></span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{gotra}"
+                                       th:placeholder="#{editor.instruction.gotra}"/>
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.kuldaivat}"></span>
+                            </label>
+
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{kuldaivat}"
+                                       th:placeholder="#{editor.instruction.kuldaivat}" />
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                </div>
+                            </div>
                         </div>
+                    </div>
 
 
+                    <!-- ================= BIRTH SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
 
+                        <!-- Header -->
+                        <button type="button"
+                                onclick="toggleSection('birthSection', 'iconBirth')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
 
-                        <form id="biodataForm"
-                              th:object="${form}"
-                              method="post"
-                              action="/preview"
-                              enctype="multipart/form-data">
-
-                            <input type="hidden" name="templateId" th:value="${templateId}"/>
-
-                            <div class="border border-gray-200 rounded-xl p-4 bg-white space-y-4">
-
-                                <h3 class="font-semibold text-gray-700 text-center">
-                                    God Image & Mantra
-                                </h3>
-
-
-                                <!-- CURRENT GOD IMAGE -->
-                                <div class="text-center">
-                                    <img id="previewGodImage"
-                                         src="/images/gods/ganesh.png"
-                                         class="h-20 mx-auto mb-2 border p-2 rounded"/>
-
-                                    <button type="button"
-                                            onclick="openGodModal()"
-                                            class="text-sm text-red-600 font-medium hover:underline">
-                                        Change God Image
-                                    </button>
-
-                                    <input type="hidden" th:field="*{godImage}" id="selectedGod" value="ganesh">
-                                </div>
-
-                                <!-- CURRENT MANTRA -->
-                                <div class="text-center mt-4">
-                                    <p id="previewMantra" class="font-semibold text-gray-700">
-                                        || श्री गणेशाय नमः ||
-                                    </p>
-
-                                    <button type="button"
-                                            onclick="openMantraModal()"
-                                            class="text-sm text-red-600 font-medium hover:underline">
-                                        Change Mantra
-                                    </button>
-
-                                    <input type="hidden" th:field="*{mantra}" id="selectedMantra">
-                                </div>
-
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🎂</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.birth}">
+                                    Birth & Kundli
+                                </span>
                             </div>
 
+                            <span id="iconBirth" class="text-gray-500 text-xl">−</span>
+                        </button>
 
-                            <!-- GOD MODAL -->
-                            <div id="godModal" class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
-                                <div class="bg-white p-6 rounded shadow-lg w-[600px]">
-                                    <h3 class="font-semibold mb-4">Select God Image</h3>
-                                    <div class="grid grid-cols-4 gap-3">
-                                        <img th:each="img : ${godImages}"
-                                             th:src="@{'/images/gods/' + ${img} + '.png'}"
-                                             th:attr="data-value=${img}"
-                                             class="cursor-pointer border p-1 hover:border-red-500"/>
-                                    </div>
-                                    <div class="text-right mt-4">
-                                        <button type="button"
-                                                onclick="closeGodModal()"
-                                                class="border px-3 py-1 mt-2">
-                                            <span th:text="#{button.close}">Close</span>
-                                        </button>
-                                    </div>
-                                </div>
+                        <!-- Body -->
+                        <div id="birthSection" class="hidden px-4 py-4 bg-white">
+
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.birthDate}"></span>
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <!-- Date of Birth -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+
+                                <select id="birthDay"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                    <option value="" th:text="#{dropdown.date.select}" >Day</option>
+                                    <option th:each="d : ${#numbers.sequence(1,31)}"
+                                            th:value="${d}"
+                                            th:text="${d}"></option>
+                                </select>
+
+                                <!-- Month -->
+                                <select id="birthMonth"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+
+                                    <option value="" th:text="#{dropdown.month.select}"></option>
+                                    <option value="01" th:text="#{dropdown.month.01}"></option>
+                                    <option value="02" th:text="#{dropdown.month.02}"></option>
+                                    <option value="03" th:text="#{dropdown.month.03}"></option>
+                                    <option value="04" th:text="#{dropdown.month.04}"></option>
+                                    <option value="05" th:text="#{dropdown.month.05}"></option>
+                                    <option value="06" th:text="#{dropdown.month.06}"></option>
+                                    <option value="07" th:text="#{dropdown.month.07}"></option>
+                                    <option value="08" th:text="#{dropdown.month.08}"></option>
+                                    <option value="09" th:text="#{dropdown.month.09}"></option>
+                                    <option value="10" th:text="#{dropdown.month.10}"></option>
+                                    <option value="11" th:text="#{dropdown.month.11}"></option>
+                                    <option value="12" th:text="#{dropdown.month.12}"></option>
+                                </select>
+
+                                <!-- Year -->
+                                <select id="birthYear"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+
+                                    <option value="" th:text="#{dropdown.year.select}" >Year</option>
+                                    <option th:each="y : ${#numbers.sequence(1960,2010)}"
+                                            th:value="${y}"
+                                            th:text="${y}"></option>
+                                </select>
                             </div>
-                            <!-- MANTRA MODAL -->
 
-                            <!-- ================= MANTRA MODAL ================= -->
-                            <div id="mantraModal"
-                                 class="fixed inset-0 bg-black bg-opacity-40 hidden flex items-center justify-center z-50">
+                            <!-- Hidden Date -->
+                            <input type="hidden" th:field="*{birthDate}" id="birthDate"/>
 
-                                <div class="bg-white p-6 rounded shadow-lg w-[600px] space-y-4">
-
-                                    <h3 class="font-semibold text-lg"
-                                        th:text="#{label.selectMantra}">
-                                        Select Mantra
-                                    </h3>
-
-                                    <!-- 🔁 Dynamic mantra list -->
-                                    <div class="space-y-2 max-h-[80vh] overflow-auto">
-
-                                        <button th:each="key : ${mantraKeys}"
-                                                type="button"
-                                                class="block w-full text-left px-3 py-2 hover:bg-gray-100 rounded mantra-option"
-                                                th:text="#{'mantra.' + ${key}}"
-                                                th:attr="data-value=#{'mantra.' + ${key}}">
-                                        </button>
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.birthTime}"></span>
+                            </label>
+                            <!-- Birth Time -->
+                            <input type="time"
+                                   class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
+                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                   th:field="*{birthTime}"
+                                   th:placeholder="#{editor.instruction.birthTime}" />
 
 
-                                    </div>
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.birthPlace}"></span>
+                            </label>
 
-                                    <hr>
+                            <div class="ime-wrapper relative mb-4">
+                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       th:field="*{birthPlace}"
+                                       th:placeholder="#{editor.instruction.birthPlace}"/>
 
-                                    <!-- CUSTOM MANTRA -->
-                                    <div>
-                                        <input id="customMantraInput"
-                                               type="text"
-                                               th:placeholder="#{placeholder.customMantra}"
-                                               class="w-full border p-2 rounded ime-marathi"/>
-
-                                        <button type="button"
-                                                onclick="applyCustomMantra()"
-                                                class="mt-2 bg-blue-500 text-white px-3 py-1 rounded">
-                                            <span th:text="#{button.applyCustom}">Apply Custom</span>
-                                        </button>
-                                    </div>
-
-                                    <div class="text-right">
-                                        <button type="button"
-                                                onclick="closeMantraModal()"
-                                                class="border px-3 py-1 mt-2">
-                                            <span th:text="#{button.close}">Close</span>
-                                        </button>
-                                    </div>
-
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
                                 </div>
                             </div>
 
 
 
-                            <div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-4">
+                            <label class="block text-sm font-medium text-gray-800 mb-1">
+                                <span th:text="#{editor.form.rashi}"></span>
+                            </label>
 
-                                <div>
-                                    <p class="text-sm font-semibold text-gray-800"
-                                       th:text="#{marathi.typing.title}"></p>
+                            <!-- Rashi -->
+                            <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                    focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                    th:field="*{rashi}">
 
-                                    <p class="text-xs text-gray-500"
-                                       th:text="#{marathi.typing.desc}"></p>
-                                </div>
+                                <option value="" th:text="#{dropdown.rashi.select}"></option>
 
-                                <!-- Toggle Switch -->
-                                <label class="inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="marathiToggle" class="sr-only peer" checked>
+                                <option th:value="#{dropdown.rashi.mesh}" th:text="#{dropdown.rashi.mesh}"></option>
+                                <option th:value="#{dropdown.rashi.vrushabh}" th:text="#{dropdown.rashi.vrushabh}"></option>
+                                <option th:value="#{dropdown.rashi.mithun}" th:text="#{dropdown.rashi.mithun}"></option>
+                                <option th:value="#{dropdown.rashi.kark}" th:text="#{dropdown.rashi.kark}"></option>
+                                <option th:value="#{dropdown.rashi.sinh}" th:text="#{dropdown.rashi.sinh}"></option>
+                                <option th:value="#{dropdown.rashi.kanya}" th:text="#{dropdown.rashi.kanya}"></option>
+                                <option th:value="#{dropdown.rashi.tula}" th:text="#{dropdown.rashi.tula}"></option>
+                                <option th:value="#{dropdown.rashi.vrishchik}" th:text="#{dropdown.rashi.vrishchik}"></option>
+                                <option th:value="#{dropdown.rashi.dhanu}" th:text="#{dropdown.rashi.dhanu}"></option>
+                                <option th:value="#{dropdown.rashi.makar}" th:text="#{dropdown.rashi.makar}"></option>
+                                <option th:value="#{dropdown.rashi.kumbh}" th:text="#{dropdown.rashi.kumbh}"></option>
+                                <option th:value="#{dropdown.rashi.meen}" th:text="#{dropdown.rashi.meen}"></option>
+                            </select>
 
-                                    <div class="w-11 h-6 bg-gray-300 rounded-full peer 
-                                         peer-checked:bg-red-500 
-                                         relative transition">
-
-                                        <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition
-                                             peer-checked:translate-x-5"></div>
-                                    </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1">
+                                    <span th:text="#{editor.form.nakshatra}"></span>
                                 </label>
+                                <!-- Nakshatra -->
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{nakshatra}">
+
+                                    <option value="" th:text="#{dropdown.nakshatra.select}"></option>
+
+                                    <option th:value="#{dropdown.nakshatra.ashwini}" th:text="#{dropdown.nakshatra.ashwini}"></option>
+                                    <option th:value="#{dropdown.nakshatra.bharani}" th:text="#{dropdown.nakshatra.bharani}"></option>
+                                    <option th:value="#{dropdown.nakshatra.krittika}" th:text="#{dropdown.nakshatra.krittika}"></option>
+                                    <option th:value="#{dropdown.nakshatra.rohini}" th:text="#{dropdown.nakshatra.rohini}"></option>
+                                    <option th:value="#{dropdown.nakshatra.mrigashira}" th:text="#{dropdown.nakshatra.mrigashira}"></option>
+                                    <option th:value="#{dropdown.nakshatra.ardra}" th:text="#{dropdown.nakshatra.ardra}"></option>
+                                    <option th:value="#{dropdown.nakshatra.punarvasu}" th:text="#{dropdown.nakshatra.punarvasu}"></option>
+                                    <option th:value="#{dropdown.nakshatra.pushya}" th:text="#{dropdown.nakshatra.pushya}"></option>
+                                    <option th:value="#{dropdown.nakshatra.ashlesha}" th:text="#{dropdown.nakshatra.ashlesha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.magha}" th:text="#{dropdown.nakshatra.magha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.purvaPhalguni}" th:text="#{dropdown.nakshatra.purvaPhalguni}"></option>
+                                    <option th:value="#{dropdown.nakshatra.uttaraPhalguni}" th:text="#{dropdown.nakshatra.uttaraPhalguni}"></option>
+                                    <option th:value="#{dropdown.nakshatra.hasta}" th:text="#{dropdown.nakshatra.hasta}"></option>
+                                    <option th:value="#{dropdown.nakshatra.chitra}" th:text="#{dropdown.nakshatra.chitra}"></option>
+                                    <option th:value="#{dropdown.nakshatra.swati}" th:text="#{dropdown.nakshatra.swati}"></option>
+                                    <option th:value="#{dropdown.nakshatra.vishakha}" th:text="#{dropdown.nakshatra.vishakha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.anuradha}" th:text="#{dropdown.nakshatra.anuradha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.jyeshtha}" th:text="#{dropdown.nakshatra.jyeshtha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.mula}" th:text="#{dropdown.nakshatra.mula}"></option>
+                                    <option th:value="#{dropdown.nakshatra.purvashada}" th:text="#{dropdown.nakshatra.purvashada}"></option>
+                                    <option th:value="#{dropdown.nakshatra.uttarashada}" th:text="#{dropdown.nakshatra.uttarashada}"></option>
+                                    <option th:value="#{dropdown.nakshatra.shravana}" th:text="#{dropdown.nakshatra.shravana}"></option>
+                                    <option th:value="#{dropdown.nakshatra.dhanishta}" th:text="#{dropdown.nakshatra.dhanishta}"></option>
+                                    <option th:value="#{dropdown.nakshatra.shatabhisha}" th:text="#{dropdown.nakshatra.shatabhisha}"></option>
+                                    <option th:value="#{dropdown.nakshatra.purvaBhadrapada}" th:text="#{dropdown.nakshatra.purvaBhadrapada}"></option>
+                                    <option th:value="#{dropdown.nakshatra.uttaraBhadrapada}" th:text="#{dropdown.nakshatra.uttaraBhadrapada}"></option>
+                                    <option th:value="#{dropdown.nakshatra.revati}" th:text="#{dropdown.nakshatra.revati}"></option>
+                                </select>
+
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.mangal}"></label>
+
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{mangal}">
+
+                                    <!-- default -->
+                                    <option value="" th:text="#{dropdown.mangal.select}"></option>
+
+                                    <option th:value="yes" th:text="#{dropdown.mangal.yes}"></option>
+                                    <option th:value="no" th:text="#{dropdown.mangal.no}"></option>
+                                    <option th:value="unknown" th:text="#{dropdown.mangal.unknown}"></option>
+
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.gan}">
+                                </label>
+
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{gan}">
+
+                                    <option value=""  th:text="#{dropdown.gan.select}">  </option>
+
+                                    <option th:value="dev"
+                                            th:text="#{dropdown.gan.dev}">
+                                    </option>
+
+                                    <option th:value="manushya"
+                                            th:text="#{dropdown.gan.manushya}">
+                                    </option>
+
+                                    <option th:value="rakshas"
+                                            th:text="#{dropdown.gan.rakshas}">
+                                    </option>
+
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.nadi}">
+                                </label>
+
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{nadi}">
+
+                                    <option value=""  th:text="#{dropdown.nadi.select}"> </option>
+
+                                    <option th:value="adi"
+                                            th:text="#{dropdown.nadi.adi}">
+                                    </option>
+
+                                    <option th:value="madhya"
+                                            th:text="#{dropdown.nadi.madhya}">
+                                    </option>
+
+                                    <option th:value="antya"
+                                            th:text="#{dropdown.nadi.antya}">
+                                    </option>
+
+                                </select>
                             </div>
 
 
+                        </div>
+                    </div>
 
+                    <!-- ================= PHYSICAL SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
 
-                            <!-- ================= PERSONAL SECTION ================= -->
-                            <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                        <!-- Header -->
+                        <button type="button"
+                                onclick="toggleSection('physicalSection', 'iconPhysical')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
 
-                                <!-- Header -->
-                                <button type="button"
-                                        onclick="toggleSection('personalSection', 'iconPersonal')"
-                                        class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
-
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-lg">👤</span>
-                                        <span class="font-semibold text-gray-800"
-                                              th:text="#{editor.section.personal}">
-                                            Personal Details
-                                        </span>
-                                        <span class="text-sm text-gray-400">(5 fields)</span>
-                                    </div>
-
-                                    <span id="iconPersonal" class="text-gray-500 text-xl">−</span>
-                                </button>
-
-                                <!-- Body -->
-                                <div id="personalSection" class=" px-4 py-4 bg-white">
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.name}"></span>
-                                        <span class="text-red-500">*</span>
-                                    </label>
-
-                                    <div class="ime-wrapper relative mb-6">
-                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                               th:field="*{name}"
-                                               th:placeholder="#{editor.instruction.name}"/>
-
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
-                                        </div>
-
-                                    </div>
-
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.religion}"></span>
-                                    </label>
-
-                                    <!-- Religion -->
-                                    <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3 
-                                            focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                            th:field="*{religion}">
-                                        <option value="" th:text="#{dropdown.religion.select}"></option>
-
-                                        <option th:value="#{dropdown.religion.hindu}" th:text="#{dropdown.religion.hindu}"></option>
-                                        <option th:value="#{dropdown.religion.muslim}" th:text="#{dropdown.religion.muslim}"></option>
-                                        <option th:value="#{dropdown.religion.christian}" th:text="#{dropdown.religion.christian}"></option>
-                                        <option th:value="#{dropdown.religion.buddhist}" th:text="#{dropdown.religion.buddhist}"></option>
-                                        <option th:value="#{dropdown.religion.jain}" th:text="#{dropdown.religion.jain}"></option>
-                                    </select>
-
-                                    <!-- Caste -->
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.caste}"></span>
-                                    </label>
-
-                                    <div class="ime-wrapper relative mb-4">
-                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                               th:field="*{caste}"
-                                               th:placeholder="#{editor.instruction.caste}"/>
-
-                                        <!-- Inline Suggestions Dropdown -->
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
-                                        </div>
-                                    </div>
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.subCaste}"></span>
-                                    </label>
-
-                                    <div class="ime-wrapper relative mb-4">
-                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                               th:field="*{subCaste}"
-                                               th:placeholder="#{editor.instruction.subCaste}"/>
-
-                                        <!-- Inline Suggestions Dropdown -->
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
-                                        </div>
-                                    </div>
-
-                                    <!-- Gotra -->
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.gotra}"></span>
-                                    </label>
-
-                                    <div class="ime-wrapper relative mb-4">
-                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                               th:field="*{gotra}"
-                                               th:placeholder="#{editor.instruction.gotra}"/>
-
-                                        <!-- Inline Suggestions Dropdown -->
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
-                                        </div>
-                                    </div>
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.kuldaivat}"></span>
-                                    </label>
-
-                                    <div class="ime-wrapper relative mb-4">
-                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                               th:field="*{kuldaivat}"
-                                               th:placeholder="#{editor.instruction.kuldaivat}" />
-
-                                        <!-- Inline Suggestions Dropdown -->
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🧍</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.physical}">
+                                    Physical Details
+                                </span>
                             </div>
 
+                            <span id="iconPhysical" class="text-gray-500 text-xl">−</span>
+                        </button>
 
-                            <!-- ================= BIRTH SECTION ================= -->
-                            <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                        <!-- Body -->
+                        <div id="physicalSection" class="hidden px-4 py-4 bg-white">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1">
+                                    <span th:text="#{editor.form.height}"></span>
+                                </label>
+                                <!-- Height -->
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{height}">
 
-                                <!-- Header -->
-                                <button type="button"
-                                        onclick="toggleSection('birthSection', 'iconBirth')"
-                                        class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+                                    <option value="" th:text="#{dropdown.height.select}"></option>
 
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-lg">🎂</span>
-                                        <span class="font-semibold text-gray-800"
-                                              th:text="#{editor.section.birth}">
-                                            Birth & Kundli
-                                        </span>
-                                        <span class="text-sm text-gray-400">(5 fields)</span>
-                                    </div>
-
-                                    <span id="iconBirth" class="text-gray-500 text-xl">−</span>
-                                </button>
-
-                                <!-- Body -->
-                                <div id="birthSection" class="hidden px-4 py-4 bg-white">
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.birthDate}"></span>
-                                        <span class="text-red-500">*</span>
-                                    </label>
-                                    <!-- Date of Birth -->
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-
-                                        <select id="birthDay"
-                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
-                                            <option value="" th:text="#{dropdown.date.select}" >Day</option>
-                                            <option th:each="d : ${#numbers.sequence(1,31)}"
-                                                    th:value="${d}"
-                                                    th:text="${d}"></option>
-                                        </select>
-
-                                        <!-- Month -->
-                                        <select id="birthMonth"
-                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
-
-                                            <option value="" th:text="#{dropdown.month.select}"></option>
-                                            <option value="01" th:text="#{dropdown.month.01}"></option>
-                                            <option value="02" th:text="#{dropdown.month.02}"></option>
-                                            <option value="03" th:text="#{dropdown.month.03}"></option>
-                                            <option value="04" th:text="#{dropdown.month.04}"></option>
-                                            <option value="05" th:text="#{dropdown.month.05}"></option>
-                                            <option value="06" th:text="#{dropdown.month.06}"></option>
-                                            <option value="07" th:text="#{dropdown.month.07}"></option>
-                                            <option value="08" th:text="#{dropdown.month.08}"></option>
-                                            <option value="09" th:text="#{dropdown.month.09}"></option>
-                                            <option value="10" th:text="#{dropdown.month.10}"></option>
-                                            <option value="11" th:text="#{dropdown.month.11}"></option>
-                                            <option value="12" th:text="#{dropdown.month.12}"></option>
-                                        </select>
-
-                                        <!-- Year -->
-                                        <select id="birthYear"
-                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
-
-                                            <option value="" th:text="#{dropdown.year.select}" >Year</option>
-                                            <option th:each="y : ${#numbers.sequence(1960,2010)}"
-                                                    th:value="${y}"
-                                                    th:text="${y}"></option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Hidden Date -->
-                                    <input type="hidden" th:field="*{birthDate}" id="birthDate"/>
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.birthTime}"></span>
-                                    </label>
-                                    <!-- Birth Time -->
-                                    <input type="time"
-                                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                           th:field="*{birthTime}"
-                                           th:placeholder="#{editor.instruction.birthTime}" />
-
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.birthPlace}"></span>
-                                    </label>
-
-                                    <div class="ime-wrapper relative mb-4">
-                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                               th:field="*{birthPlace}"
-                                               th:placeholder="#{editor.instruction.birthPlace}"/>
-
-                                        <!-- Inline Suggestions Dropdown -->
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
-                                        </div>
-                                    </div>
-
-
-
-                                    <label class="block text-sm font-medium text-gray-800 mb-1">
-                                        <span th:text="#{editor.form.rashi}"></span>
-                                    </label>
-
-                                    <!-- Rashi -->
-                                    <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                            focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                            th:field="*{rashi}">
-
-                                        <option value="" th:text="#{dropdown.rashi.select}"></option>
-
-                                        <option th:value="#{dropdown.rashi.mesh}" th:text="#{dropdown.rashi.mesh}"></option>
-                                        <option th:value="#{dropdown.rashi.vrushabh}" th:text="#{dropdown.rashi.vrushabh}"></option>
-                                        <option th:value="#{dropdown.rashi.mithun}" th:text="#{dropdown.rashi.mithun}"></option>
-                                        <option th:value="#{dropdown.rashi.kark}" th:text="#{dropdown.rashi.kark}"></option>
-                                        <option th:value="#{dropdown.rashi.sinh}" th:text="#{dropdown.rashi.sinh}"></option>
-                                        <option th:value="#{dropdown.rashi.kanya}" th:text="#{dropdown.rashi.kanya}"></option>
-                                        <option th:value="#{dropdown.rashi.tula}" th:text="#{dropdown.rashi.tula}"></option>
-                                        <option th:value="#{dropdown.rashi.vrishchik}" th:text="#{dropdown.rashi.vrishchik}"></option>
-                                        <option th:value="#{dropdown.rashi.dhanu}" th:text="#{dropdown.rashi.dhanu}"></option>
-                                        <option th:value="#{dropdown.rashi.makar}" th:text="#{dropdown.rashi.makar}"></option>
-                                        <option th:value="#{dropdown.rashi.kumbh}" th:text="#{dropdown.rashi.kumbh}"></option>
-                                        <option th:value="#{dropdown.rashi.meen}" th:text="#{dropdown.rashi.meen}"></option>
-                                    </select>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1">
-                                            <span th:text="#{editor.form.nakshatra}"></span>
-                                        </label>
-                                        <!-- Nakshatra -->
-                                        <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                th:field="*{nakshatra}">
-
-                                            <option value="" th:text="#{dropdown.nakshatra.select}"></option>
-
-                                            <option th:value="#{dropdown.nakshatra.ashwini}" th:text="#{dropdown.nakshatra.ashwini}"></option>
-                                            <option th:value="#{dropdown.nakshatra.bharani}" th:text="#{dropdown.nakshatra.bharani}"></option>
-                                            <option th:value="#{dropdown.nakshatra.krittika}" th:text="#{dropdown.nakshatra.krittika}"></option>
-                                            <option th:value="#{dropdown.nakshatra.rohini}" th:text="#{dropdown.nakshatra.rohini}"></option>
-                                            <option th:value="#{dropdown.nakshatra.mrigashira}" th:text="#{dropdown.nakshatra.mrigashira}"></option>
-                                            <option th:value="#{dropdown.nakshatra.ardra}" th:text="#{dropdown.nakshatra.ardra}"></option>
-                                            <option th:value="#{dropdown.nakshatra.punarvasu}" th:text="#{dropdown.nakshatra.punarvasu}"></option>
-                                            <option th:value="#{dropdown.nakshatra.pushya}" th:text="#{dropdown.nakshatra.pushya}"></option>
-                                            <option th:value="#{dropdown.nakshatra.ashlesha}" th:text="#{dropdown.nakshatra.ashlesha}"></option>
-                                            <option th:value="#{dropdown.nakshatra.magha}" th:text="#{dropdown.nakshatra.magha}"></option>
-                                            <option th:value="#{dropdown.nakshatra.purvaPhalguni}" th:text="#{dropdown.nakshatra.purvaPhalguni}"></option>
-                                            <option th:value="#{dropdown.nakshatra.uttaraPhalguni}" th:text="#{dropdown.nakshatra.uttaraPhalguni}"></option>
-                                            <option th:value="#{dropdown.nakshatra.hasta}" th:text="#{dropdown.nakshatra.hasta}"></option>
-                                            <option th:value="#{dropdown.nakshatra.chitra}" th:text="#{dropdown.nakshatra.chitra}"></option>
-                                            <option th:value="#{dropdown.nakshatra.swati}" th:text="#{dropdown.nakshatra.swati}"></option>
-                                            <option th:value="#{dropdown.nakshatra.vishakha}" th:text="#{dropdown.nakshatra.vishakha}"></option>
-                                            <option th:value="#{dropdown.nakshatra.anuradha}" th:text="#{dropdown.nakshatra.anuradha}"></option>
-                                            <option th:value="#{dropdown.nakshatra.jyeshtha}" th:text="#{dropdown.nakshatra.jyeshtha}"></option>
-                                            <option th:value="#{dropdown.nakshatra.mula}" th:text="#{dropdown.nakshatra.mula}"></option>
-                                            <option th:value="#{dropdown.nakshatra.purvashada}" th:text="#{dropdown.nakshatra.purvashada}"></option>
-                                            <option th:value="#{dropdown.nakshatra.uttarashada}" th:text="#{dropdown.nakshatra.uttarashada}"></option>
-                                            <option th:value="#{dropdown.nakshatra.shravana}" th:text="#{dropdown.nakshatra.shravana}"></option>
-                                            <option th:value="#{dropdown.nakshatra.dhanishta}" th:text="#{dropdown.nakshatra.dhanishta}"></option>
-                                            <option th:value="#{dropdown.nakshatra.shatabhisha}" th:text="#{dropdown.nakshatra.shatabhisha}"></option>
-                                            <option th:value="#{dropdown.nakshatra.purvaBhadrapada}" th:text="#{dropdown.nakshatra.purvaBhadrapada}"></option>
-                                            <option th:value="#{dropdown.nakshatra.uttaraBhadrapada}" th:text="#{dropdown.nakshatra.uttaraBhadrapada}"></option>
-                                            <option th:value="#{dropdown.nakshatra.revati}" th:text="#{dropdown.nakshatra.revati}"></option>
-                                        </select>
-
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1"
-                                               th:text="#{editor.form.mangal}"></label>
-
-                                        <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                th:field="*{mangal}">
-
-                                            <!-- default -->
-                                            <option value="" th:text="#{dropdown.mangal.select}"></option>
-
-                                            <option th:value="yes" th:text="#{dropdown.mangal.yes}"></option>
-                                            <option th:value="no" th:text="#{dropdown.mangal.no}"></option>
-                                            <option th:value="unknown" th:text="#{dropdown.mangal.unknown}"></option>
-
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1"
-                                               th:text="#{editor.form.gan}">
-                                        </label>
-
-                                        <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                th:field="*{gan}">
-
-                                            <option value=""  th:text="#{dropdown.gan.select}">  </option>
-
-                                            <option th:value="dev"
-                                                    th:text="#{dropdown.gan.dev}">
-                                            </option>
-
-                                            <option th:value="manushya"
-                                                    th:text="#{dropdown.gan.manushya}">
-                                            </option>
-
-                                            <option th:value="rakshas"
-                                                    th:text="#{dropdown.gan.rakshas}">
-                                            </option>
-
-                                        </select>
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1"
-                                               th:text="#{editor.form.nadi}">
-                                        </label>
-
-                                        <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                th:field="*{nadi}">
-
-                                            <option value=""  th:text="#{dropdown.nadi.select}"> </option>
-
-                                            <option th:value="adi"
-                                                    th:text="#{dropdown.nadi.adi}">
-                                            </option>
-
-                                            <option th:value="madhya"
-                                                    th:text="#{dropdown.nadi.madhya}">
-                                            </option>
-
-                                            <option th:value="antya"
-                                                    th:text="#{dropdown.nadi.antya}">
-                                            </option>
-
-                                        </select>
-                                    </div>
-
-
-                                </div>
+                                    <option th:value="#{dropdown.height.4_6}" th:text="#{dropdown.height.4_6}"></option>
+                                    <option th:value="#{dropdown.height.4_8}" th:text="#{dropdown.height.4_8}"></option>
+                                    <option th:value="#{dropdown.height.5_0}" th:text="#{dropdown.height.5_0}"></option>
+                                    <option th:value="#{dropdown.height.5_2}" th:text="#{dropdown.height.5_2}"></option>
+                                    <option th:value="#{dropdown.height.5_4}" th:text="#{dropdown.height.5_4}"></option>
+                                    <option th:value="#{dropdown.height.5_6}" th:text="#{dropdown.height.5_6}"></option>
+                                    <option th:value="#{dropdown.height.5_8}" th:text="#{dropdown.height.5_8}"></option>
+                                    <option th:value="#{dropdown.height.5_10}" th:text="#{dropdown.height.5_10}"></option>
+                                    <option th:value="#{dropdown.height.6_0}" th:text="#{dropdown.height.6_0}"></option>
+                                    <option th:value="#{dropdown.height.6_2}" th:text="#{dropdown.height.6_2}"></option>
+                                </select>
                             </div>
-
-                            <!-- ================= PHYSICAL SECTION ================= -->
-                            <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
-
-                                <!-- Header -->
-                                <button type="button"
-                                        onclick="toggleSection('physicalSection', 'iconPhysical')"
-                                        class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
-
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-lg">🧍</span>
-                                        <span class="font-semibold text-gray-800"
-                                              th:text="#{editor.section.physical}">
-                                            Physical Details
-                                        </span>
-                                        <span class="text-sm text-gray-400">(2 fields)</span>
-                                    </div>
-
-                                    <span id="iconPhysical" class="text-gray-500 text-xl">−</span>
-                                </button>
-
-                                <!-- Body -->
-                                <div id="physicalSection" class="hidden px-4 py-4 bg-white">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1">
-                                            <span th:text="#{editor.form.height}"></span>
-                                        </label>
-                                        <!-- Height -->
-                                        <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                th:field="*{height}">
-
-                                            <option value="" th:text="#{dropdown.height.select}"></option>
-
-                                            <option th:value="#{dropdown.height.4_6}" th:text="#{dropdown.height.4_6}"></option>
-                                            <option th:value="#{dropdown.height.4_8}" th:text="#{dropdown.height.4_8}"></option>
-                                            <option th:value="#{dropdown.height.5_0}" th:text="#{dropdown.height.5_0}"></option>
-                                            <option th:value="#{dropdown.height.5_2}" th:text="#{dropdown.height.5_2}"></option>
-                                            <option th:value="#{dropdown.height.5_4}" th:text="#{dropdown.height.5_4}"></option>
-                                            <option th:value="#{dropdown.height.5_6}" th:text="#{dropdown.height.5_6}"></option>
-                                            <option th:value="#{dropdown.height.5_8}" th:text="#{dropdown.height.5_8}"></option>
-                                            <option th:value="#{dropdown.height.5_10}" th:text="#{dropdown.height.5_10}"></option>
-                                            <option th:value="#{dropdown.height.6_0}" th:text="#{dropdown.height.6_0}"></option>
-                                            <option th:value="#{dropdown.height.6_2}" th:text="#{dropdown.height.6_2}"></option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1">
-                                            <span th:text="#{editor.form.bloodGroup}"></span>
-                                        </label>
-                                        <!-- Blood Group -->
-                                        <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                th:field="*{bloodGroup}">
-                                            <option value="" th:text="#{dropdown.blood.select}"></option>
-                                            <option th:value="#{dropdown.blood.a_pos}" th:text="#{dropdown.blood.a_pos}"></option>
-                                            <option th:value="#{dropdown.blood.a_neg}" th:text="#{dropdown.blood.a_neg}"></option>
-                                            <option th:value="#{dropdown.blood.b_pos}" th:text="#{dropdown.blood.b_pos}"></option>
-                                            <option th:value="#{dropdown.blood.b_neg}" th:text="#{dropdown.blood.b_neg}"></option>
-                                            <option th:value="#{dropdown.blood.ab_pos}" th:text="#{dropdown.blood.ab_pos}"></option>
-                                            <option th:value="#{dropdown.blood.ab_neg}" th:text="#{dropdown.blood.ab_neg}"></option>
-                                            <option th:value="#{dropdown.blood.o_pos}" th:text="#{dropdown.blood.o_pos}"></option>
-                                            <option th:value="#{dropdown.blood.o_neg}" th:text="#{dropdown.blood.o_neg}"></option>
-                                        </select> 
-                                    </div>
-                                    <!-- Complexion -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1"
-                                               th:text="#{editor.form.complexion}">
-                                        </label>
-
-
-                                        <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                th:field="*{complexion}">
-
-                                            <!-- Default placeholder -->
-                                            <option value="" th:text="#{dropdown.complexion.select}"> </option>
-
-
-                                            <option th:value="veryFair"
-                                                    th:text="#{dropdown.complexion.veryFair}">
-                                            </option>
-
-                                            <option th:value="fair"
-                                                    th:text="#{dropdown.complexion.fair}">
-                                            </option>
-
-                                            <option th:value="wheatish"
-                                                    th:text="#{dropdown.complexion.wheatish}">
-                                            </option>
-
-                                            <option th:value="dark"
-                                                    th:text="#{dropdown.complexion.dark}">
-                                            </option>
-
-                                        </select>
-
-                                    </div>
-
-                                </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1">
+                                    <span th:text="#{editor.form.bloodGroup}"></span>
+                                </label>
+                                <!-- Blood Group -->
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{bloodGroup}">
+                                    <option value="" th:text="#{dropdown.blood.select}"></option>
+                                    <option th:value="#{dropdown.blood.a_pos}" th:text="#{dropdown.blood.a_pos}"></option>
+                                    <option th:value="#{dropdown.blood.a_neg}" th:text="#{dropdown.blood.a_neg}"></option>
+                                    <option th:value="#{dropdown.blood.b_pos}" th:text="#{dropdown.blood.b_pos}"></option>
+                                    <option th:value="#{dropdown.blood.b_neg}" th:text="#{dropdown.blood.b_neg}"></option>
+                                    <option th:value="#{dropdown.blood.ab_pos}" th:text="#{dropdown.blood.ab_pos}"></option>
+                                    <option th:value="#{dropdown.blood.ab_neg}" th:text="#{dropdown.blood.ab_neg}"></option>
+                                    <option th:value="#{dropdown.blood.o_pos}" th:text="#{dropdown.blood.o_pos}"></option>
+                                    <option th:value="#{dropdown.blood.o_neg}" th:text="#{dropdown.blood.o_neg}"></option>
+                                </select> 
                             </div>
-                            <!-- ================= EDUCATION SECTION ================= -->
-                            <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
-                                <button type="button"
-                                        onclick="toggleSection('educationSection', 'iconEducation')"
-                                        class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
-
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-lg">🎓</span>
-                                        <span class="font-semibold text-gray-800"
-                                              th:text="#{editor.section.education}">
-                                            Education & Profession
-                                        </span>
-                                        <span class="text-sm text-gray-400">(2 fields)</span>
-                                    </div>
-                                    <span id="iconEducation" class="text-gray-500 text-xl">−</span>
-                                </button>
-                                <div id="educationSection" class="hidden px-4 py-4 bg-white">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <!-- Education -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-800 mb-1"
-                                                   th:text="#{editor.form.education}"></label>
-                                            <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                   th:field="*{education}"
-                                                   th:placeholder="#{editor.instruction.education}"/>
-                                        </div>
-                                        <!-- Profession -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-800 mb-1"
-                                                   th:text="#{editor.form.profession}"></label>
-
-                                            <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                                   th:field="*{profession}"
-                                                   th:placeholder="#{editor.instruction.profession}"/>
-
-                                        </div>
-                                    </div>
-                                </div>
+                            <!-- Complexion -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.complexion}">
+                                </label>
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{complexion}">
+                                    <option value="" th:text="#{dropdown.complexion.select}"></option>
+                                    <option th:value="#{dropdown.complexion.veryFair}" th:text="#{dropdown.complexion.veryFair}"></option>
+                                    <option th:value="#{dropdown.complexion.fair}" th:text="#{dropdown.complexion.fair}"></option>
+                                    <option th:value="#{dropdown.complexion.wheatish}" th:text="#{dropdown.complexion.wheatish}"></option>
+                                    <option th:value="#{dropdown.complexion.dark}" th:text="#{dropdown.complexion.dark}"></option>
+                                </select>
                             </div>
-                            <!-- ================= FAMILY SECTION ================= -->
-                            <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
-                                <button type="button"
-                                        onclick="toggleSection('familySection', 'iconFamily')"
-                                        class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-lg">👪</span>
-                                        <span class="font-semibold text-gray-800"
-                                              th:text="#{editor.section.family}">
-                                            Family Details
-                                        </span>
-                                        <span class="text-sm text-gray-400">(Parents & Siblings)</span>
-                                    </div>
-                                    <span id="iconFamily" class="text-gray-500 text-xl">−</span>
-                                </button>
-                                <div id="familySection" class="hidden px-4 py-4 bg-white space-y-5">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-800 mb-1"
-                                                   th:text="#{editor.form.fatherName}"></label>
+                        </div>
+                    </div>
+                    <!-- ================= EDUCATION SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                        <button type="button"
+                                onclick="toggleSection('educationSection', 'iconEducation')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
 
-                                            <div class="ime-wrapper relative mb-4">
-                                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                                       th:field="*{fatherName}"
-                                                       th:placeholder="#{editor.instruction.fatherName}"/>
-
-                                                <!-- Inline Suggestions Dropdown -->
-                                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-800 mb-1"
-                                                   th:text="#{editor.form.fatherOccupation}"></label>
-
-                                            <div class="ime-wrapper relative">
-                                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                                       th:field="*{fatherOccupation}"
-                                                       th:placeholder="#{editor.instruction.fatherOccupation}"/>
-
-                                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                                     bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <!-- Mother -->
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-800 mb-1"
-                                                   th:text="#{editor.form.motherName}"></label>
-
-                                            <div class="ime-wrapper relative mb-4">
-                                                <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                                       th:field="*{motherName}"
-                                                       th:placeholder="#{editor.instruction.motherName}"/>
-
-                                                <!-- Inline Suggestions Dropdown -->
-                                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                                     bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <!-- 🔸 Brothers -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1"
-                                               th:text="#{editor.form.brothers}"></label>
-                                        <select id="brotherCount"
-                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                                            <option value="" th:text="#{dropdown.count.select}"></option>
-                                            <option th:each="n : ${#numbers.sequence(0,5)}"
-                                                    th:value="${n}" th:text="${n}"></option>
-                                        </select>
-                                        <!-- dynamic inputs -->
-                                        <div id="brotherInputs" class="space-y-2"></div>
-                                        <input type="hidden" th:field="*{brothers}" id="brothers"/>
-                                    </div>
-                                    <!-- 🔸 Sisters -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-800 mb-1"
-                                               th:text="#{editor.form.sisters}"></label>
-                                        <select id="sisterCount"
-                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
-                                            <option value="" th:text="#{dropdown.count.select}"></option>
-                                            <option th:each="n : ${#numbers.sequence(0,5)}"
-                                                    th:value="${n}" th:text="${n}"></option>
-                                        </select>
-                                        <!-- dynamic inputs -->
-                                        <div id="sisterInputs" class="space-y-2"></div>
-                                        <input type="hidden" th:field="*{sisters}" id="sisters"/>
-                                    </div>
-                                    <!-- dataset for JS -->
-                                    <div id="familyMessages"
-                                         th:data-brother-name="#{editor.placeholder.brotherName}"
-                                         th:data-sister-name="#{editor.placeholder.sisterName}"
-                                         th:data-status-select="#{dropdown.marital.select}"
-                                         th:data-married="#{dropdown.marital.married}"
-                                         th:data-unmarried="#{dropdown.marital.unmarried}">
-                                    </div>
-                                </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🎓</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.education}">
+                                    Education & Profession
+                                </span>
                             </div>
-                            <!-- ================= RELATIVES / CUSTOM SECTION ================= -->
-                            <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
-                                <button type="button"
-                                        onclick="toggleSection('customSection', 'iconCustom')"
-                                        class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
-
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-lg">🧾</span>
-                                        <span class="font-semibold text-gray-800"
-                                              th:text="#{editor.section.custom}">
-                                            Relatives & Additional Info
-                                        </span>
-                                        <span class="text-sm text-gray-400">(optional)</span>
-                                    </div>
-                                    <span id="iconCustom" class="text-gray-500 text-xl">+</span>
-                                </button>
-                                <div id="customSection" class="hidden px-4 py-4 bg-white mt-6">
-                                    <div id="customFields" class="space-y-3"></div>
-                                    <button type="button"
-                                            onclick="addCustomField()"
-                                            class="text-red-600 hover:text-red-700 text-sm font-medium">
-                                        + Add Relative / Custom Field
-                                    </button>
-                                    <p class="text-xs text-gray-400">
-                                        Example: Mama, Kaka, Mavshi, Atte, Maternal Uncle etc.
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- ================= CONTACT SECTION ================= -->
-                            <div class="border border-gray-200 rounded-xl mb-5 overflow-visible">
-
-                                <!-- Header -->
-                                <button type="button"
-                                        onclick="toggleSection('contactSection', 'iconContact')"
-                                        class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
-
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-lg">📞</span>
-                                        <span class="font-semibold text-gray-800"
-                                              th:text="#{editor.section.contact}">
-                                            Contact Details
-                                        </span>
-                                        <span class="text-sm text-gray-400">(2 fields)</span>
-                                    </div>
-
-                                    <span id="iconContact" class="text-gray-500 text-xl">−</span>
-                                </button>
-
-                                <!-- Body -->
-                                <div id="contactSection" class="hidden px-4 py-4 bg-white space-y-4 overflow-visible">
-
-                                    <!-- Mobile -->
+                            <span id="iconEducation" class="text-gray-500 text-xl">−</span>
+                        </button>
+                        <div id="educationSection" class="hidden px-4 py-4 bg-white">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Education -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.education}"></label>
                                     <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
                                            focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                           th:field="*{mobile}"
-                                           th:placeholder="#{editor.instruction.mobile}"/>
+                                           th:field="*{education}"
+                                           th:placeholder="#{editor.instruction.education}"/>
+                                </div>
+                                <!-- Profession -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.profession}"></label>
 
-                                    <!-- Address -->
-                                    <div class="ime-wrapper relative mb-4">
-
-                                        <textarea rows="3"
-                                                  class="w-full rounded-lg border border-gray-300 px-4 py-2.5 
-                                                  focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                                  th:field="*{address}"
-                                                  th:placeholder="#{editor.instruction.address}">
-                                        </textarea>
-
-                                        <!-- Inline Suggestions Dropdown -->
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] max-h-48 overflow-auto">
-                                        </div>
-                                    </div>
+                                    <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                           th:field="*{profession}"
+                                           th:placeholder="#{editor.instruction.profession}"/>
 
                                 </div>
                             </div>
-
-
-                            <!-- ================= SUBMIT ================= -->
-                            <div class="sticky bottom-0 bg-white pt-4 pb-2 border-t mt-6">
-                                <button type="button" id="submitBtn"
-                                        class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 mt-6 rounded-lg shadow-lg font-semibold text-lg transition"
-                                        th:text="#{editor.form.submit}">
-                                </button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
-            </section>
-            <script th:src="@{/js/transliteration.js}"></script>
-            <script th:src="@{/js/biodata-editor.js}"></script>
-        </div>
+                    <!-- ================= FAMILY SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                        <button type="button"
+                                onclick="toggleSection('familySection', 'iconFamily')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">👪</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.family}">
+                                    Family Details
+                                </span>
+                            </div>
+                            <span id="iconFamily" class="text-gray-500 text-xl">−</span>
+                        </button>
+                        <div id="familySection" class="hidden px-4 py-4 bg-white space-y-5">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.fatherName}"></label>
+
+                                    <div class="ime-wrapper relative mb-4">
+                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               th:field="*{fatherName}"
+                                               th:placeholder="#{editor.instruction.fatherName}"/>
+
+                                        <!-- Inline Suggestions Dropdown -->
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.fatherOccupation}"></label>
+
+                                    <div class="ime-wrapper relative">
+                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               th:field="*{fatherOccupation}"
+                                               th:placeholder="#{editor.instruction.fatherOccupation}"/>
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Mother -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.motherName}"></label>
+
+                                    <div class="ime-wrapper relative mb-4">
+                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               th:field="*{motherName}"
+                                               th:placeholder="#{editor.instruction.motherName}"/>
+
+                                        <!-- Inline Suggestions Dropdown -->
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-800 mb-1"
+                                           th:text="#{editor.form.motherOccupation}"></label>
+
+                                    <div class="ime-wrapper relative">
+                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               th:field="*{motherOccupation}"
+                                               th:placeholder="#{editor.instruction.motherOccupation}"/>
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 🔸 Brothers -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.brothers}"></label>
+                                <select id="brotherCount"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                                    <option value="" th:text="#{dropdown.count.select}"></option>
+                                    <option th:each="n : ${#numbers.sequence(0,5)}"
+                                            th:value="${n}" th:text="${n}"></option>
+                                </select>
+                                <!-- dynamic inputs -->
+                                <div id="brotherInputs" class="space-y-2"></div>
+                                <input type="hidden" th:field="*{brothers}" id="brothers"/>
+                            </div>
+                            <!-- 🔸 Sisters -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.sisters}"></label>
+                                <select id="sisterCount"
+                                        class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                                    <option value="" th:text="#{dropdown.count.select}"></option>
+                                    <option th:each="n : ${#numbers.sequence(0,5)}"
+                                            th:value="${n}" th:text="${n}"></option>
+                                </select>
+                                <!-- dynamic inputs -->
+                                <div id="sisterInputs" class="space-y-2"></div>
+                                <input type="hidden" th:field="*{sisters}" id="sisters"/>
+                            </div> 
+
+                            <!-- Mother -->
+
+                            <div>
+
+                                <!-- Label -->
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.mamaName}">
+                                    मामा
+                                </label>
+
+                                <!-- Input with Marathi IME -->
+                                <div class="ime-wrapper relative mb-4">
+
+                                    <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                           th:field="*{mama}"
+                                           th:placeholder="#{editor.instruction.mamaName}" />
+
+                                    <!-- Inline Suggestions Dropdown -->
+                                    <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                         bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="mt-4">
+
+                                <!-- Label -->
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.relatives}">नातेवाईक</label>
+
+                                <!-- Input with IME support -->
+                                <div class="ime-wrapper relative mb-4">
+
+                                    <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                           th:field="*{relatives}"
+                                           th:placeholder="#{editor.instruction.relatives}"/>
+
+                                    <!-- Inline Suggestions Dropdown -->
+                                    <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                         bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- dataset for JS -->
+                            <div id="familyMessages"
+                                 th:data-brother-name="#{editor.placeholder.brotherName}"
+                                 th:data-sister-name="#{editor.placeholder.sisterName}"
+                                 th:data-status-select="#{dropdown.marital.select}"
+                                 th:data-married="#{dropdown.marital.married}"
+                                 th:data-unmarried="#{dropdown.marital.unmarried}">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ================= RELATIVES / CUSTOM SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                        <button type="button"
+                                onclick="toggleSection('customSection', 'iconCustom')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🧾</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.custom}">
+                                    Relatives & Additional Info
+                                </span>
+                                <span class="text-sm text-gray-400">(optional)</span>
+                            </div>
+                            <span id="iconCustom" class="text-gray-500 text-xl">+</span>
+                        </button>
+                        <div id="customSection" class="hidden px-4 py-4 bg-white mt-6">
+                            <div id="customFields" class="space-y-3"></div>
+                            <button type="button"
+                                    onclick="addCustomField()"
+                                    class="text-red-600 hover:text-red-700 text-sm font-medium">
+                                + Add Relative / Custom Field
+                            </button>
+                            <p class="text-xs text-gray-400">
+                                Example: Mama, Kaka, Mavshi, Atte, Maternal Uncle etc.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- ================= CONTACT SECTION ================= -->
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-visible">
+
+                        <!-- Header -->
+                        <button type="button"
+                                onclick="toggleSection('contactSection', 'iconContact')"
+                                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">📞</span>
+                                <span class="font-semibold text-gray-800"
+                                      th:text="#{editor.section.contact}">
+                                    Contact Details
+                                </span>
+                            </div>
+
+                            <span id="iconContact" class="text-gray-500 text-xl">−</span>
+                        </button>
+
+                        <!-- Body -->
+                        <div id="contactSection" class="hidden px-4 py-4 bg-white space-y-4 overflow-visible">
+
+                            <!-- Mobile -->
+                            <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                   th:field="*{mobile}"
+                                   th:placeholder="#{editor.instruction.mobile}"/>
+
+                            <!-- Address -->
+                            <div class="ime-wrapper relative mb-4">
+
+                                <textarea rows="3"
+                                          class="w-full rounded-lg border border-gray-300 px-4 py-2.5 
+                                          focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                          th:field="*{address}"
+                                          th:placeholder="#{editor.instruction.address}">
+                                </textarea>
+
+                                <!-- Inline Suggestions Dropdown -->
+                                <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                     bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] max-h-48 overflow-auto">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <!-- ================= SUBMIT ================= -->
+                    <div class="sticky bottom-0 bg-white pt-4 pb-2 border-t mt-6">
+                        <button type="button" id="submitBtn"
+                                class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 mt-6 rounded-lg shadow-lg font-semibold text-lg transition"
+                                th:text="#{editor.form.submit}">
+                        </button>
+                    </div>
+                </form>
+            </div>
+    </section>
+    <script th:src="@{/js/transliteration.js}"></script>
+    <script th:src="@{/js/biodata-editor.js}"></script>
+</div>

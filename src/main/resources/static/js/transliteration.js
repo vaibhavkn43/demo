@@ -1,18 +1,18 @@
 /* ============================================================
-   Marathi Transliteration + Inline Suggestions
-   ------------------------------------------------------------
-   Features:
-   ✔ English → Marathi transliteration
-   ✔ Inline dropdown suggestions under input
-   ✔ Arrow key navigation (↑ ↓)
-   ✔ Enter / Space selection
-   ✔ Auto hide on outside click
-   ✔ Works with multiple inputs (.ime-marathi)
-   ============================================================ */
+ Marathi Transliteration + Inline Suggestions
+ ------------------------------------------------------------
+ Features:
+ ✔ English → Marathi transliteration
+ ✔ Inline dropdown suggestions under input
+ ✔ Arrow key navigation (↑ ↓)
+ ✔ Enter / Space selection
+ ✔ Auto hide on outside click
+ ✔ Works with multiple inputs (.ime-marathi)
+ ============================================================ */
 
 /* ============================================================
-   GLOBAL STATE (shared across typing session)
-   ============================================================ */
+ GLOBAL STATE (shared across typing session)
+ ============================================================ */
 
 let marathiEnabled = true;            // toggle for enabling/disabling IME
 let activeInput = null;               // currently focused input element
@@ -20,8 +20,8 @@ let activeWordRange = null;           // {start, end} of current word
 let activeSuggestionIndex = -1;       // index of highlighted suggestion
 
 /* ============================================================
-   DOM READY → Initialize toggle listener
-   ============================================================ */
+ DOM READY → Initialize toggle listener
+ ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
     const toggle = document.getElementById("marathiToggle");
@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /* ============================================================
-   CLICK OUTSIDE → close suggestion dropdown
-   ============================================================ */
+ CLICK OUTSIDE → close suggestion dropdown
+ ============================================================ */
 
 document.addEventListener("click", function (e) {
     if (!e.target.closest(".ime-wrapper")) {
@@ -45,10 +45,10 @@ document.addEventListener("click", function (e) {
 
 
 /* ============================================================
-   KEYUP EVENT
-   Trigger: user types letters
-   Purpose: detect English word and fetch Marathi suggestions
-   ============================================================ */
+ KEYUP EVENT
+ Trigger: user types letters
+ Purpose: detect English word and fetch Marathi suggestions
+ ============================================================ */
 
 document.addEventListener("keyup", async function (e) {
 
@@ -72,19 +72,22 @@ document.addEventListener("keyup", async function (e) {
 
     // get word before cursor
     const left = text.slice(0, cursor);
-    const match = left.match(/([a-zA-Z]+)$/);
 
-    // if no English word, hide suggestions
+// 🔥 find last English word ignoring trailing commas/spaces
+    const match = left.match(/([a-zA-Z]+)(?=[^a-zA-Z]*$)/);
+
     if (!match) {
         hideSuggestions();
         return;
     }
 
     const word = match[1];
-    const start = cursor - word.length;
-    const end = cursor;
 
-    // save current active input and word range
+// 🔥 get correct start index of that word
+    const start = left.lastIndexOf(word);
+    const end = start + word.length;
+
+// 🔥 IMPORTANT: store actual word range only (not comma part)
     activeInput = input;
     activeWordRange = {start, end};
     activeSuggestionIndex = -1;
@@ -98,10 +101,10 @@ document.addEventListener("keyup", async function (e) {
 
 
 /* ============================================================
-   KEYDOWN EVENT
-   Trigger: arrow keys / enter / space
-   Purpose: navigate and select suggestions
-   ============================================================ */
+ KEYDOWN EVENT
+ Trigger: arrow keys / enter / space
+ Purpose: navigate and select suggestions
+ ============================================================ */
 
 document.addEventListener("keydown", function (e) {
 
@@ -125,7 +128,7 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
 
         activeSuggestionIndex =
-            (activeSuggestionIndex + 1) % items.length;
+                (activeSuggestionIndex + 1) % items.length;
 
         updateHighlight(items);
     }
@@ -136,7 +139,7 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
 
         activeSuggestionIndex =
-            (activeSuggestionIndex - 1 + items.length) % items.length;
+                (activeSuggestionIndex - 1 + items.length) % items.length;
 
         updateHighlight(items);
     }
@@ -154,7 +157,7 @@ document.addEventListener("keydown", function (e) {
             const pos = activeInput.selectionStart;
 
             activeInput.value =
-                activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
+                    activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
 
             activeInput.setSelectionRange(pos + 1, pos + 1);
 
@@ -174,7 +177,7 @@ document.addEventListener("keydown", function (e) {
             const pos = activeInput.selectionStart;
 
             activeInput.value =
-                activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
+                    activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
 
             activeInput.setSelectionRange(pos + 1, pos + 1);
 
@@ -186,13 +189,13 @@ document.addEventListener("keydown", function (e) {
 
 
 /* ============================================================
-   FETCH SUGGESTIONS FROM GOOGLE INPUT TOOLS API
-   ============================================================ */
+ FETCH SUGGESTIONS FROM GOOGLE INPUT TOOLS API
+ ============================================================ */
 
 async function fetchSuggestions(word) {
 
     const url =
-        `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=mr-t-i0-und&num=6`;
+            `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=mr-t-i0-und&num=6`;
 
     try {
         const res = await fetch(url);
@@ -208,8 +211,8 @@ async function fetchSuggestions(word) {
 
 
 /* ============================================================
-   SHOW INLINE DROPDOWN UNDER INPUT
-   ============================================================ */
+ SHOW INLINE DROPDOWN UNDER INPUT
+ ============================================================ */
 
 function showInlineSuggestions(input, suggestions) {
 
@@ -241,7 +244,7 @@ function showInlineSuggestions(input, suggestions) {
             const text = input.value;
 
             const newText =
-                text.slice(0, start) + word + text.slice(end);
+                    text.slice(0, start) + word + text.slice(end);
 
             input.value = newText;
 
@@ -268,21 +271,21 @@ function showInlineSuggestions(input, suggestions) {
 
 
 /* ============================================================
-   HIDE ALL DROPDOWNS
-   ============================================================ */
+ HIDE ALL DROPDOWNS
+ ============================================================ */
 
 function hideSuggestions() {
 
     document.querySelectorAll(".suggestion-dropdown")
-        .forEach(d => d.classList.add("hidden"));
+            .forEach(d => d.classList.add("hidden"));
 
     activeSuggestionIndex = -1;
 }
 
 
 /* ============================================================
-   UPDATE HIGHLIGHT DURING KEY NAVIGATION
-   ============================================================ */
+ UPDATE HIGHLIGHT DURING KEY NAVIGATION
+ ============================================================ */
 
 function updateHighlight(items) {
 

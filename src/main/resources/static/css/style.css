@@ -1,0 +1,181 @@
+/* =====================================================
+   🅰️ FONT DEFINITIONS
+===================================================== */
+
+@font-face {
+    font-family: 'NotoDevanagari';
+    src: url('/fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mangal';
+    src: url('/fonts/mangal.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Default font for entire app */
+body {
+    font-family: 'NotoDevanagari', serif;
+    -webkit-font-smoothing: antialiased;
+    font-kerning: normal;
+}
+
+
+/* =====================================================
+   📄 BIODATA PREVIEW (A4 FIX - ORIGINAL SIZE)
+===================================================== */
+
+#biodata-preview {
+    width: 794px;                 /* A4 width */
+    height: 1120px;               /* slightly less than 1123px to avoid overflow */
+    overflow: hidden;             /* prevents extra blank page */
+    box-sizing: border-box;
+    background-color: #ffffff;
+}
+
+
+/* =====================================================
+   👁 PREVIEW ZOOM (ONLY VISUAL SCALE - SAFE FOR EXPORT)
+===================================================== */
+
+.preview-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+
+    /* allow scroll */
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
+
+/* =====================================================
+   🖨 PRINT MODE (Ctrl+P)
+===================================================== */
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+    }
+
+    #biodata-preview {
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    * {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+}
+
+
+/* =====================================================
+   🔠 MARATHI TEXT SAFETY
+   (avoid letter-spacing issues)
+===================================================== */
+
+.marathi-text {
+    letter-spacing: normal !important;
+}
+
+
+/* =====================================================
+   🧱 OPTIONAL SAFE WRAPPER (for export or reuse)
+===================================================== */
+
+.export-wrapper {
+    width: 794px;
+    margin: 0 auto;
+    background: #fff;
+}
+
+.preview-scale {
+    transform-origin: top center;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    min-width: 180px;
+}
+
+
+@media (max-width: 768px) {
+    .action-buttons {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding: 10px;
+        z-index: 50;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    }
+}
+
+/* =========================
+   PREVIEW AREA
+========================= */
+
+.preview-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+
+    /* allow scroll */
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+
+/* scaling wrapper */
+.preview-scale {
+    transform-origin: top center;
+}
+
+
+/* =========================
+   BUTTON BAR
+========================= */
+
+.action-buttons {
+    position: sticky;
+    bottom: 0;
+    background: #ffffff;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    z-index: 100;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+}
+
+.action-buttons button {
+    min-width: 150px;
+}
+
+/* mobile buttons full width */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .action-buttons button {
+        width: 90%;
+    }
+}

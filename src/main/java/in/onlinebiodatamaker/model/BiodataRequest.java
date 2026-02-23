@@ -67,7 +67,7 @@ public class BiodataRequest {
     private String motherOccupation;
     private String brothers;
     private String sisters;
-
+    private String mama;
     private String Relatives;
 
     // ======================
