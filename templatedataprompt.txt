@@ -1,0 +1,30 @@
+You are an expert document formatter and OCR extractor.
+
+I will provide you with two images:
+
+1. Image A → A blank biodata template (design layout only)
+2. Image B → A filled biodata template with actual data
+
+Your task is:
+
+STEP 1: Carefully read Image B and extract ONLY the textual data values.
+- Do NOT copy colors, borders, decorations, fonts, or styling.
+- Only extract the actual field values (like name, date of birth, caste, education, etc.)
+
+STEP 2: Identify the matching labels/fields in Image A (the blank template).
+
+STEP 3: Insert the extracted data from Image B into the correct corresponding positions in Image A.
+
+IMPORTANT RULES:
+- Keep the design, borders, ornaments, spacing, and layout EXACTLY same as Image A.
+- Replace only the empty placeholders in Image A with the data from Image B.
+- Keep alignment and structure clean and readable.
+- Use the same language (Marathi/English mix) as in Image B.
+- Do not invent or change any values.
+- If any field is missing in Image B, leave it blank in Image A.
+
+OUTPUT FORMAT:
+Return the final result as a clean formatted text layout that mirrors Image A structure with filled data.
+
+Do NOT include explanations.
+Return only the final filled template content.

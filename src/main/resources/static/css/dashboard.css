@@ -1,0 +1,22 @@
+/* 
+    Created on : Feb 23, 2026, 12:25:38 PM
+    Author     : Vaibhav
+*/
+
+.modal-box {
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+.modal-preview-img {
+    transition: transform 0.3s ease;
+}
+
+.modal-preview-img:hover {
+    transform: scale(1.03);
+}
+@media (max-width: 768px) {
+    .modal-box {
+        width: 95%;
+        padding: 15px;
+    }
+}

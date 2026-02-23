@@ -22,7 +22,7 @@
       "whichReligion": "HINDU",
       "photo": true,
       "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t3.png",
-      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t3.png"
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t3.jpg"
     },
     {
       "id": "t4",
@@ -30,7 +30,7 @@
       "whichReligion": "HINDU",
       "photo": true,
       "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t4.png",
-      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t4.png"
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t4.jpg"
     },
     {
       "id": "t5",
@@ -38,7 +38,7 @@
       "whichReligion": "HINDU",
       "photo": false,
       "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t5.png",
-      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t5.png"
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t5.jpg"
     },
     {
       "id": "t6",
@@ -46,7 +46,15 @@
       "whichReligion": "HINDU",
       "photo": true,
       "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t6.png",
-      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t6.png"
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t6.jpg"
+    },
+        {
+      "id": "t7",
+      "name": "Traditional Family Biodata",
+      "whichReligion": "HINDU",
+      "photo": true,
+      "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t7.png",
+      "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t7.jpg"
     }
   ]
 }
