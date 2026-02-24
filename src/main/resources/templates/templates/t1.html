@@ -1,9 +1,9 @@
 <div th:fragment="content">
 
-    <div id="biodata-preview"
-         class="w-[794px] h-[1120px] mx-auto bg-white relative shadow"
-         style="font-family: 'NotoDevanagari', serif;"
-         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:cover;'">
+  <div id="biodata-preview"
+     class="w-full max-w-[794px] mx-auto bg-white relative shadow"
+     style="min-height:1120px; font-family: 'NotoDevanagari', serif;"
+     th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:cover;'">
 
         <!-- 🔴 WATERMARK -->
         <div th:if="${!isPaid}"
@@ -15,7 +15,7 @@
         </div>
 
         <!-- INNER MARGIN -->
-        <div class="absolute inset-0 px-28 py-16">
+        <div class="absolute inset-0 px-6 py-8 md:px-28 md:py-16">
 
             <!-- 🔱 HEADER -->
             <div class="text-center mb-6">

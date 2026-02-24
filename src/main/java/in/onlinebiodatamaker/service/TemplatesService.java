@@ -5,14 +5,12 @@ import in.onlinebiodatamaker.model.Template;
 import jakarta.annotation.PostConstruct;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author Vaibhav
- */
 @Service
 @Getter
 @Setter
@@ -38,6 +36,10 @@ public class TemplatesService {
         }
     }
 
+    // =========================
+    // BASIC METHODS
+    // =========================
+
     public List<Template> getAllTemplates() {
         return templates;
     }
@@ -56,13 +58,36 @@ public class TemplatesService {
     }
 
     // =========================
+    // 🔥 NEW: FILTER BY RELIGION
+    // =========================
+    public List<Template> getByReligion(String religion) {
+
+        if (religion == null || religion.isBlank()) {
+            return templates;
+        }
+
+        return templates.stream()
+                .filter(t -> religion.equalsIgnoreCase(t.getWhichReligion()))
+                .toList();
+    }
+
+    // =========================
+    // 🔥 NEW: GET DISTINCT RELIGIONS (for filter buttons)
+    // =========================
+    public Set<String> getAvailableReligions() {
+        return templates.stream()
+                .map(Template::getWhichReligion)
+                .filter(r -> r != null && !r.isBlank())
+                .map(String::toUpperCase)
+                .collect(Collectors.toSet());
+    }
+
+    // =========================
     // 🔽 Inner Wrapper Class
     // =========================
     @Getter
     @Setter
     public static class TemplatesWrapper {
-
         private List<Template> templates;
     }
-
 }

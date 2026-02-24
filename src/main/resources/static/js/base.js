@@ -24,3 +24,14 @@ function toggleMobileMenu() {
     const menu = document.getElementById("mobileMenu");
     menu.classList.toggle("hidden");
 }
+window.addEventListener('scroll', function() {
+    const actionBox = document.querySelector(".action-buttons");
+
+    if (window.scrollY > 50) {
+        // When header shrinks (80px -> 64px), move box up by 16px
+        if(actionBox) actionBox.style.top = "84px"; 
+    } else {
+        // Back to original position
+        if(actionBox) actionBox.style.top = "100px";
+    }
+});

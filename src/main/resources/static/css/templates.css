@@ -1,0 +1,44 @@
+/* 
+    Created on : Feb 24, 2026, 11:34:07 PM
+    Author     : admin
+*/
+
+
+
+.filter-chip.active {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+    box-shadow: 0 6px 20px rgba(239,68,68,0.35);
+    transform: translateY(-1px);
+}
+/* Hide scrollbar but allow scroll */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Filter chips */
+.filter-chip {
+    white-space: nowrap;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    font-size: 13px;
+    color: #374151;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+    background: #f3f4f6;
+}
+
+.active-chip {
+    background: #dc2626;
+    color: #fff;
+    border-color: #dc2626;
+}

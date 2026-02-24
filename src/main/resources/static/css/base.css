@@ -1,0 +1,112 @@
+/* 
+    Created on : Feb 24, 2026, 9:25:47 PM
+    Author     : admin
+*/
+
+/* =====================================================
+   🅰️ FONT DEFINITIONS
+===================================================== */
+
+@font-face {
+    font-family: 'NotoDevanagari';
+    src: url('/fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Mangal';
+    src: url('/fonts/mangal.ttf') format('truetype');
+}
+
+
+/* =====================================================
+   🌐 GLOBAL BASE STYLES
+===================================================== */
+
+body {
+    font-family: 'NotoDevanagari', serif;
+    -webkit-font-smoothing: antialiased;
+    font-kerning: normal;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #f7f7f7;
+}
+
+/* =====================================================
+   🧱 DARK FOOTER (RICH BLACK THEME)
+===================================================== */
+
+.footer-dark {
+    background: linear-gradient(180deg, #0f172a, #020617);
+    color: #e5e7eb;
+    margin-top: 40px;
+    border-top: 1px solid #1f2937;
+}
+
+/* hover underline animation */
+.footer-links a {
+    position: relative;
+}
+
+.footer-links a::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    left: 0;
+    bottom: -2px;
+    background: #ef4444;
+    transition: width 0.25s ease;
+}
+
+.footer-links a:hover::after {
+    width: 100%;
+}
+
+
+
+/* Titles */
+.footer-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.footer-heading {
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #f3f4f6;
+}
+
+/* Description */
+.footer-desc {
+    color: #9ca3af;
+    line-height: 1.6;
+}
+
+/* Links */
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 6px;
+}
+
+
+
+/* Bottom strip */
+.footer-bottom {
+    text-align: center;
+    font-size: 13px;
+    padding: 14px 10px;
+    border-top: 1px solid #1f2937;
+    color: #9ca3af;
+}
+
+.footer-bottom .made-in {
+    margin-left: 6px;
+}

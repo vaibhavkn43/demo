@@ -1,61 +1,33 @@
-/* =====================================================
-   🅰️ FONT DEFINITIONS
-===================================================== */
 
-@font-face {
-    font-family: 'NotoDevanagari';
-    src: url('/fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
-}
 
-@font-face {
-    font-family: 'Mangal';
-    src: url('/fonts/mangal.ttf') format('truetype');
-}
 
 /* =====================================================
-   🌐 GLOBAL SETTINGS
-===================================================== */
-
-body {
-    font-family: 'NotoDevanagari', serif;
-    -webkit-font-smoothing: antialiased;
-    font-kerning: normal;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    background: #f7f7f7;
-}
-
-/* =====================================================
-   📄 BIODATA PREVIEW (A4)
+   📄 BIODATA PREVIEW (A4 CONTAINER)
 ===================================================== */
 
 #biodata-preview {
     width: 794px;
-    height: 1120px;
+    min-height: 1120px;
+    height: auto;
     overflow: hidden;
     box-sizing: border-box;
     background-color: #ffffff;
 }
 
+
 /* =====================================================
-   👁 PREVIEW WRAPPER
+   👁 PREVIEW WRAPPER + SCALE
 ===================================================== */
 
 .preview-wrapper {
     display: flex;
     justify-content: center;
     margin-top: 15px;
-    overflow-x: hidden;
-    overflow-y: auto;
     padding-bottom: 20px;
-    align-items: flex-start;
 }
 
-.preview-scale {
-    transform: scale(0.9);
-    transform-origin: top center;
-}
+
+
 
 /* =====================================================
    🖨 PRINT MODE
@@ -80,6 +52,7 @@ body {
     }
 }
 
+
 /* =====================================================
    🔠 MARATHI TEXT RENDER FIX
 ===================================================== */
@@ -88,8 +61,9 @@ body {
     letter-spacing: normal !important;
 }
 
+
 /* =====================================================
-   📦 EXPORT WRAPPER
+   📦 EXPORT WRAPPER (FOR IMAGE/PDF EXPORT)
 ===================================================== */
 
 .export-wrapper {
@@ -98,6 +72,7 @@ body {
     background: #fff;
 }
 
+
 /* =====================================================
    🎯 ACTION BUTTON BAR (DESKTOP)
 ===================================================== */
@@ -105,12 +80,13 @@ body {
 .action-buttons {
     position: static;
     margin-top: 10px;
+    padding-bottom: 20px;
+
     display: flex;
     justify-content: center;
     gap: 14px;
     flex-wrap: wrap;
     text-align: center;
-    padding-bottom: 20px;
 }
 
 .action-buttons button {
@@ -118,6 +94,7 @@ body {
     font-weight: 600;
     border-radius: 8px;
 }
+
 
 /* =====================================================
    🎟 COUPON SECTION
@@ -135,61 +112,6 @@ body {
     margin-top: 6px;
 }
 
-/* =====================================================
-   📱 MOBILE OPTIMIZATION
-===================================================== */
-
-@media (max-width: 768px) {
-
-    body {
-        overflow-x: hidden;
-    }
-
-    /* scale preview for mobile */
-
-    .preview-scale {
-        transform: scale(0.75);
-    }
-
-    .preview-wrapper {
-        padding-bottom: 130px; /* space for sticky footer */
-    }
-
-    /* ===== sticky bottom bar ===== */
-    .action-buttons {
-        position: static;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: #ffffff;
-        padding: 10px 10px;
-        z-index: 1000;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
-
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        align-items: center;
-    }
-
-    /* full width buttons */
-    .action-buttons button {
-        width: 95%;
-        font-size: 14px;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
-    /* coupon layout mobile */
-    #couponInput {
-        width: 60%;
-    }
-
-    .action-buttons input,
-    .action-buttons button {
-        max-width: 95%;
-    }
-}
 
 /* =====================================================
    💰 PAYMENT BOX CENTER ALIGN
@@ -200,6 +122,7 @@ body {
     max-width: 420px;
     margin: auto;
 }
+
 
 /* =====================================================
    🧾 PRICE TEXT STYLING
@@ -217,6 +140,7 @@ body {
     font-size: 20px;
 }
 
+
 /* =====================================================
    🔒 WATERMARK STYLE
 ===================================================== */
@@ -233,10 +157,190 @@ body {
     user-select: none;
 }
 
+
 /* =====================================================
    📊 UTILITY
 ===================================================== */
 
 .hidden {
     display: none !important;
+}
+
+
+/* =====================================================
+   📱 MOBILE RESPONSIVE DESIGN (PRO VERSION)
+===================================================== */
+
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    /* 1. The Container (Screen Width)
+       This div is 100% of the phone screen. 
+       We use Flexbox to mathematically center the 794px box inside it. */
+    .mobile-preview-scale {
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start;
+        overflow: hidden;
+        height: 520px; /* Forces height so buttons don't overlap */
+        margin-top: 15px;
+        background: #f7f7f7;
+    }
+
+    /* 2. The Scaler (Fixed A4 Width)
+       We FORCE this to be 794px. We then scale it down.
+       Since it is centered by the parent, it will be perfectly centered. */
+    .preview-wrapper {
+        width: 794px !important;
+        flex-shrink: 0;
+        transform: scale(0.44); /* Adjust this (0.40 to 0.45) to fit your screen */
+        transform-origin: top center;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* 3. The Biodata (Template Fix)
+       Overriding Tailwind's 'w-full' to ensure the layout doesn't collapse. */
+    #biodata-preview {
+        width: 794px !important;
+        min-height: 1120px !important;
+        display: block !important;
+        margin: 0 auto !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Fix for the extra div inserted by Thymeleaf */
+    .preview-wrapper > div {
+        width: 794px !important;
+    }
+
+    /* 2. Refined Action Buttons Container */
+    .action-buttons {
+        border-radius: 24px 24px 0 0; /* Smoother rounded corners */
+        padding: 30px 20px;
+        gap: 15px;
+        margin-top: -20px;
+        position: sticky;
+        /* Set top to 80px so it sits perfectly below the shrunken header (64px) + margin */
+        top: 80px;
+        transition: top 0.3s ease;
+    }
+
+    /* 3. Fix the Button Text Wrapping */
+    #payBtn {
+        width: 100% !important;
+        max-width: 350px;
+        min-height: 58px; /* Extra height to accommodate wrapping if needed */
+        font-size: 16px !important;
+        padding: 10px 15px !important;
+        line-height: 1.3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    /* 4. Left-Align Benefits for Better Scannability */
+    .action-buttons .text-sm.text-gray-600 {
+        text-align: left !important;
+        display: inline-block;
+        width: auto;
+        margin: 10px auto;
+        line-height: 1.8;
+    }
+
+    /* 5. Improve Coupon Input UI */
+    #couponInput {
+        border: 2px solid #e2e8f0 !important;
+        height: 48px;
+        transition: border-color 0.2s;
+    }
+
+    #couponInput:focus {
+        border-color: #ef4444 !important; /* Matches your brand red */
+        outline: none;
+    }
+
+}
+
+.mobile-preview-scale {
+    transform-origin: top center;
+}
+
+
+.preview-wrapper {
+    overflow-x: auto;
+}
+
+/* =====================================================
+   🖥️ DESKTOP SIDE-BY-SIDE LAYOUT (min-width: 1024px)
+===================================================== */
+
+/* =====================================================
+   🖥️ PREMIUM DESKTOP SIDE-BY-SIDE (min-width: 1024px)
+===================================================== */
+
+@media (min-width: 1024px) {
+    main {
+        background-color: #f8fafc;
+        padding-bottom: 80px;
+    }
+
+    /* 2. Target the specific split container */
+    .preview-split-container {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: flex-start !important;
+        max-width: 1240px;
+        margin: 0 auto;
+        gap: 40px;
+    }
+
+    /* 3. The Sync Fix for the Payment Box */
+    .action-buttons {
+        flex: 0 0 380px;
+        position: sticky;
+
+        /* CALCULATION: 
+           80px (Initial Header Height) + 20px (Main Padding) = 100px 
+           We set top to 100px so it 'sticks' exactly where it starts.
+        */
+        top: 100px;
+
+        margin-top: 0 !important;
+        z-index: 10;
+
+        /* Smoothly move the box up ONLY when the header shrinks */
+        transition: top 0.3s ease-in-out;
+
+        background: #ffffff;
+        padding: 30px 25px !important;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    }
+
+    /* Ensure the biodata starts at the same level */
+    .mobile-preview-scale {
+        margin-top: 0 !important;
+    }
+
+
+    /* Ensure benefits are easy to read in the sidebar */
+    .action-buttons .text-sm {
+        text-align: left !important;
+        padding-left: 10px;
+        border-left: 2px solid #f1f5f9;
+        margin: 15px 0;
+    }
+
+    #payBtn {
+        height: 60px; /* Larger desktop call-to-action */
+        font-size: 18px !important;
+    }
+
+
 }

@@ -1,96 +1,93 @@
 <div th:fragment="content">
-
-    <!-- ================= PREVIEW ================= -->
-    <div class="preview-wrapper">
-        <div class="preview-scale">
-
-            <!-- template injected here -->
-            <div th:replace="~{|templates/${template.id}| :: content}"></div>
-
+    <div class="preview-split-container">
+        <div class="mobile-preview-scale">
+            <!-- ================= PREVIEW ================= -->
+            <div class="preview-wrapper">
+                <div th:replace="~{|templates/${template.id}| :: content}"></div>
+            </div>
         </div>
-    </div>
+        <!-- ================= ACTION SECTION ================= -->
+        <div class="action-buttons">
 
-    <!-- ================= ACTION SECTION ================= -->
-    <div class="action-buttons">
+            <!-- STATUS MESSAGE -->
+            <div id="action-status"
+                 style="width:100%; text-align:center; font-weight:600; color:#444; display:none;">
+            </div>
 
-        <!-- STATUS MESSAGE -->
-        <div id="action-status"
-             style="width:100%; text-align:center; font-weight:600; color:#444; display:none;">
-        </div>
+            <!-- ================= BEFORE PAYMENT ================= -->
+            <div th:if="${!isPaid}" class="payment-box">
 
-        <!-- ================= BEFORE PAYMENT ================= -->
-        <div th:if="${!isPaid}" class="payment-box">
+                <!-- 🎁 COUPON -->
+                <div class="text-center">
+                    <div class="text-sm font-semibold text-gray-600 mb-1">
+                        🎁 Have a Coupon?
+                    </div>
 
-            <!-- 🎁 COUPON -->
-            <div class="text-center">
-                <div class="text-sm font-semibold text-gray-600 mb-1">
-                    🎁 Have a Coupon?
+                    <div class="flex justify-center items-center gap-2 flex-wrap">
+                        <input id="couponInput" type="text"
+                               placeholder="Enter coupon code"
+                               class="border px-3 py-2 rounded text-center"/>
+
+                        <button onclick="applyCoupon()"
+                                class="bg-gray-800 text-white px-4 py-2 rounded">
+                            Apply
+                        </button>
+                    </div>
+
+                    <!-- coupon message -->
+                    <div id="couponMsg"
+                         class="text-sm mt-2 text-green-600 font-semibold"></div>
                 </div>
 
-                <div class="flex justify-center items-center gap-2 flex-wrap">
-                    <input id="couponInput" type="text"
-                           placeholder="Enter coupon code"
-                           class="border px-3 py-2 rounded text-center"/>
-
-                    <button onclick="applyCoupon()"
-                            class="bg-gray-800 text-white px-4 py-2 rounded">
-                        Apply
-                    </button>
+                <!-- 💰 PRICE -->
+                <div class="text-lg font-semibold mt-2 text-center">
+                    Price:
+                    <span id="originalPrice" class="price-original hidden">₹49</span>
+                    <span id="finalPrice" class="price-final">₹49</span>
                 </div>
 
-                <!-- coupon message -->
-                <div id="couponMsg"
-                     class="text-sm mt-2 text-green-600 font-semibold"></div>
+                <!-- 💳 PAY BUTTON -->
+                <button id="payBtn"
+                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded text-lg font-semibold shadow">
+                    💳 Pay ₹49 & Download Instantly
+                </button>
+
+                <!-- ✔ BENEFITS -->
+                <div class="text-sm text-gray-600 mt-2 text-center space-y-1">
+                    <div>✔ High-quality PDF (Print ready)</div>
+                    <div>✔ HD Image format</div>
+                    <div>✔ WhatsApp sharing ready</div>
+                    <div>✔ No watermark after payment</div>
+                </div>
+
+                <!-- 🔒 TRUST -->
+                <div class="text-xs text-gray-500 text-center mt-2">
+                    🔒 100% Secure payment powered by Razorpay
+                </div>
+
             </div>
 
-            <!-- 💰 PRICE -->
-            <div class="text-lg font-semibold mt-2 text-center">
-                Price:
-                <span id="originalPrice" class="price-original hidden">₹49</span>
-                <span id="finalPrice" class="price-final">₹49</span>
+
+            <!-- ================= AFTER PAYMENT ================= -->
+            <div th:if="${isPaid}"
+                 class="flex gap-3 flex-wrap justify-center payment-box">
+
+                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+                        onclick="downloadImage()">
+                    📷 Download Image
+                </button>
+
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                        onclick="downloadPDF()">
+                    📄 Download PDF
+                </button>
+
+                <button class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded"
+                        onclick="shareOnWhatsApp()">
+                    📲 WhatsApp वर पाठवा
+                </button>
+
             </div>
-
-            <!-- 💳 PAY BUTTON -->
-            <button id="payBtn"
-                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded text-lg font-semibold shadow">
-                💳 Pay ₹49 & Download Instantly
-            </button>
-
-            <!-- ✔ BENEFITS -->
-            <div class="text-sm text-gray-600 mt-2 text-center space-y-1">
-                <div>✔ High-quality PDF (Print ready)</div>
-                <div>✔ HD Image format</div>
-                <div>✔ WhatsApp sharing ready</div>
-                <div>✔ No watermark after payment</div>
-            </div>
-
-            <!-- 🔒 TRUST -->
-            <div class="text-xs text-gray-500 text-center mt-2">
-                🔒 100% Secure payment powered by Razorpay
-            </div>
-
-        </div>
-
-
-        <!-- ================= AFTER PAYMENT ================= -->
-        <div th:if="${isPaid}"
-             class="flex gap-3 flex-wrap justify-center payment-box">
-
-            <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-                    onclick="downloadImage()">
-                📷 Download Image
-            </button>
-
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-                    onclick="downloadPDF()">
-                📄 Download PDF
-            </button>
-
-            <button class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded"
-                    onclick="shareOnWhatsApp()">
-                📲 WhatsApp वर पाठवा
-            </button>
-
         </div>
 
     </div>

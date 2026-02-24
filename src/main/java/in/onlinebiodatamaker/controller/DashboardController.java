@@ -128,4 +128,18 @@ public class DashboardController {
         return "layout/base";
     }
 
+    @GetMapping("/templates")
+    public String templatesPage(
+            @RequestParam(value = "religion", required = false) String religion,
+            Model model) {
+
+        List<Template> templates = templatesService.getByReligion(religion);
+
+        model.addAttribute("templates", templates);
+        model.addAttribute("selectedReligion", religion);
+        model.addAttribute("religions", templatesService.getAvailableReligions());
+        model.addAttribute("content", "templates");
+        return "layout/base";
+    }
+
 }

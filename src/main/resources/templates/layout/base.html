@@ -48,17 +48,18 @@
 
         <!-- ================= STYLES ================= -->
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" th:href="@{/css/base.css}">
         <link rel="stylesheet" th:href="@{/css/style.css}">
         <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+        <link rel="stylesheet" th:href="@{/css/templates.css}">
     </head>
 
     <body class="bg-gray-50 text-gray-800">
 
         <!-- ================= HEADER ================= -->
-        <!-- ================= HEADER ================= -->
-        <header class="bg-white border-b shadow-sm">
+        <header class="bg-white/95 backdrop-blur-md border-b shadow-sm sticky top-0 z-50">
 
-            <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+            <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between gap-6">
 
                 <!-- LOGO -->
                 <a href="/dashboard" class="flex items-center gap-2">
@@ -68,7 +69,7 @@
                 </a>
 
                 <!-- DESKTOP NAV -->
-                <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
+                <nav class="!hidden lg:!flex lg:items-center lg:gap-6 text-sm font-medium text-gray-700">
                     <a href="/dashboard" class="hover:text-red-600" th:text="#{nav.home}">Home</a>
                     <a href="/templates" class="hover:text-red-600" th:text="#{nav.templates}">Templates</a>
                     <a href="/how-it-works" class="hover:text-red-600" th:text="#{nav.how}">How It Works</a>
@@ -103,7 +104,7 @@
 
                     <!-- MOBILE MENU BUTTON -->
                     <button onclick="toggleMobileMenu()"
-                            class="md:hidden text-2xl text-red-600">
+                            class="lg:hidden text-2xl text-red-600">
                         ☰
                     </button>
 
@@ -130,47 +131,54 @@
             <div th:replace="~{ ${content} :: content }"></div>
         </main>
 
-        <!-- ================= FOOTER ================= -->
-        <footer class="bg-white border-t mt-16">
+        <footer class="footer-dark">
 
-            <div class="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8 text-sm">
+            <div class="max-w-7xl mx-auto px-6 py-12
+                 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 text-sm">
 
-                <!-- BRAND -->
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">VivahPatra</h3>
-                    <p class="text-gray-600">
-                        Create beautiful marriage biodata in minutes. Free, simple and secure biodata maker for Indian families.
+                <!-- ================= BRAND ================= -->
+                <div class="text-center sm:text-left">
+                    <h3 class="footer-title" th:text="#{footer.brand}">VivahPatra</h3>
+
+                    <p class="footer-desc mt-2"
+                       th:text="#{footer.desc}">
+                        Create beautiful marriage biodata in just a few minutes.
                     </p>
                 </div>
 
-                <!-- QUICK LINKS -->
-                <div>
-                    <h4 class="font-semibold text-gray-800 mb-3">Quick Links</h4>
-                    <ul class="space-y-2">
-                        <li><a href="/dashboard" class="hover:text-red-600">Home</a></li>
-                        <li><a href="/templates" class="hover:text-red-600">Templates</a></li>
-                        <li><a href="/about" class="hover:text-red-600">About</a></li>
-                        <li><a href="/contact" class="hover:text-red-600">Contact</a></li>
+                <!-- ================= QUICK LINKS ================= -->
+                <div class="text-center sm:text-left">
+                    <h4 class="footer-heading" th:text="#{footer.links.title}">Quick Links</h4>
+
+                    <ul class="footer-links space-y-1">
+                        <li><a href="/dashboard">🏠 <span th:text="#{footer.links.home}">Home</span></a></li>
+                        <li><a href="/templates">📄 <span th:text="#{footer.links.templates}">Templates</span></a></li>
+                        <li><a href="/how-it-works">⚙ <span th:text="#{footer.links.how}">How It Works</span></a></li>
+                        <li><a href="/contact">📞 <span th:text="#{footer.links.contact}">Contact</span></a></li>
                     </ul>
                 </div>
 
-                <!-- LEGAL -->
-                <div>
-                    <h4 class="font-semibold text-gray-800 mb-3">Legal</h4>
-                    <ul class="space-y-2">
-                        <li><a href="/privacy" class="hover:text-red-600">Privacy Policy</a></li>
-                        <li><a href="/terms" class="hover:text-red-600">Terms & Conditions</a></li>
+                <!-- ================= LEGAL ================= -->
+                <div class="text-center sm:text-left">
+                    <h4 class="footer-heading" th:text="#{footer.legal.title}">Legal</h4>
+
+                    <ul class="footer-links space-y-1">
+                        <li><a href="/privacy">🔒 <span th:text="#{footer.legal.privacy}">Privacy Policy</span></a></li>
+                        <li><a href="/terms">📜 <span th:text="#{footer.legal.terms}">Terms & Conditions</span></a></li>
                     </ul>
                 </div>
 
             </div>
 
-            <div class="text-center text-gray-500 text-xs pb-6">
-                © 2026 VivahPatra • Made with ❤️ in India
+            <!-- ================= BOTTOM STRIP ================= -->
+            <div class="footer-bottom flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3 text-center">
+                <span th:text="#{footer.copyright}">
+                    © 2026 Biodata Maker. All rights reserved.
+                </span>
+                <span class="made-in">• Made with ❤️ in India</span>
             </div>
 
         </footer>
-
         <!-- ================= SCRIPTS ================= -->
         <script th:src="@{/js/base.js}" defer></script>
         <script th:src="@{/js/dashboard.js}" defer></script>

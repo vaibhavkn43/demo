@@ -11,7 +11,7 @@
     {
       "id": "t2",
       "name": "Simple Biodata",
-      "whichReligion": "HINDU",
+      "whichReligion": "MUSLIM",
       "photo": false,
       "emptyTemplateLocation": "/images/biodata_templates/EmptyBiodataTemplates/t2.jpg",
       "filledTemplateLocation": "/images/biodata_templates/FilledBiodataTemplates/t2.jpg"
