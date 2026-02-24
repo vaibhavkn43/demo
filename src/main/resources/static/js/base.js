@@ -19,3 +19,8 @@ document.addEventListener("click", function (e) {
 });
 
 
+
+function toggleMobileMenu() {
+    const menu = document.getElementById("mobileMenu");
+    menu.classList.toggle("hidden");
+}

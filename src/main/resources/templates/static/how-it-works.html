@@ -1,0 +1,109 @@
+<div th:fragment="content">
+
+    <!-- ================= HERO ================= -->
+    <div class="bg-gradient-to-r from-red-600 to-pink-600 text-white py-12 text-center">
+        <h1 class="text-3xl md:text-4xl font-bold mb-2"
+            th:text="#{how.title}">
+            How It Works
+        </h1>
+
+        <p class="text-white/90 text-lg max-w-2xl mx-auto"
+           th:text="#{how.subtitle}">
+            Create your perfect marriage biodata in just 3 simple steps.
+        </p>
+    </div>
+
+    <div class="h-8 bg-gray-50"></div>
+
+
+    <!-- ================= STEPS ================= -->
+    <div class="max-w-6xl mx-auto px-4 py-10 space-y-12">
+
+        <div class="grid md:grid-cols-3 gap-8 text-center">
+
+            <!-- Step 1 -->
+            <div class="bg-white shadow rounded-xl p-8 hover:shadow-xl hover:-translate-y-1 transition">
+                <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-red-100 text-red-600 text-2xl mb-4">
+                    1
+                </div>
+
+                <h3 class="text-red-700 font-semibold text-lg mb-2"
+                    th:text="#{how.step1.title}">
+                    Fill Your Details
+                </h3>
+
+                <p class="text-gray-600"
+                   th:text="#{how.step1.desc}">
+                    Enter your personal, family, education and contact details in our easy form.
+                </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-white shadow rounded-xl p-8 hover:shadow-xl hover:-translate-y-1 transition">
+                <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-amber-100 text-amber-600 text-2xl mb-4">
+                    2
+                </div>
+
+                <h3 class="text-red-700 font-semibold text-lg mb-2"
+                    th:text="#{how.step2.title}">
+                    Choose Template
+                </h3>
+
+                <p class="text-gray-600"
+                   th:text="#{how.step2.desc}">
+                    Select from multiple beautiful biodata designs that match your style.
+                </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-white shadow rounded-xl p-8 hover:shadow-xl hover:-translate-y-1 transition">
+                <div class="w-14 h-14 mx-auto flex items-center justify-center rounded-full bg-green-100 text-green-600 text-2xl mb-4">
+                    3
+                </div>
+
+                <h3 class="text-red-700 font-semibold text-lg mb-2"
+                    th:text="#{how.step3.title}">
+                    Download & Share
+                </h3>
+
+                <p class="text-gray-600"
+                   th:text="#{how.step3.desc}">
+                    Download your biodata as PDF or image and share with family easily.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- EXTRA EXPLANATION -->
+        <div class="bg-white shadow rounded-xl p-8 text-center">
+            <h2 class="text-red-700 font-semibold text-xl mb-3"
+                th:text="#{how.extra.title}">
+                Fast, Simple & Secure
+            </h2>
+
+            <p class="text-gray-600 max-w-3xl mx-auto"
+               th:text="#{how.extra.desc}">
+                Our platform is designed to make biodata creation simple and fast for everyone. No technical knowledge required, no login required, and your data stays secure.
+            </p>
+        </div>
+
+
+        <!-- CTA -->
+        <div class="text-center pt-4">
+            <a href="/dashboard"
+               class="inline-block bg-gradient-to-r from-red-600 to-red-700 
+               hover:from-red-700 hover:to-red-800 
+               text-white px-8 py-3 rounded-lg shadow-lg transition"
+               th:text="#{how.button}">
+                Create Your Biodata Now
+            </a>
+
+            <p class="text-gray-400 text-sm mt-3"
+               th:text="#{how.trust}">
+                No login required • 100% free • Secure
+            </p>
+        </div>
+
+    </div>
+
+</div>

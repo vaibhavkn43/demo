@@ -55,48 +55,74 @@
     <body class="bg-gray-50 text-gray-800">
 
         <!-- ================= HEADER ================= -->
+        <!-- ================= HEADER ================= -->
         <header class="bg-white border-b shadow-sm">
+
             <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
 
                 <!-- LOGO -->
                 <a href="/dashboard" class="flex items-center gap-2">
                     <img th:src="${#locale.language == 'mr'} ? '/images/logo_mr.png' : '/images/logo.png'"
                          alt="VivahPatra"
-                         class="h-16 md:h-20 w-auto object-contain scale-110">
+                         class="h-14 md:h-20 w-auto object-contain scale-110">
                 </a>
 
-                <!-- NAV LINKS -->
+                <!-- DESKTOP NAV -->
                 <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
                     <a href="/dashboard" class="hover:text-red-600" th:text="#{nav.home}">Home</a>
                     <a href="/templates" class="hover:text-red-600" th:text="#{nav.templates}">Templates</a>
-                    <a href="/about" class="hover:text-red-600" th:text="#{nav.how}">How</a>
+                    <a href="/how-it-works" class="hover:text-red-600" th:text="#{nav.how}">How It Works</a>
                     <a href="/about" class="hover:text-red-600" th:text="#{about.title}">About</a>
                     <a href="/contact" class="hover:text-red-600" th:text="#{nav.contact}">Contact</a>
                 </nav>
 
-                <!-- LANGUAGE SWITCH -->
-                <div class="relative inline-block text-left" id="langDropdown">
-                    <button onclick="toggleLangDropdown()"
-                            class="flex items-center gap-2 text-sm md:text-base font-medium text-red-700 border-b-2 border-red-700 pb-1">
-                        🌐
-                        <span th:text="${#locale.language == 'mr'} ? 'मराठी' : 'English'"></span>
-                        ▾
-                    </button>
+                <!-- RIGHT SIDE -->
+                <div class="flex items-center gap-3">
 
-                    <div id="langMenu"
-                         class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border z-50">
+                    <!-- LANGUAGE SWITCH -->
+                    <div class="relative inline-block text-left" id="langDropdown">
+                        <button onclick="toggleLangDropdown()"
+                                class="flex items-center gap-2 text-sm md:text-base font-medium text-red-700 border-b-2 border-red-700 pb-1">
+                            🌐
+                            <span th:text="${#locale.language == 'mr'} ? 'मराठी' : 'English'"></span>
+                            ▾
+                        </button>
 
-                        <div onclick="changeLanguage('en')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            English
-                        </div>
+                        <div id="langMenu"
+                             class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border z-50">
 
-                        <div onclick="changeLanguage('mr')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                            मराठी
+                            <div onclick="changeLanguage('en')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                English
+                            </div>
+
+                            <div onclick="changeLanguage('mr')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                                मराठी
+                            </div>
                         </div>
                     </div>
+
+                    <!-- MOBILE MENU BUTTON -->
+                    <button onclick="toggleMobileMenu()"
+                            class="md:hidden text-2xl text-red-600">
+                        ☰
+                    </button>
+
                 </div>
 
             </div>
+
+            <!-- MOBILE MENU -->
+            <div id="mobileMenu"
+                 class="hidden md:hidden bg-white border-t px-4 py-4 space-y-3 text-sm font-medium text-gray-700">
+
+                <a href="/dashboard" class="block hover:text-red-600" th:text="#{nav.home}">Home</a>
+                <a href="/templates" class="block hover:text-red-600" th:text="#{nav.templates}">Templates</a>
+                <a href="/how-it-works" class="block hover:text-red-600" th:text="#{nav.how}">How It Works</a>
+                <a href="/about" class="block hover:text-red-600" th:text="#{about.title}">About</a>
+                <a href="/contact" class="block hover:text-red-600" th:text="#{nav.contact}">Contact</a>
+
+            </div>
+
         </header>
 
         <!-- ================= MAIN ================= -->

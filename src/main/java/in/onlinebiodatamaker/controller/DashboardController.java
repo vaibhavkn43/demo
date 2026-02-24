@@ -7,6 +7,7 @@ import in.onlinebiodatamaker.service.GodImageService;
 import in.onlinebiodatamaker.service.TemplatesService;
 import in.onlinebiodatamaker.util.TimeHandlerUtil;
 import in.onlinebiodatamaker.util.ValidationResult;
+import jakarta.servlet.http.HttpSession;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,7 +62,7 @@ public class DashboardController {
 
     @PostMapping("/preview")
     public String preview(BiodataRequest form, Model model, Locale locale,
-            @RequestParam(required = false, defaultValue = "false") boolean sample) {
+            HttpSession session) {
 
         ValidationResult result = biodataValidationService.validate(form);
 
@@ -91,7 +92,8 @@ public class DashboardController {
         // 🔥 use template object directly
         Template template = templatesService.getById(form.getTemplateId());
         model.addAttribute("template", template);
-
+        Boolean isPaid = (Boolean) session.getAttribute("PAID");
+        model.addAttribute("isPaid", isPaid != null && isPaid);
         model.addAttribute("content", "preview");
         return "layout/base";
     }
@@ -117,6 +119,12 @@ public class DashboardController {
     @GetMapping("/contact")
     public String contact(Model model) {
         model.addAttribute("content", "static/contact");
+        return "layout/base";
+    }
+
+    @GetMapping("/how-it-works")
+    public String howItWorks(Model model) {
+        model.addAttribute("content", "static/how-it-works");
         return "layout/base";
     }
 

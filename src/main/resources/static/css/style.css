@@ -5,59 +5,64 @@
 @font-face {
     font-family: 'NotoDevanagari';
     src: url('/fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
 }
 
 @font-face {
     font-family: 'Mangal';
     src: url('/fonts/mangal.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
 }
 
-/* Default font for entire app */
+/* =====================================================
+   🌐 GLOBAL SETTINGS
+===================================================== */
+
 body {
     font-family: 'NotoDevanagari', serif;
     -webkit-font-smoothing: antialiased;
     font-kerning: normal;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background: #f7f7f7;
 }
 
-
 /* =====================================================
-   📄 BIODATA PREVIEW (A4 FIX - ORIGINAL SIZE)
+   📄 BIODATA PREVIEW (A4)
 ===================================================== */
 
 #biodata-preview {
-    width: 794px;                 /* A4 width */
-    height: 1120px;               /* slightly less than 1123px to avoid overflow */
-    overflow: hidden;             /* prevents extra blank page */
+    width: 794px;
+    height: 1120px;
+    overflow: hidden;
     box-sizing: border-box;
     background-color: #ffffff;
 }
 
-
 /* =====================================================
-   👁 PREVIEW ZOOM (ONLY VISUAL SCALE - SAFE FOR EXPORT)
+   👁 PREVIEW WRAPPER
 ===================================================== */
 
 .preview-wrapper {
     display: flex;
     justify-content: center;
     margin-top: 15px;
-
-    /* allow scroll */
     overflow-x: hidden;
     overflow-y: auto;
     padding-bottom: 20px;
+    align-items: flex-start;
 }
 
+.preview-scale {
+    transform: scale(0.9);
+    transform-origin: top center;
+}
 
 /* =====================================================
-   🖨 PRINT MODE (Ctrl+P)
+   🖨 PRINT MODE
 ===================================================== */
 
 @media print {
+
     body {
         margin: 0;
         padding: 0;
@@ -68,28 +73,23 @@ body {
         margin: 0 !important;
         box-shadow: none !important;
         page-break-inside: avoid;
-        break-inside: avoid;
     }
 
     * {
         page-break-inside: avoid !important;
-        break-inside: avoid !important;
     }
 }
 
-
 /* =====================================================
-   🔠 MARATHI TEXT SAFETY
-   (avoid letter-spacing issues)
+   🔠 MARATHI TEXT RENDER FIX
 ===================================================== */
 
 .marathi-text {
     letter-spacing: normal !important;
 }
 
-
 /* =====================================================
-   🧱 OPTIONAL SAFE WRAPPER (for export or reuse)
+   📦 EXPORT WRAPPER
 ===================================================== */
 
 .export-wrapper {
@@ -98,84 +98,145 @@ body {
     background: #fff;
 }
 
-.preview-scale {
-    transform-origin: top center;
-}
+/* =====================================================
+   🎯 ACTION BUTTON BAR (DESKTOP)
+===================================================== */
 
 .action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
-
-.action-buttons button {
-    min-width: 180px;
-}
-
-
-@media (max-width: 768px) {
-    .action-buttons {
-        position: sticky;
-        bottom: 0;
-        background: white;
-        padding: 10px;
-        z-index: 50;
-        box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-    }
-}
-
-/* =========================
-   PREVIEW AREA
-========================= */
-
-.preview-wrapper {
-    display: flex;
-    justify-content: center;
+    position: static;
     margin-top: 10px;
-
-    /* allow scroll */
-    max-height: 75vh;
-    overflow-y: auto;
-}
-
-
-/* scaling wrapper */
-.preview-scale {
-    transform-origin: top center;
-}
-
-
-/* =========================
-   BUTTON BAR
-========================= */
-
-.action-buttons {
-    position: sticky;
-    bottom: 0;
-    background: #ffffff;
-    padding: 10px;
     display: flex;
     justify-content: center;
-    gap: 12px;
-    z-index: 100;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    gap: 14px;
     flex-wrap: wrap;
+    text-align: center;
+    padding-bottom: 20px;
 }
 
 .action-buttons button {
-    min-width: 150px;
+    min-width: 200px;
+    font-weight: 600;
+    border-radius: 8px;
 }
 
-/* mobile buttons full width */
+/* =====================================================
+   🎟 COUPON SECTION
+===================================================== */
+
+#couponInput {
+    border: 1px solid #ccc;
+    padding: 8px 10px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+#couponMsg {
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+/* =====================================================
+   📱 MOBILE OPTIMIZATION
+===================================================== */
+
 @media (max-width: 768px) {
+
+    body {
+        overflow-x: hidden;
+    }
+
+    /* scale preview for mobile */
+
+    .preview-scale {
+        transform: scale(0.75);
+    }
+
+    .preview-wrapper {
+        padding-bottom: 130px; /* space for sticky footer */
+    }
+
+    /* ===== sticky bottom bar ===== */
     .action-buttons {
+        position: static;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+        padding: 10px 10px;
+        z-index: 1000;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+
+        display: flex;
         flex-direction: column;
+        gap: 8px;
         align-items: center;
     }
 
+    /* full width buttons */
     .action-buttons button {
-        width: 90%;
+        width: 95%;
+        font-size: 14px;
+        padding: 10px;
+        border-radius: 8px;
     }
+
+    /* coupon layout mobile */
+    #couponInput {
+        width: 60%;
+    }
+
+    .action-buttons input,
+    .action-buttons button {
+        max-width: 95%;
+    }
+}
+
+/* =====================================================
+   💰 PAYMENT BOX CENTER ALIGN
+===================================================== */
+
+.payment-box {
+    width: 100%;
+    max-width: 420px;
+    margin: auto;
+}
+
+/* =====================================================
+   🧾 PRICE TEXT STYLING
+===================================================== */
+
+.price-original {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 6px;
+}
+
+.price-final {
+    color: #16a34a;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* =====================================================
+   🔒 WATERMARK STYLE
+===================================================== */
+
+.watermark {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-25deg);
+    font-size: 40px;
+    color: rgba(0,0,0,0.08);
+    font-weight: bold;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* =====================================================
+   📊 UTILITY
+===================================================== */
+
+.hidden {
+    display: none !important;
 }

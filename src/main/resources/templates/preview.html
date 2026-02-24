@@ -1,16 +1,16 @@
 <div th:fragment="content">
 
-    <!-- SCALE WRAPPER -->
+    <!-- ================= PREVIEW ================= -->
     <div class="preview-wrapper">
         <div class="preview-scale">
 
             <!-- template injected here -->
-         <div th:replace="~{|templates/${template.id}| :: content}"></div>
+            <div th:replace="~{|templates/${template.id}| :: content}"></div>
 
         </div>
     </div>
 
-    <!-- ACTION BUTTONS BAR -->
+    <!-- ================= ACTION SECTION ================= -->
     <div class="action-buttons">
 
         <!-- STATUS MESSAGE -->
@@ -18,19 +18,88 @@
              style="width:100%; text-align:center; font-weight:600; color:#444; display:none;">
         </div>
 
-        <button class="bg-green-600 text-white px-4 py-2 rounded" onclick="downloadImage()">
-            📷 Download Image
-        </button>
+        <!-- ================= BEFORE PAYMENT ================= -->
+        <div th:if="${!isPaid}" class="payment-box">
 
-        <button class="bg-blue-600 text-white px-4 py-2 rounded" onclick="downloadPDF()">
-            📄 Download PDF
-        </button>
+            <!-- 🎁 COUPON -->
+            <div class="text-center">
+                <div class="text-sm font-semibold text-gray-600 mb-1">
+                    🎁 Have a Coupon?
+                </div>
 
-        <button class="bg-green-700 text-white px-4 py-2 rounded" onclick="shareOnWhatsApp()">
-            📲 WhatsApp वर पाठवा
-        </button>
+                <div class="flex justify-center items-center gap-2 flex-wrap">
+                    <input id="couponInput" type="text"
+                           placeholder="Enter coupon code"
+                           class="border px-3 py-2 rounded text-center"/>
+
+                    <button onclick="applyCoupon()"
+                            class="bg-gray-800 text-white px-4 py-2 rounded">
+                        Apply
+                    </button>
+                </div>
+
+                <!-- coupon message -->
+                <div id="couponMsg"
+                     class="text-sm mt-2 text-green-600 font-semibold"></div>
+            </div>
+
+            <!-- 💰 PRICE -->
+            <div class="text-lg font-semibold mt-2 text-center">
+                Price:
+                <span id="originalPrice" class="price-original hidden">₹49</span>
+                <span id="finalPrice" class="price-final">₹49</span>
+            </div>
+
+            <!-- 💳 PAY BUTTON -->
+            <button id="payBtn"
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded text-lg font-semibold shadow">
+                💳 Pay ₹49 & Download Instantly
+            </button>
+
+            <!-- ✔ BENEFITS -->
+            <div class="text-sm text-gray-600 mt-2 text-center space-y-1">
+                <div>✔ High-quality PDF (Print ready)</div>
+                <div>✔ HD Image format</div>
+                <div>✔ WhatsApp sharing ready</div>
+                <div>✔ No watermark after payment</div>
+            </div>
+
+            <!-- 🔒 TRUST -->
+            <div class="text-xs text-gray-500 text-center mt-2">
+                🔒 100% Secure payment powered by Razorpay
+            </div>
+
+        </div>
+
+
+        <!-- ================= AFTER PAYMENT ================= -->
+        <div th:if="${isPaid}"
+             class="flex gap-3 flex-wrap justify-center payment-box">
+
+            <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+                    onclick="downloadImage()">
+                📷 Download Image
+            </button>
+
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                    onclick="downloadPDF()">
+                📄 Download PDF
+            </button>
+
+            <button class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded"
+                    onclick="shareOnWhatsApp()">
+                📲 WhatsApp वर पाठवा
+            </button>
+
+        </div>
 
     </div>
 
+    <!-- ================= JS FILES ================= -->
     <script th:src="@{/js/biodata-download.js}"></script>
+    <script th:src="@{/js/html-to-image.min.js}"></script>
+    <script th:src="@{/js/html2pdf.bundle.min.js}"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script th:src="@{/js/checkout.js}"></script>
+
 </div>
