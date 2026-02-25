@@ -1,0 +1,88 @@
+/* =====================================================
+   📄 BIODATA RESPONSIVE PRINT MODES
+===================================================== */
+
+/* ================= NORMAL (default) ================= */
+#biodata-preview.normal-mode {
+    font-size: 23px;
+    line-height: 1.6;
+}
+
+#biodata-preview.normal-mode .god-img {
+    height: 210px;
+}
+
+
+/* ================= MEDIUM ================= */
+#biodata-preview.medium-mode {
+    font-size: 21px;
+}
+
+#biodata-preview.medium-mode h1 { font-size: 34px !important; }
+#biodata-preview.medium-mode h2 { font-size: 24px !important; }
+#biodata-preview.medium-mode h3 { font-size: 24px !important; }
+
+#biodata-preview.medium-mode .god-img {
+    height: 160px;
+}
+
+#biodata-preview.medium-mode .space-y-3 > * {
+    margin-top: 6px !important;
+}
+
+
+/* ================= COMPACT ================= */
+#biodata-preview.compact-mode {
+    font-size: 20px;
+    line-height: 1.35;
+}
+
+/* hide title */
+#biodata-preview.compact-mode .biodata-title {
+    display: none;
+}
+
+/* smaller god image */
+#biodata-preview.compact-mode .god-img {
+    height: 120px !important;
+}
+
+/* headings */
+#biodata-preview.compact-mode h1 { font-size: 32px !important; }
+#biodata-preview.compact-mode h2 { font-size: 22px !important; }
+#biodata-preview.compact-mode h3 {
+    font-size: 22px !important;
+    margin-bottom: 10px !important;
+}
+
+/* spacing tighten */
+#biodata-preview.compact-mode .space-y-3 > * {
+    margin-top: 4px !important;
+}
+
+#biodata-preview.compact-mode .mb-6 { margin-bottom: 10px !important; }
+#biodata-preview.compact-mode .mt-6 { margin-top: 10px !important; }
+#biodata-preview.compact-mode .gap-10 { gap: 16px !important; }
+
+/* 🔥 important: reduce section spacing */
+#biodata-preview.compact-mode .space-y-10 {
+    margin-top: 10px !important;
+}
+
+/* 🔥 reduce container bottom padding */
+#biodata-preview.compact-mode .absolute.inset-0 {
+    padding-bottom: 40px !important;
+}
+
+/* 🔥 reduce line spacing */
+#biodata-preview.compact-mode .leading-relaxed {
+    line-height: 1.25 !important;
+}
+
+
+/* ================= LAST RESCUE SCALE ================= */
+/* If still overflow after compact */
+#biodata-preview.compact-mode.scale-down {
+    transform: scale(0.97);
+    transform-origin: top center;
+}

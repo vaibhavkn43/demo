@@ -159,3 +159,32 @@ function disableButtons(disable = true) {
                 btn.style.opacity = disable ? "0.6" : "1";
             });
 }
+
+function adjustLayout() {
+
+    const container = document.getElementById("biodata-preview");
+    const content = container.querySelector(".absolute.inset-0");
+
+    container.classList.remove("normal-mode", "medium-mode", "compact-mode", "scale-down");
+
+    const maxHeight = 1540;
+    const currentHeight = content.scrollHeight;
+
+    if (currentHeight > maxHeight) {
+        container.classList.add("compact-mode");
+
+        // re-check after compact applied
+        setTimeout(() => {
+            if (content.scrollHeight > maxHeight) {
+                container.classList.add("scale-down");
+            }
+        }, 50);
+
+    } else if (currentHeight > maxHeight * 0.85) {
+        container.classList.add("medium-mode");
+    } else {
+        container.classList.add("normal-mode");
+    }
+}
+
+window.onload = adjustLayout;

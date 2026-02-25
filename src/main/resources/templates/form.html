@@ -550,16 +550,21 @@
                                 <label class="block text-sm font-medium text-gray-800 mb-1"
                                        th:text="#{editor.form.mangal}"></label>
 
-                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                        th:field="*{mangal}">
+                                <select th:field="*{mangal}" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3">
 
-                                    <!-- default -->
                                     <option value="" th:text="#{dropdown.mangal.select}"></option>
 
-                                    <option th:value="yes" th:text="#{dropdown.mangal.yes}"></option>
-                                    <option th:value="no" th:text="#{dropdown.mangal.no}"></option>
-                                    <option th:value="unknown" th:text="#{dropdown.mangal.unknown}"></option>
+                                    <option th:value="#{dropdown.mangal.yes}"
+                                            th:text="#{dropdown.mangal.yes}">
+                                    </option>
+
+                                    <option th:value="#{dropdown.mangal.no}"
+                                            th:text="#{dropdown.mangal.no}">
+                                    </option>
+
+                                    <option th:value="#{dropdown.mangal.unknown}"
+                                            th:text="#{dropdown.mangal.unknown}">
+                                    </option>
 
                                 </select>
                             </div>
@@ -568,21 +573,19 @@
                                        th:text="#{editor.form.gan}">
                                 </label>
 
-                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                        th:field="*{gan}">
+                                <select th:field="*{gan}" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3">
 
-                                    <option value=""  th:text="#{dropdown.gan.select}">  </option>
+                                    <option value="" th:text="#{dropdown.gan.select}"></option>
 
-                                    <option th:value="dev"
+                                    <option th:value="#{dropdown.gan.dev}"
                                             th:text="#{dropdown.gan.dev}">
                                     </option>
 
-                                    <option th:value="manushya"
+                                    <option th:value="#{dropdown.gan.manushya}"
                                             th:text="#{dropdown.gan.manushya}">
                                     </option>
 
-                                    <option th:value="rakshas"
+                                    <option th:value="#{dropdown.gan.rakshas}"
                                             th:text="#{dropdown.gan.rakshas}">
                                     </option>
 
@@ -594,21 +597,19 @@
                                        th:text="#{editor.form.nadi}">
                                 </label>
 
-                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                        th:field="*{nadi}">
+                                <select th:field="*{nadi}" class="w-full rounded-lg border border-gray-300 px-4 py-2.5">
 
-                                    <option value=""  th:text="#{dropdown.nadi.select}"> </option>
+                                    <option value="" th:text="#{dropdown.nadi.select}"></option>
 
-                                    <option th:value="adi"
+                                    <option th:value="#{dropdown.nadi.adi}"
                                             th:text="#{dropdown.nadi.adi}">
                                     </option>
 
-                                    <option th:value="madhya"
+                                    <option th:value="#{dropdown.nadi.madhya}"
                                             th:text="#{dropdown.nadi.madhya}">
                                     </option>
 
-                                    <option th:value="antya"
+                                    <option th:value="#{dropdown.nadi.antya}"
                                             th:text="#{dropdown.nadi.antya}">
                                     </option>
 
@@ -854,30 +855,117 @@
                                 <input type="hidden" th:field="*{sisters}" id="sisters"/>
                             </div> 
 
-                            <!-- Mother -->
+                            <!-- ================= MAMA (Dynamic Add More) ================= -->
+                            <div id="mama-container" class="space-y-2">
 
-                            <div>
-
-                                <!-- Label -->
+                                <!-- Section Label -->
                                 <label class="block text-sm font-medium text-gray-800 mb-1"
                                        th:text="#{editor.form.mamaName}">
                                     मामा
                                 </label>
 
-                                <!-- Input with Marathi IME -->
-                                <div class="ime-wrapper relative mb-4">
+                                <!-- 🔹 First Row (template row) -->
+                                <div class="mama-row grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 
-                                    <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                           th:field="*{mama}"
-                                           th:placeholder="#{editor.instruction.mamaName}" />
+                                    <!-- Name -->
+                                    <div class="ime-wrapper relative">
+                                        <input type="text"
+                                               name="mamaName"
+                                               class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               th:placeholder="#{editor.instruction.mamaName}" />
 
-                                    <!-- Inline Suggestions Dropdown -->
-                                    <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                         bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto"></div>
+                                    </div>
+
+                                    <!-- Extra -->
+                                    <div class="ime-wrapper relative flex gap-2">
+
+                                        <input type="text"
+                                               name="mamaExtra"
+                                               class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               th:placeholder="#{editor.instruction.mamaExtra}" />
+
+                                        <!-- Remove Button -->
+                                        <button type="button"
+                                                class="remove-row hidden text-red-500 text-sm px-2">
+                                            ✕
+                                        </button>
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto"></div>
+                                    </div>
+                                </div>
+                                <!-- ➕ Add More Mama -->
+                                <button type="button"
+                                        id="add-mama"
+                                        class="text-sm text-blue-600 hover:underline mt-1"
+                                        th:text="#{editor.button.addMoreMama}">
+                                    + अजून मामा जोडा
+                                </button>
+
+                                <!-- Hidden field for final combined value -->
+                                <input type="hidden" name="mama"/>
+
+                            </div>
+
+                            <!-- ================= KAKA (Dynamic Add More) ================= -->
+                            <div id="kaka-container" class="space-y-2 mt-4">
+
+                                <!-- Section Label -->
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.kakaName}">
+                                    काका
+                                </label>
+
+                                <!-- 🔹 First Row -->
+                                <div class="kaka-row grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+
+                                    <!-- Kaka Name -->
+                                    <div class="ime-wrapper relative">
+                                        <input type="text"
+                                               name="kakaName"
+                                               class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               th:placeholder="#{editor.instruction.kakaName}" />
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto"></div>
+                                    </div>
+
+                                    <!-- Kaka Extra -->
+                                    <div class="ime-wrapper relative flex gap-2 items-center">
+
+                                        <input type="text"
+                                               name="kakaExtra"
+                                               class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               th:placeholder="#{editor.instruction.kakaExtra}" />
+
+                                        <!-- Remove -->
+                                        <button type="button"
+                                                class="remove-row hidden text-red-500 text-lg px-2 flex items-center justify-center">
+                                            ✕
+                                        </button>
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto"></div>
                                     </div>
 
                                 </div>
+
+                                <!-- ➕ Add More Button -->
+                                <button type="button"
+                                        id="add-kaka"
+                                        class="text-sm text-blue-600 hover:underline mt-1"
+                                        th:text="#{editor.button.addMoreKaka}">
+                                    + अजून काका जोडा
+                                </button>
+
+                                <!-- Hidden combined value -->
+                                <input type="hidden" name="kaka"/>
 
                             </div>
 

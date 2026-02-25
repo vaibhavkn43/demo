@@ -22,38 +22,22 @@ public class BiodataRequest {
     // Personal Information
     // ======================
     private String name;
-    private String gender;
     private String birthDate;
     private String birthTime;
     private String birthPlace;
-    private String age;
     private String religion;
     private String caste;
     private String subCaste;
     private String gotra;
     private String kuldaivat;
-
-    // ======================
-    // Horoscope (optional)
-    // ======================
     private String rashi;
     private String nakshatra;
     private String gan;
     private String nadi;
     private String mangal;
-
-    // ======================
-    // Physical Information
-    // ======================
     private String height;
-    private String weight;
     private String complexion;
     private String bloodGroup;
-    private String disability;
-
-    // ======================
-    // Education & Profession
-    // ======================
     private String education;
     private String profession;
     private String income;
@@ -68,6 +52,9 @@ public class BiodataRequest {
     private String brothers;
     private String sisters;
     private String mama;
+    private String kaka;
+    private String mamaExtra;
+    private String kakaExtra;
     private String Relatives;
 
     // ======================
@@ -77,7 +64,6 @@ public class BiodataRequest {
     private String mobile;
     private String alternateMobile;
     private String email;
-
     private String godImage;
     private String mantra;
 

@@ -5,6 +5,7 @@ import in.onlinebiodatamaker.model.Template;
 import in.onlinebiodatamaker.service.BiodataValidationService;
 import in.onlinebiodatamaker.service.GodImageService;
 import in.onlinebiodatamaker.service.TemplatesService;
+import in.onlinebiodatamaker.util.BiodataUtil;
 import in.onlinebiodatamaker.util.TimeHandlerUtil;
 import in.onlinebiodatamaker.util.ValidationResult;
 import jakarta.servlet.http.HttpSession;
@@ -39,6 +40,8 @@ public class DashboardController {
     private MessageSource messageSource;
     @Autowired
     private TemplatesService templatesService;
+    @Autowired
+    private BiodataUtil biodataUtil;
 
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
@@ -65,6 +68,9 @@ public class DashboardController {
             HttpSession session) {
 
         ValidationResult result = biodataValidationService.validate(form);
+
+        // 🔥 NORMALIZE DATA HERE
+        form = biodataUtil.normalize(form);
 
         if (form.getBirthTime() != null && !form.getBirthTime().isEmpty()) {
             LocalTime time = LocalTime.parse(form.getBirthTime());

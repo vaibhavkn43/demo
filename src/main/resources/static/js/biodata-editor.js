@@ -35,6 +35,15 @@ document.addEventListener("DOMContentLoaded", function () {
 //        if (!runValidation())
 //            return;
 
+
+        const mamaCombined = collectMultiValues("mamaName", "mamaExtra");
+        console.log(mamaCombined, "mamaCombined")
+        document.querySelector('[name="mama"]').value = mamaCombined;
+
+        const kakaCombined = collectMultiValues("kakaName", "kakaExtra");
+        console.log(kakaCombined, "kakaCombined")
+        document.querySelector('[name="kaka"]').value = kakaCombined;
+
         document.getElementById("biodataForm").submit();
     });
 
@@ -340,14 +349,17 @@ document.getElementById("photoNo")?.addEventListener("change", function () {
     const preview = document.getElementById("photoPreview");
     const placeholder = document.getElementById("photoPlaceholder");
 
-    if (preview) preview.src = "";
-    if (placeholder) placeholder.classList.remove("hidden");
+    if (preview)
+        preview.src = "";
+    if (placeholder)
+        placeholder.classList.remove("hidden");
 });
 
 document.getElementById("photoInput")?.addEventListener("change", function (e) {
 
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file)
+        return;
 
     const reader = new FileReader();
 
@@ -365,3 +377,96 @@ document.getElementById("photoInput")?.addEventListener("change", function (e) {
 
 
 
+// ================= MAMA ADD MORE =================
+(function setupMamaDynamic() {
+
+    const container = document.getElementById("mama-container");
+    const addBtn = document.getElementById("add-mama");
+
+    if (!container || !addBtn)
+        return;
+
+    addBtn.addEventListener("click", () => {
+
+        const rows = container.querySelectorAll(".mama-row");
+
+        if (rows.length >= 5) {
+            alert("You can add maximum 5 Mama");
+            return;
+        }
+
+        const firstRow = container.querySelector(".mama-row");
+        const newRow = firstRow.cloneNode(true);
+
+        newRow.querySelectorAll("input").forEach(i => i.value = "");
+
+        const removeBtn = newRow.querySelector(".remove-row");
+        removeBtn.classList.remove("hidden");
+
+        removeBtn.onclick = () => newRow.remove();
+
+        container.insertBefore(newRow, addBtn);
+    });
+
+})();
+
+// ================= KAKA ADD MORE =================
+(function setupKakaDynamic() {
+
+    const container = document.getElementById("kaka-container");
+    const addBtn = document.getElementById("add-kaka");
+
+    if (!container || !addBtn) return;
+
+    addBtn.addEventListener("click", () => {
+
+        const rows = container.querySelectorAll(".kaka-row");
+
+        // optional max limit
+        if (rows.length >= 5) {
+            alert("You can add maximum 5 Kaka");
+            return;
+        }
+
+        const firstRow = container.querySelector(".kaka-row");
+        const newRow = firstRow.cloneNode(true);
+
+        newRow.querySelectorAll("input").forEach(i => i.value = "");
+
+        const removeBtn = newRow.querySelector(".remove-row");
+        removeBtn.classList.remove("hidden");
+
+        removeBtn.onclick = () => newRow.remove();
+
+        container.insertBefore(newRow, addBtn);
+    });
+
+})();
+
+function collectMultiValues(nameField, extraField) {
+
+    const names = document.querySelectorAll(`[name="${nameField}"]`);
+    const extras = document.querySelectorAll(`[name="${extraField}"]`);
+
+    let result = [];
+
+    for (let i = 0; i < names.length; i++) {
+
+        const name = names[i].value.trim();
+        const extra = extras[i].value.trim();
+
+        // skip empty rows
+        if (!name)
+            continue;
+
+        // append with brackets if extra present
+        if (extra) {
+            result.push(`${name} (${extra})`);
+        } else {
+            result.push(name);
+        }
+    }
+
+    // join with comma
+    return result.join(", ");
+}
