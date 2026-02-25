@@ -5,13 +5,18 @@
    📄 BIODATA PREVIEW (A4 CONTAINER)
 ===================================================== */
 
+* {
+    box-sizing: border-box !important;
+}
+
 #biodata-preview {
-    width: 794px;
-    min-height: 1120px;
-    height: auto;
-    overflow: hidden;
-    box-sizing: border-box;
-    background-color: #ffffff;
+    width: 1033px !important;
+    height: 1540px !important;
+    max-height: 1540px !important; /* Force a hard limit */
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative;
 }
 
 
@@ -23,7 +28,7 @@
     display: flex;
     justify-content: center;
     margin-top: 15px;
-    padding-bottom: 20px;
+    padding-bottom: 0px; /* Change from 20px to 0px to stop 2nd page spill */
 }
 
 
@@ -171,69 +176,69 @@
    📱 MOBILE RESPONSIVE DESIGN (PRO VERSION)
 ===================================================== */
 
+/* =====================================================
+   📱 MOBILE VIEW RESPONSIVENESS (WeddingBio.in)#biodata-preview
+===================================================== */
 @media (max-width: 768px) {
     body {
         overflow-x: hidden;
     }
 
-    /* 1. The Container (Screen Width)
-       This div is 100% of the phone screen. 
-       We use Flexbox to mathematically center the 794px box inside it. */
+    /* 1. The Container (Ensures no horizontal scroll) */
     .mobile-preview-scale {
         width: 100% !important;
         display: flex !important;
         justify-content: center !important;
         align-items: flex-start;
         overflow: hidden;
-        height: 520px; /* Forces height so buttons don't overlap */
+        height: 520px; /* Space for the scaled preview */
         margin-top: 15px;
         background: #f7f7f7;
     }
 
-    /* 2. The Scaler (Fixed A4 Width)
-       We FORCE this to be 794px. We then scale it down.
-       Since it is centered by the parent, it will be perfectly centered. */
+    /* 2. The Scaler (Shrinks 1033px to fit phone width) */
     .preview-wrapper {
-        width: 794px !important;
-        flex-shrink: 0;
-        transform: scale(0.44); /* Adjust this (0.40 to 0.45) to fit your screen */
+        width: 1033px !important;
+        transform: scale(0.32) !important;
         transform-origin: top center;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 0px !important; /* Critical for 1-page PDF */
+    }
+
+    /* Fix for extra div inserted by Thymeleaf inside the wrapper */
+    .preview-wrapper > div {
+        width: 1033px !important;
+    }
+
+    /* 3. The Biodata Canvas (Fixed Template Size) */
+    #biodata-preview {
+        width: 1033px !important;
+        height: 1540px !important;
         margin: 0 !important;
         padding: 0 !important;
-    }
-
-    /* 3. The Biodata (Template Fix)
-       Overriding Tailwind's 'w-full' to ensure the layout doesn't collapse. */
-    #biodata-preview {
-        width: 794px !important;
-        min-height: 1120px !important;
+        overflow: hidden !important;
         display: block !important;
-        margin: 0 auto !important;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
-    /* Fix for the extra div inserted by Thymeleaf */
-    .preview-wrapper > div {
-        width: 794px !important;
-    }
-
-    /* 2. Refined Action Buttons Container */
+    /* 4. Refined Action Buttons (Payment Box) */
     .action-buttons {
-        border-radius: 24px 24px 0 0; /* Smoother rounded corners */
+        border-radius: 24px 24px 0 0;
         padding: 30px 20px;
         gap: 15px;
         margin-top: -20px;
         position: sticky;
-        /* Set top to 80px so it sits perfectly below the shrunken header (64px) + margin */
-        top: 80px;
+        top: 80px; /* Sticks below shrunken header */
         transition: top 0.3s ease;
+        background: white;
+        z-index: 50;
     }
 
-    /* 3. Fix the Button Text Wrapping */
+    /* 5. Button & UI Improvements */
     #payBtn {
         width: 100% !important;
         max-width: 350px;
-        min-height: 58px; /* Extra height to accommodate wrapping if needed */
+        min-height: 58px;
         font-size: 16px !important;
         padding: 10px 15px !important;
         line-height: 1.3;
@@ -243,16 +248,6 @@
         text-align: center;
     }
 
-    /* 4. Left-Align Benefits for Better Scannability */
-    .action-buttons .text-sm.text-gray-600 {
-        text-align: left !important;
-        display: inline-block;
-        width: auto;
-        margin: 10px auto;
-        line-height: 1.8;
-    }
-
-    /* 5. Improve Coupon Input UI */
     #couponInput {
         border: 2px solid #e2e8f0 !important;
         height: 48px;
@@ -260,10 +255,17 @@
     }
 
     #couponInput:focus {
-        border-color: #ef4444 !important; /* Matches your brand red */
+        border-color: #ef4444 !important; /* Brand Red */
         outline: none;
     }
 
+    .action-buttons .text-sm.text-gray-600 {
+        text-align: left !important;
+        display: inline-block;
+        width: auto;
+        margin: 10px auto;
+        line-height: 1.8;
+    }
 }
 
 .mobile-preview-scale {
@@ -272,7 +274,7 @@
 
 
 .preview-wrapper {
-    overflow-x: auto;
+    line-height: 0; /* Prevents tiny gaps between divs */
 }
 
 /* =====================================================
@@ -294,7 +296,7 @@
         display: flex !important;
         justify-content: center !important;
         align-items: flex-start !important;
-        max-width: 1240px;
+        max-width: 1440px;
         margin: 0 auto;
         gap: 40px;
     }

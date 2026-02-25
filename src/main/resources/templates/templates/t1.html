@@ -1,143 +1,152 @@
 <div th:fragment="content">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <div id="biodata-preview"
-     class="w-full max-w-[794px] mx-auto bg-white relative shadow"
-     style="min-height:1120px; font-family: 'NotoDevanagari', serif;"
-     th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:cover;'">
+    <div id="biodata-preview"
+         class="mx-auto bg-white relative shadow-2xl overflow-hidden"
+         style="width: 1033px; height: 1540px; font-family: 'Noto Sans Devanagari', sans-serif; color: #333;"
+         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size: 100% 100%; width: 1033px; height: 1540px; font-family: \'Noto Sans Devanagari\', sans-serif;'">
 
-        <!-- 🔴 WATERMARK -->
         <div th:if="${!isPaid}"
              style="position:absolute; inset:0; display:flex; justify-content:center; align-items:center;
-             pointer-events:none; z-index:5;">
-            <div style="font-size:70px; color:rgba(0,0,0,0.12); transform:rotate(-30deg); font-weight:bold;">
-                PREVIEW ONLY
+             pointer-events:none; z-index:50;">
+            <div style="font-size:100px; color:rgba(0,0,0,0.06); transform:rotate(-35deg); font-weight:900; letter-spacing: 5px;">
+                Weddingbio.in
             </div>
         </div>
 
-        <!-- INNER MARGIN -->
-        <div class="absolute inset-0 px-6 py-8 md:px-28 md:py-16">
+        <div class="absolute inset-0 px-28 pt-4 pb-20 flex flex-col items-center">
 
-            <!-- 🔱 HEADER -->
-            <div class="text-center mb-6">
+            <div class="text-center w-full mb-4">
                 <div class="mb-2">
-                    <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="mx-auto h-16"/>
+                    <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="mx-auto h-52 w-auto object-contain"/>
                 </div>
 
-                <h2 class="text-[18px] font-semibold " th:text="${data.mantra}"></h2>
-
-                <h1 class="text-[26px] font-bold mt-2 inline-block px-8 pb-1">
-                    <span th:text="#{preview.header}">Biodata</span>
-                </h1>
+                <div class="flex flex-col items-center gap-4">
+                    <h2 class="text-[28px] font-bold text-[#7a1f1f] leading-tight" th:text="${data.mantra}">॥ श्री गणेशाय नमः ॥</h2>
+                    <h1 class="text-[40px] font-extrabold text-[#7a1f1f] border-b-4 border-[#7a1f1f] inline-block px-14 pb-2 leading-tight" th:text="#{preview.header}">
+                        लग्नासाठी माहिती
+                    </h1>
+                </div>
             </div>
 
-            <div class="flex gap-6">
+            <div class="w-full flex flex-row gap-10 mt-6">
 
-                <!-- LEFT CONTENT -->
-                <div th:class="${data.profileImagePath != null and data.profileImagePath != ''} ? 'w-3/4 space-y-6 text-[16px] leading-7' : 'w-full space-y-6 text-[16px] leading-7'">
+                <div th:class="${data.profileImagePath != null and data.profileImagePath != ''} ? 'w-[70%] space-y-10' : 'w-full space-y-10'">
 
-                    <!-- ================= PERSONAL ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase text-[#7a1f1f]" th:text="#{editor.section.personal}"></h3>
+                    <section>
+                        <h3 class="text-center font-bold text-[28px] mb-6 text-[#7a1f1f] underline underline-offset-8 decoration-2"
+                            th:text="#{editor.section.personal}">वैयक्तिक माहिती</h3>
 
-                        <div class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.name} + ' :'"></div><div class="col-span-2 font-bold" th:text="${data.name}"></div></div>
-                        <div class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.birthDate} + ' :'"></div><div class="col-span-2" th:text="${data.birthDate}"></div></div>
+                        <div class="space-y-3 text-[23px] leading-relaxed">
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.name}">नाव</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-bold text-black" th:text="${data.name}">वैभव बापूराव कल्याणकर</div>
+                            </div>
 
-                        <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.birthTime} + ' :'"></div><div class="col-span-2" th:text="${data.birthTime}"></div></div>
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.birthDate}">जन्म तारीख</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.birthDate}">18/09/1975</div>
+                            </div>
 
-                        <div class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.birthPlace} + ' :'"></div><div class="col-span-2" th:text="${data.birthPlace}"></div></div>
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.birthPlace}">जन्म स्थळ</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.birthPlace}"></div>
+                            </div>
 
-                        <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.religion} + ' :'"></div><div class="col-span-2" th:text="${data.religion}"></div></div>
+                            <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.religion}">धर्म</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.religion}">हिंदू</div>
+                            </div>
 
-                        <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.caste} + ' :'"></div><div class="col-span-2" th:text="${data.caste}"></div></div>
+                            <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.caste}">जात</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.caste}">कुंभार</div>
+                            </div>
 
-                        <div th:if="${data.subCaste != null and !#strings.isEmpty(#strings.trim(data.subCaste))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.subCaste} + ' :'"></div><div class="col-span-2" th:text="${data.subCaste}"></div></div>
-
-                        <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.gotra} + ' :'"></div><div class="col-span-2" th:text="${data.gotra}"></div></div>
-
-                        <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.kuldaivat} + ' :'"></div><div class="col-span-2" th:text="${data.kuldaivat}"></div></div>
-                    </div>
-
-                    <!-- ================= PHYSICAL ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase text-[#7a1f1f]" th:text="#{editor.section.physical}"></h3>
-
-                        <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.height} + ' :'"></div><div class="col-span-2" th:text="${data.height}"></div></div>
-
-                        <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.complexion} + ' :'"></div><div class="col-span-2" th:text="${data.complexion}"></div></div>
-
-                        <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.bloodGroup} + ' :'"></div><div class="col-span-2" th:text="${data.bloodGroup}"></div></div>
-                    </div>
-
-                    <!-- ================= EDUCATION ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase text-[#7a1f1f]" th:text="#{editor.section.education}"></h3>
-
-                        <div class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.education} + ' :'"></div><div class="col-span-2" th:text="${data.education}"></div></div>
-
-                        <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.profession} + ' :'"></div><div class="col-span-2" th:text="${data.profession}"></div></div>
-
-                        <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.income} + ' :'"></div><div class="col-span-2" th:text="${data.income}"></div></div>
-                    </div>
-
-                    <!-- ================= FAMILY ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase text-[#7a1f1f]" th:text="#{editor.section.family}"></h3>
-
-                        <div th:if="${data.fatherName != null and !#strings.isEmpty(#strings.trim(data.fatherName))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.fatherName} + ' :'"></div><div class="col-span-2" th:text="${data.fatherName}"></div></div>
-
-                        <div th:if="${data.motherName != null and !#strings.isEmpty(#strings.trim(data.motherName))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.motherName} + ' :'"></div><div class="col-span-2" th:text="${data.motherName}"></div></div>
-
-                        <div th:if="${data.brothers != null and !#strings.isEmpty(#strings.trim(data.brothers))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.brothers} + ' :'"></div><div class="col-span-2" th:text="${data.brothers}"></div></div>
-
-                        <div th:if="${data.sisters != null and !#strings.isEmpty(#strings.trim(data.sisters))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.sisters} + ' :'"></div><div class="col-span-2" th:text="${data.sisters}"></div></div>
-
-                        <div th:if="${data.relatives != null and !#strings.isEmpty(#strings.trim(data.relatives))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.relatives} + ' :'"></div><div class="col-span-2" th:text="${data.relatives}"></div></div>
-                    </div>
-
-                    <!-- ================= CONTACT ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase text-[#7a1f1f]"
-                            th:text="#{editor.section.contact}"></h3>
-
-                        <div class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.mobile} + ' :'"></div>
-                            <div class="col-span-2"
-                                 th:text="${isPaid} ? ${data.mobile} : '9999999999'"></div>
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.education}">शिक्षण</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.education}"></div>
+                            </div>
                         </div>
+                    </section>
 
-                        <div class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold">Email :</div>
-                            <div class="col-span-2"
-                                 th:text="${isPaid} ? ${data.email} : 'abc@gmail.com'"></div>
-                        </div>
+                    <section>
+                        <h3 class="text-center font-bold text-[28px] mb-6 text-[#7a1f1f] underline underline-offset-8 decoration-2"
+                            th:text="#{editor.section.family}">कौटुंबिक माहिती</h3>
 
-                        <div class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.address} + ' :'"></div>
-                            <div class="col-span-2"
-                                 th:text="${isPaid} ? ${data.address} : 'Pune, Maharashtra'"></div>
+                        <div class="space-y-3 text-[23px] leading-relaxed">
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.fatherName}">वडिलांचे नाव</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.fatherName}"></div>
+                            </div>
+
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.motherName}">आईचे नाव</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.motherName}"></div>
+                            </div>
+
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.brothers}">भाऊ</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.brothers}"></div>
+                            </div>
+
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.sisters}">बहीण</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.sisters}"></div>
+                            </div>
+                            
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.relatives}">नातेवाईक</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.relatives}"></div>
+                            </div>
                         </div>
-                    </div>
+                    </section>
+
+                    <section>
+                        <h3 class="text-center font-bold text-[28px] mb-6 text-[#7a1f1f] underline underline-offset-8 decoration-2"
+                            th:text="#{editor.section.contact}">संपर्क माहिती</h3>
+
+                        <div class="space-y-3 text-[23px] leading-relaxed">
+                            <div class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.mobile}">मोबाईल नंबर</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-bold text-black" th:text="${isPaid} ? ${data.mobile} : ''"></div>
+                            </div>
+                        </div>
+                    </section>
 
                 </div>
 
-                <!-- PHOTO -->
-                <div class="w-1/4 flex justify-center"
+                <div class="w-[30%] flex justify-start pt-20"
                      th:if="${data.profileImagePath != null and data.profileImagePath != ''}">
-                    <div class="w-36 h-44 border border-gray-400 bg-white shadow-sm">
+                    <div class="w-56 h-72 border-[8px] border-white shadow-2xl overflow-hidden rounded-sm ring-1 ring-gray-100">
                         <img th:src="@{'/generated/' + ${data.profileImagePath}}" class="object-cover w-full h-full"/>
                     </div>
                 </div>
 
             </div>
-
         </div>
     </div>
 
-    <!-- 🔵 CSS -->
     <style>
-        .blur-section {
-            filter: blur(6px);
-            pointer-events: none;
+        #biodata-preview {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Tightens text rendering to prevent overlapping issues with different fonts */
+        .leading-tight {
+            line-height: 1.25 !important;
         }
     </style>
 
