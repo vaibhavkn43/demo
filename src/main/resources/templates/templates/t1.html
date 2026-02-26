@@ -235,21 +235,21 @@
                         <div class="space-y-2 text-[22px] font-semibold text-[#222] leading-snug">
 
                             <!-- 📞 Mobile -->
-                            <div th:if="${isPaid}">
+                            <div>
                                 <span>📞 </span>
-                                <span th:text="${data.mobile}"></span>
+                                <span th:text="${isPaid ? data.mobile : '99999 99999'}"></span>
                             </div>
 
                             <!-- ✉️ Email -->
-                            <div th:if="${isPaid and data.email != null and !#strings.isEmpty(#strings.trim(data.email))}">
+                            <div th:if="${isPaid ? (data.email != null and !#strings.isEmpty(#strings.trim(data.email))) : true}">
                                 <span>✉️ </span>
-                                <span th:text="${data.email}"></span>
+                                <span th:text="${isPaid ? data.email : 'yourname@weddingbio.in'}"></span>
                             </div>
 
                             <!-- 📍 Address -->
-                            <div th:if="${isPaid}">
+                            <div>
                                 <span>📍 </span>
-                                <span th:text="${data.address}"></span>
+                                <span th:text="${isPaid ? data.address : 'Flat No. 101, Sai Residency, Wakad, Pune'}"></span>
                             </div>
 
                         </div>

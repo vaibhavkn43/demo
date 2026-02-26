@@ -67,6 +67,32 @@
 
             </div>
 
+<div th:if="${!isPaid}"
+     class="mt-4 text-center text-sm text-gray-700 leading-relaxed max-w-md mx-auto
+            bg-red-50 border border-red-200 rounded-lg p-3 shadow-sm blink-once">
+
+    🔒 <span class="font-semibold text-red-700"
+             th:text="#{payment.privacy.hidden}">
+        तुमची वैयक्तिक संपर्क माहिती सुरक्षित ठेवली आहे.
+    </span>
+
+    <div class="mt-1">
+        <span th:text="#{payment.privacy.reveal.before}">
+            पेमेंट पूर्ण केल्यावर तुमचा
+        </span>
+
+        <span class="font-semibold text-green-700"
+              th:text="#{payment.privacy.reveal.items}">
+            खरा मोबाईल नंबर, ईमेल आणि पत्ता
+        </span>
+
+        <span th:text="#{payment.privacy.reveal.after}">
+            बायोडाटामध्ये लगेच दिसेल.
+        </span>
+    </div>
+
+</div>
+
 
             <!-- ================= AFTER PAYMENT ================= -->
             <div th:if="${isPaid}"
