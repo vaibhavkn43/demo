@@ -188,3 +188,14 @@ function adjustLayout() {
 }
 
 window.onload = adjustLayout;
+
+
+function scrollToPayment(){
+    const el = document.getElementById("paymentBox");
+    if(el){
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        el.classList.add("highlight");
+        setTimeout(()=> el.classList.remove("highlight"),2000);
+    }
+}

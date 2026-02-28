@@ -1,0 +1,39 @@
+.template-t1 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: #333;
+}
+
+/* headings */
+.template-t1 h3 {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #7a1f1f;
+    text-decoration: underline;
+}
+
+/* label column */
+.template-t1 .label {
+    font-weight: 600;
+    color: #555;
+}
+
+/* value column */
+.template-t1 .value {
+    font-weight: 600;
+    color: #222;
+}
+
+/* colon */
+.template-t1 .colon {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* grid fix */
+.template-t1 .row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 7fr;
+    align-items: baseline;
+    margin-bottom: 6px;
+}

@@ -1,6 +1,6 @@
 =============================== 
 PROJECT SNAPSHOT 
-Generated on Wed 02/25/2026 20:35:52.80 
+Generated on Sat 02/28/2026 13:46:21.76 
 =============================== 
  
  
@@ -64,6 +64,10 @@ FILE: pom.xml
             <groupId>com.razorpay</groupId>
             <artifactId>razorpay-java</artifactId>
             <version>1.4.6</version>
+        </dependency> 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -198,6 +202,7 @@ import in.onlinebiodatamaker.model.Template;
 import in.onlinebiodatamaker.service.BiodataValidationService;
 import in.onlinebiodatamaker.service.GodImageService;
 import in.onlinebiodatamaker.service.TemplatesService;
+import in.onlinebiodatamaker.util.BiodataUtil;
 import in.onlinebiodatamaker.util.TimeHandlerUtil;
 import in.onlinebiodatamaker.util.ValidationResult;
 import jakarta.servlet.http.HttpSession;
@@ -232,6 +237,8 @@ public class DashboardController {
     private MessageSource messageSource;
     @Autowired
     private TemplatesService templatesService;
+    @Autowired
+    private BiodataUtil biodataUtil;
 
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
@@ -258,6 +265,9 @@ public class DashboardController {
             HttpSession session) {
 
         ValidationResult result = biodataValidationService.validate(form);
+
+        // 🔥 NORMALIZE DATA HERE
+        form = biodataUtil.normalize(form);
 
         if (form.getBirthTime() != null && !form.getBirthTime().isEmpty()) {
             LocalTime time = LocalTime.parse(form.getBirthTime());
@@ -477,6 +487,8 @@ public class BiodataRequest {
     private String sisters;
     private String mama;
     private String kaka;
+    private String mamaExtra;
+    private String kakaExtra;
     private String Relatives;
 
     // ======================
@@ -854,9 +866,12 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\java\in\onlinebiodatama
 package in.onlinebiodatamaker.util;
 
 import in.onlinebiodatamaker.config.AppStorageConfig;
+import in.onlinebiodatamaker.model.BiodataRequest;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -885,6 +900,73 @@ public class BiodataUtil {
         return target.toString(); // store path
     }
 
+    public BiodataRequest normalize(BiodataRequest form) {
+        form.setFatherName(mergeWithBracket(form.getFatherName(), form.getFatherOccupation()));
+        form.setMotherName(mergeWithBracket(form.getMotherName(), form.getMotherOccupation()));
+        form.setCaste(mergeWithBracket(form.getCaste(), form.getSubCaste()));
+        form.setRelatives(normalizeNameList(form.getRelatives()));
+        form.setMama(normalizeCommaString(form.getMama()));
+        form.setKaka(normalizeCommaString(form.getKaka()));
+        form.setAlternateMobile(normalizeCommaString(form.getAlternateMobile()));
+        return form;
+    }
+
+    private String mergeWithBracket(String main, String extra) {
+
+        if (main == null || main.trim().isEmpty()) {
+            return main;
+        }
+
+        if (extra == null || extra.trim().isEmpty()) {
+            return main.trim();
+        }
+
+        return main.trim() + " (" + extra.trim() + ")";
+    }
+
+    private String normalizeCommaString(String value) {
+
+        if (value == null || value.trim().isEmpty()) {
+            return value;
+        }
+
+        // Split only on comma (not spaces)
+        String[] parts = value.split(",");
+
+        List<String> clean = new ArrayList<>();
+
+        for (String p : parts) {
+            if (p != null && !p.trim().isEmpty()) {
+                clean.add(p.trim());
+            }
+        }
+
+        return String.join(", ", clean);
+    }
+
+    public String normalizeNameList(String value) {
+
+        if (value == null || value.trim().isEmpty()) {
+            return value;
+        }
+
+        // Step 1: Replace commas with space so everything becomes one stream
+        value = value.replace(",", " ");
+
+        // Step 2: Split by space
+        String[] tokens = value.trim().split("\\s+");
+
+        List<String> clean = new ArrayList<>();
+
+        for (String t : tokens) {
+            if (!t.trim().isEmpty()) {
+                clean.add(t.trim());
+            }
+        }
+
+        // Step 3: Join with comma
+        return String.join(", ", clean);
+    }
 }
  
 -------------------------------------------------- 
@@ -1201,7 +1283,10 @@ editor.form.familyType=Family Type
 editor.form.fatherOccupation=Father's Occupation
 editor.form.motherOccupation=Mother's Occupation
 editor.form.relatives=Relatives
-
+editor.form.mamaName=Maternal Uncle (Mama)
+editor.form.mamaExtra=Maternal Uncle Details
+editor.form.kakaName=Uncle (Kaka)
+editor.form.kakaExtra=Uncle's Details
 
 # =====================================================
 # EDITOR - CONTACT
@@ -1248,8 +1333,10 @@ editor.instruction.motherOccupation=Enter Mother's Occupation
 editor.instruction.familyIncome=Enter Annual Family Income
 editor.instruction.familyType=Select Family Type
 editor.instruction.fatherOccupation=Enter Father's Occupation
-editor.form.mamaName=Maternal Uncle (Mama)
 editor.instruction.mamaName=Enter Maternal Uncle's (Mama) name
+editor.instruction.kakaName=Enter uncle's (Kaka) name
+editor.instruction.mamaExtra=Enter occupation or village (e.g. Farmer, Satara)
+editor.instruction.kakaExtra=Enter occupation or village (e.g. Business, Pune)
 editor.instruction.relatives=Eg. Patil, Jadhav, Pawar, Shinde
 
 editor.instruction.gan=Select Gan
@@ -1257,7 +1344,9 @@ editor.instruction.nadi=Select Nadi
 
 editor.placeholder.brotherName=Brother Name
 editor.placeholder.sisterName=Sister Name
-
+# ===== KAKA DYNAMIC =====# 
+editor.button.addMoreMama=+ Add more maternal uncles
+editor.button.addMoreKaka=+ Add more uncles (father side)
 
 # =====================================================
 # DROPDOWNS - COMMON
@@ -1648,7 +1737,13 @@ filter.hindu=Hindu
 filter.muslim=Muslim
 filter.christian=Christian
 filter.jain=Jain
-filter.buddhist=Buddhist 
+filter.buddhist=Buddhist
+
+
+payment.privacy.hidden=Your personal contact details are hidden for privacy.
+payment.privacy.reveal.before=Complete the payment to instantly reveal your
+payment.privacy.reveal.items=real mobile number, email and address
+payment.privacy.reveal.after=in the biodata. 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\messages_mr.properties" 
 -------------------------------------------------- 
@@ -1847,8 +1942,10 @@ editor.form.familyIncome=\u0935\u093e\u0930\u094d\u0937\u093f\u0915 \u0909\u0924
 editor.form.fatherOccupation=\u0935\u0921\u093f\u0932\u093e\u0902\u091a\u093e \u0935\u094d\u092f\u0935\u0938\u093e\u092f
 editor.form.motherOccupation=\u0906\u0908\u091a\u093e \u0935\u094d\u092f\u0935\u0938\u093e\u092f
 editor.form.mamaName=\u092e\u093e\u092e\u093e
+editor.form.mamaExtra=\u092e\u093e\u092e\u093e\u091a\u0940 \u092e\u093e\u0939\u093f\u0924\u0940
+editor.form.kakaName=\u0915\u093e\u0915\u093e\u0902\u091a\u0947 \u0928\u093e\u0935
+editor.form.kakaExtra=\u0915\u093e\u0915\u093e\u0902\u091a\u0940 \u092e\u093e\u0939\u093f\u0924\u0940
 editor.form.relatives=\u0928\u093e\u0924\u0947\u0935\u093e\u0908\u0915
-
 
 # =====================================================
 # EDITOR - CONTACT
@@ -1896,6 +1993,9 @@ editor.instruction.motherOccupation=\u0906\u0908\u091a\u093e \u0935\u094d\u092f\
 editor.instruction.familyIncome=\u0935\u093e\u0930\u094d\u0937\u093f\u0915 \u0909\u0924\u094d\u092a\u0928\u094d\u0928 \u0932\u093f\u0939\u093e
 editor.instruction.familyType=\u0915\u0941\u091f\u0941\u0902\u092c \u092a\u094d\u0930\u0915\u093e\u0930 \u0928\u093f\u0935\u0921\u093e
 editor.instruction.mamaName=\u092e\u093e\u092e\u093e\u091a\u0947 \u0928\u093e\u0935 \u0932\u093f\u0939\u093e 
+editor.instruction.mamaExtra=\u0935\u094d\u092f\u0935\u0938\u093e\u092f \u0915\u093f\u0902\u0935\u093e \u0917\u093e\u0935 \u0932\u093f\u0939\u093e (\u0909\u0926\u093e. \u0936\u0947\u0924\u0915\u0930\u0940, \u0938\u093e\u0924\u093e\u0930\u093e)
+editor.instruction.kakaName=\u0915\u093e\u0915\u093e\u0902\u091a\u0947 \u092a\u0942\u0930\u094d\u0923 \u0928\u093e\u0935 \u0932\u093f\u0939\u093e
+editor.instruction.kakaExtra=\u0935\u094d\u092f\u0935\u0938\u093e\u092f \u0915\u093f\u0902\u0935\u093e \u0917\u093e\u0935 \u0932\u093f\u0939\u093e (\u0909\u0926\u093e. \u0935\u094d\u092f\u0935\u0938\u093e\u092f, \u092a\u0941\u0923\u0947)
 editor.instruction.relatives=\u0909\u0926\u093e. \u092a\u093e\u091f\u0940\u0932, \u091c\u093e\u0927\u0935, \u092a\u0935\u093e\u0930, \u0936\u093f\u0902\u0926\u0947
 editor.instruction.gan=\u0917\u0923 \u0928\u093f\u0935\u0921\u093e
 editor.instruction.nadi=\u0928\u093e\u0921\u0940 \u0928\u093f\u0935\u0921\u093e
@@ -1904,7 +2004,9 @@ editor.placeholder.brotherName=\u092d\u093e\u0935\u093e\u091a\u0947 \u0928\u093e
 editor.placeholder.sisterName=\u092c\u0939\u093f\u0923\u0940\u091a\u0947 \u0928\u093e\u0935
 
 editor.instruction.email=\u0908\u092e\u0947\u0932 \u0932\u093f\u0939\u093e
-
+# ===== \u0915\u093e\u0915\u093e (Dynamic Add More) =====
+editor.button.addMoreKaka=+ \u0905\u091c\u0942\u0928 \u0915\u093e\u0915\u093e \u091c\u094b\u0921\u093e
+editor.button.addMoreMama=+ \u0905\u091c\u0942\u0928 \u092e\u093e\u092e\u093e \u091c\u094b\u0921\u093e
 
 # =====================================================
 # DROPDOWNS - COMMON
@@ -2269,7 +2371,12 @@ filter.hindu=\u0939\u093f\u0902\u0926\u0942
 filter.muslim=\u092e\u0941\u0938\u094d\u0932\u093f\u092e
 filter.christian=\u0916\u094d\u0930\u093f\u0936\u094d\u091a\u0928
 filter.jain=\u091c\u0948\u0928
-filter.buddhist=\u092c\u094c\u0926\u094d\u0927 
+filter.buddhist=\u092c\u094c\u0926\u094d\u0927
+
+payment.privacy.hidden=\u0924\u0941\u092e\u091a\u0940 \u0935\u0948\u092f\u0915\u094d\u0924\u093f\u0915 \u0938\u0902\u092a\u0930\u094d\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0920\u0947\u0935\u0932\u0940 \u0906\u0939\u0947.
+payment.privacy.reveal.before=\u092a\u0947\u092e\u0947\u0902\u091f \u092a\u0942\u0930\u094d\u0923 \u0915\u0947\u0932\u094d\u092f\u093e\u0935\u0930 \u0924\u0941\u092e\u091a\u093e
+payment.privacy.reveal.items=\u0916\u0930\u093e \u092e\u094b\u092c\u093e\u0908\u0932 \u0928\u0902\u092c\u0930, \u0908\u092e\u0947\u0932 \u0906\u0923\u093f \u092a\u0924\u094d\u0924\u093e
+payment.privacy.reveal.after=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e\u092e\u0927\u094d\u092f\u0947 \u0932\u0917\u0947\u091a \u0926\u093f\u0938\u0947\u0932. 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\config\templates.json" 
 -------------------------------------------------- 
@@ -2475,6 +2582,97 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\da
     }
 }
  
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\preview.css" 
+-------------------------------------------------- 
+/* =====================================================
+   📄 BIODATA RESPONSIVE PRINT MODES
+===================================================== */
+
+/* ================= NORMAL (default) ================= */
+#biodata-preview.normal-mode {
+    font-size: 23px;
+    line-height: 1.6;
+}
+
+#biodata-preview.normal-mode .god-img {
+    height: 210px;
+}
+
+
+/* ================= MEDIUM ================= */
+#biodata-preview.medium-mode {
+    font-size: 21px;
+}
+
+#biodata-preview.medium-mode h1 { font-size: 34px !important; }
+#biodata-preview.medium-mode h2 { font-size: 24px !important; }
+#biodata-preview.medium-mode h3 { font-size: 24px !important; }
+
+#biodata-preview.medium-mode .god-img {
+    height: 160px;
+}
+
+#biodata-preview.medium-mode .space-y-3 > * {
+    margin-top: 6px !important;
+}
+
+
+/* ================= COMPACT ================= */
+#biodata-preview.compact-mode {
+    font-size: 20px;
+    line-height: 1.35;
+}
+
+/* hide title */
+#biodata-preview.compact-mode .biodata-title {
+    display: none;
+}
+
+/* smaller god image */
+#biodata-preview.compact-mode .god-img {
+    height: 120px !important;
+}
+
+/* headings */
+#biodata-preview.compact-mode h1 { font-size: 32px !important; }
+#biodata-preview.compact-mode h2 { font-size: 22px !important; }
+#biodata-preview.compact-mode h3 {
+    font-size: 22px !important;
+    margin-bottom: 10px !important;
+}
+
+/* spacing tighten */
+#biodata-preview.compact-mode .space-y-3 > * {
+    margin-top: 4px !important;
+}
+
+#biodata-preview.compact-mode .mb-6 { margin-bottom: 10px !important; }
+#biodata-preview.compact-mode .mt-6 { margin-top: 10px !important; }
+#biodata-preview.compact-mode .gap-10 { gap: 16px !important; }
+
+/* 🔥 important: reduce section spacing */
+#biodata-preview.compact-mode .space-y-10 {
+    margin-top: 10px !important;
+}
+
+/* 🔥 reduce container bottom padding */
+#biodata-preview.compact-mode .absolute.inset-0 {
+    padding-bottom: 40px !important;
+}
+
+/* 🔥 reduce line spacing */
+#biodata-preview.compact-mode .leading-relaxed {
+    line-height: 1.25 !important;
+}
+
+
+/* ================= LAST RESCUE SCALE ================= */
+/* If still overflow after compact */
+#biodata-preview.compact-mode.scale-down {
+    transform: scale(0.97);
+    transform-origin: top center;
+} 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\style.css" 
 -------------------------------------------------- 
@@ -3076,7 +3274,36 @@ function disableButtons(disable = true) {
                 btn.disabled = disable;
                 btn.style.opacity = disable ? "0.6" : "1";
             });
-} 
+}
+
+function adjustLayout() {
+
+    const container = document.getElementById("biodata-preview");
+    const content = container.querySelector(".absolute.inset-0");
+
+    container.classList.remove("normal-mode", "medium-mode", "compact-mode", "scale-down");
+
+    const maxHeight = 1540;
+    const currentHeight = content.scrollHeight;
+
+    if (currentHeight > maxHeight) {
+        container.classList.add("compact-mode");
+
+        // re-check after compact applied
+        setTimeout(() => {
+            if (content.scrollHeight > maxHeight) {
+                container.classList.add("scale-down");
+            }
+        }, 50);
+
+    } else if (currentHeight > maxHeight * 0.85) {
+        container.classList.add("medium-mode");
+    } else {
+        container.classList.add("normal-mode");
+    }
+}
+
+window.onload = adjustLayout; 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\biodata-editor.js" 
 -------------------------------------------------- 
@@ -3116,6 +3343,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //        if (!runValidation())
 //            return;
+
+
+        const mamaCombined = collectMultiValues("mamaName", "mamaExtra");
+        console.log(mamaCombined, "mamaCombined")
+        document.querySelector('[name="mama"]').value = mamaCombined;
+
+        const kakaCombined = collectMultiValues("kakaName", "kakaExtra");
+        console.log(kakaCombined, "kakaCombined")
+        document.querySelector('[name="kaka"]').value = kakaCombined;
 
         document.getElementById("biodataForm").submit();
     });
@@ -3422,14 +3658,17 @@ document.getElementById("photoNo")?.addEventListener("change", function () {
     const preview = document.getElementById("photoPreview");
     const placeholder = document.getElementById("photoPlaceholder");
 
-    if (preview) preview.src = "";
-    if (placeholder) placeholder.classList.remove("hidden");
+    if (preview)
+        preview.src = "";
+    if (placeholder)
+        placeholder.classList.remove("hidden");
 });
 
 document.getElementById("photoInput")?.addEventListener("change", function (e) {
 
     const file = e.target.files[0];
-    if (!file) return;
+    if (!file)
+        return;
 
     const reader = new FileReader();
 
@@ -3447,7 +3686,99 @@ document.getElementById("photoInput")?.addEventListener("change", function (e) {
 
 
 
- 
+// ================= MAMA ADD MORE =================
+(function setupMamaDynamic() {
+
+    const container = document.getElementById("mama-container");
+    const addBtn = document.getElementById("add-mama");
+
+    if (!container || !addBtn)
+        return;
+
+    addBtn.addEventListener("click", () => {
+
+        const rows = container.querySelectorAll(".mama-row");
+
+        if (rows.length >= 5) {
+            alert("You can add maximum 5 Mama");
+            return;
+        }
+
+        const firstRow = container.querySelector(".mama-row");
+        const newRow = firstRow.cloneNode(true);
+
+        newRow.querySelectorAll("input").forEach(i => i.value = "");
+
+        const removeBtn = newRow.querySelector(".remove-row");
+        removeBtn.classList.remove("hidden");
+
+        removeBtn.onclick = () => newRow.remove();
+
+        container.insertBefore(newRow, addBtn);
+    });
+
+})();
+
+// ================= KAKA ADD MORE =================
+(function setupKakaDynamic() {
+
+    const container = document.getElementById("kaka-container");
+    const addBtn = document.getElementById("add-kaka");
+
+    if (!container || !addBtn) return;
+
+    addBtn.addEventListener("click", () => {
+
+        const rows = container.querySelectorAll(".kaka-row");
+
+        // optional max limit
+        if (rows.length >= 5) {
+            alert("You can add maximum 5 Kaka");
+            return;
+        }
+
+        const firstRow = container.querySelector(".kaka-row");
+        const newRow = firstRow.cloneNode(true);
+
+        newRow.querySelectorAll("input").forEach(i => i.value = "");
+
+        const removeBtn = newRow.querySelector(".remove-row");
+        removeBtn.classList.remove("hidden");
+
+        removeBtn.onclick = () => newRow.remove();
+
+        container.insertBefore(newRow, addBtn);
+    });
+
+})();
+
+function collectMultiValues(nameField, extraField) {
+
+    const names = document.querySelectorAll(`[name="${nameField}"]`);
+    const extras = document.querySelectorAll(`[name="${extraField}"]`);
+
+    let result = [];
+
+    for (let i = 0; i < names.length; i++) {
+
+        const name = names[i].value.trim();
+        const extra = extras[i].value.trim();
+
+        // skip empty rows
+        if (!name)
+            continue;
+
+        // append with brackets if extra present
+        if (extra) {
+            result.push(`${name} (${extra})`);
+        } else {
+            result.push(name);
+        }
+    }
+
+    // join with comma
+    return result.join(", ");
+} 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\checkout.js" 
 -------------------------------------------------- 
@@ -4724,16 +5055,21 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 <label class="block text-sm font-medium text-gray-800 mb-1"
                                        th:text="#{editor.form.mangal}"></label>
 
-                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                        th:field="*{mangal}">
+                                <select th:field="*{mangal}" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3">
 
-                                    <!-- default -->
                                     <option value="" th:text="#{dropdown.mangal.select}"></option>
 
-                                    <option th:value="yes" th:text="#{dropdown.mangal.yes}"></option>
-                                    <option th:value="no" th:text="#{dropdown.mangal.no}"></option>
-                                    <option th:value="unknown" th:text="#{dropdown.mangal.unknown}"></option>
+                                    <option th:value="#{dropdown.mangal.yes}"
+                                            th:text="#{dropdown.mangal.yes}">
+                                    </option>
+
+                                    <option th:value="#{dropdown.mangal.no}"
+                                            th:text="#{dropdown.mangal.no}">
+                                    </option>
+
+                                    <option th:value="#{dropdown.mangal.unknown}"
+                                            th:text="#{dropdown.mangal.unknown}">
+                                    </option>
 
                                 </select>
                             </div>
@@ -4742,21 +5078,19 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                        th:text="#{editor.form.gan}">
                                 </label>
 
-                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                        th:field="*{gan}">
+                                <select th:field="*{gan}" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3">
 
-                                    <option value=""  th:text="#{dropdown.gan.select}">  </option>
+                                    <option value="" th:text="#{dropdown.gan.select}"></option>
 
-                                    <option th:value="dev"
+                                    <option th:value="#{dropdown.gan.dev}"
                                             th:text="#{dropdown.gan.dev}">
                                     </option>
 
-                                    <option th:value="manushya"
+                                    <option th:value="#{dropdown.gan.manushya}"
                                             th:text="#{dropdown.gan.manushya}">
                                     </option>
 
-                                    <option th:value="rakshas"
+                                    <option th:value="#{dropdown.gan.rakshas}"
                                             th:text="#{dropdown.gan.rakshas}">
                                     </option>
 
@@ -4768,21 +5102,19 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                        th:text="#{editor.form.nadi}">
                                 </label>
 
-                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                        th:field="*{nadi}">
+                                <select th:field="*{nadi}" class="w-full rounded-lg border border-gray-300 px-4 py-2.5">
 
-                                    <option value=""  th:text="#{dropdown.nadi.select}"> </option>
+                                    <option value="" th:text="#{dropdown.nadi.select}"></option>
 
-                                    <option th:value="adi"
+                                    <option th:value="#{dropdown.nadi.adi}"
                                             th:text="#{dropdown.nadi.adi}">
                                     </option>
 
-                                    <option th:value="madhya"
+                                    <option th:value="#{dropdown.nadi.madhya}"
                                             th:text="#{dropdown.nadi.madhya}">
                                     </option>
 
-                                    <option th:value="antya"
+                                    <option th:value="#{dropdown.nadi.antya}"
                                             th:text="#{dropdown.nadi.antya}">
                                     </option>
 
@@ -5028,30 +5360,117 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 <input type="hidden" th:field="*{sisters}" id="sisters"/>
                             </div> 
 
-                            <!-- Mother -->
+                            <!-- ================= MAMA (Dynamic Add More) ================= -->
+                            <div id="mama-container" class="space-y-2">
 
-                            <div>
-
-                                <!-- Label -->
+                                <!-- Section Label -->
                                 <label class="block text-sm font-medium text-gray-800 mb-1"
                                        th:text="#{editor.form.mamaName}">
                                     मामा
                                 </label>
 
-                                <!-- Input with Marathi IME -->
-                                <div class="ime-wrapper relative mb-4">
+                                <!-- 🔹 First Row (template row) -->
+                                <div class="mama-row grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 
-                                    <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                           th:field="*{mama}"
-                                           th:placeholder="#{editor.instruction.mamaName}" />
+                                    <!-- Name -->
+                                    <div class="ime-wrapper relative">
+                                        <input type="text"
+                                               name="mamaName"
+                                               class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               th:placeholder="#{editor.instruction.mamaName}" />
 
-                                    <!-- Inline Suggestions Dropdown -->
-                                    <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                         bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto"></div>
+                                    </div>
+
+                                    <!-- Extra -->
+                                    <div class="ime-wrapper relative flex gap-2">
+
+                                        <input type="text"
+                                               name="mamaExtra"
+                                               class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               th:placeholder="#{editor.instruction.mamaExtra}" />
+
+                                        <!-- Remove Button -->
+                                        <button type="button"
+                                                class="remove-row hidden text-red-500 text-sm px-2">
+                                            ✕
+                                        </button>
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto"></div>
+                                    </div>
+                                </div>
+                                <!-- ➕ Add More Mama -->
+                                <button type="button"
+                                        id="add-mama"
+                                        class="text-sm text-blue-600 hover:underline mt-1"
+                                        th:text="#{editor.button.addMoreMama}">
+                                    + अजून मामा जोडा
+                                </button>
+
+                                <!-- Hidden field for final combined value -->
+                                <input type="hidden" name="mama"/>
+
+                            </div>
+
+                            <!-- ================= KAKA (Dynamic Add More) ================= -->
+                            <div id="kaka-container" class="space-y-2 mt-4">
+
+                                <!-- Section Label -->
+                                <label class="block text-sm font-medium text-gray-800 mb-1"
+                                       th:text="#{editor.form.kakaName}">
+                                    काका
+                                </label>
+
+                                <!-- 🔹 First Row -->
+                                <div class="kaka-row grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+
+                                    <!-- Kaka Name -->
+                                    <div class="ime-wrapper relative">
+                                        <input type="text"
+                                               name="kakaName"
+                                               class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               th:placeholder="#{editor.instruction.kakaName}" />
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto"></div>
+                                    </div>
+
+                                    <!-- Kaka Extra -->
+                                    <div class="ime-wrapper relative flex gap-2 items-center">
+
+                                        <input type="text"
+                                               name="kakaExtra"
+                                               class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
+                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               th:placeholder="#{editor.instruction.kakaExtra}" />
+
+                                        <!-- Remove -->
+                                        <button type="button"
+                                                class="remove-row hidden text-red-500 text-lg px-2 flex items-center justify-center">
+                                            ✕
+                                        </button>
+
+                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto"></div>
                                     </div>
 
                                 </div>
+
+                                <!-- ➕ Add More Button -->
+                                <button type="button"
+                                        id="add-kaka"
+                                        class="text-sm text-blue-600 hover:underline mt-1"
+                                        th:text="#{editor.button.addMoreKaka}">
+                                    + अजून काका जोडा
+                                </button>
+
+                                <!-- Hidden combined value -->
+                                <input type="hidden" name="kaka"/>
 
                             </div>
 
@@ -5319,6 +5738,32 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\pre
 
             </div>
 
+<div th:if="${!isPaid}"
+     class="mt-4 text-center text-sm text-gray-700 leading-relaxed max-w-md mx-auto
+            bg-red-50 border border-red-200 rounded-lg p-3 shadow-sm blink-once">
+
+    🔒 <span class="font-semibold text-red-700"
+             th:text="#{payment.privacy.hidden}">
+        तुमची वैयक्तिक संपर्क माहिती सुरक्षित ठेवली आहे.
+    </span>
+
+    <div class="mt-1">
+        <span th:text="#{payment.privacy.reveal.before}">
+            पेमेंट पूर्ण केल्यावर तुमचा
+        </span>
+
+        <span class="font-semibold text-green-700"
+              th:text="#{payment.privacy.reveal.items}">
+            खरा मोबाईल नंबर, ईमेल आणि पत्ता
+        </span>
+
+        <span th:text="#{payment.privacy.reveal.after}">
+            बायोडाटामध्ये लगेच दिसेल.
+        </span>
+    </div>
+
+</div>
+
 
             <!-- ================= AFTER PAYMENT ================= -->
             <div th:if="${isPaid}"
@@ -5447,23 +5892,27 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\tem
             <div th:if="${!#lists.isEmpty(templates)}"
                  class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
 
-                <!-- CARD -->
-                <a th:each="tpl : ${templates}"
-                   th:href="@{'/editor/' + ${tpl.id}}"
-                   class="block template-card group relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-xl hover:scale-[1.02] transition p-3 md:p-4 cursor-pointer">
+                <!-- TEMPLATE CARD -->
+                <div th:each="tpl : ${templates}"
+                     class="template-card group relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl hover:scale-[1.02] transition p-3 md:p-4 cursor-pointer"
+                     th:data-id="${tpl.id}"
+                     th:data-img="${tpl.filledTemplateLocation}">
 
-                    <!-- IMAGE -->
-                    <div class="h-60 md:h-56 flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden p-3">
+                    <!-- IMAGE WRAPPER -->
+                    <div class="h-60 md:h-56 flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden p-3 relative">
 
+                        <!-- 👁 MOBILE BADGE -->
                         <div class="absolute top-2 right-2 bg-white/90 backdrop-blur
                              text-gray-700 text-[10px] px-2 py-0.5
                              rounded-full shadow md:hidden flex items-center gap-1">
                             👁 <span th:text="#{home.templates.view}">View</span>
                         </div>
 
+                        <!-- TEMPLATE IMAGE -->
                         <img th:src="@{${tpl.filledTemplateLocation}}"
                              class="max-h-full object-contain border rounded"/>
 
+                        <!-- 👁 DESKTOP HOVER OVERLAY -->
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center
                              opacity-0 pointer-events-none md:group-hover:opacity-100 md:pointer-events-auto transition">
 
@@ -5474,24 +5923,49 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\tem
 
                     </div>
 
-                    <!-- BUTTON -->
+                    <!-- USE TEMPLATE BUTTON (independent click) -->
                     <div class="mt-3">
-                        <span class="w-full flex items-center justify-center gap-2
-                              bg-red-600 text-white px-4 py-2.5
-                              text-sm font-semibold rounded-lg
-                              hover:bg-red-700 active:scale-95
-                              transition-all shadow-sm">
+                        <a th:href="@{'/editor/' + ${tpl.id}}"
+                           onclick="event.stopPropagation()"
+                           class="w-full flex items-center justify-center gap-2
+                           bg-red-600 text-white px-4 py-2.5
+                           text-sm font-semibold rounded-lg
+                           hover:bg-red-700 active:scale-95
+                           transition-all shadow-sm">
+
                             📄 <span th:text="#{home.templates.use}">Use Template</span>
-                        </span>
+                        </a>
                     </div>
 
-                </a>
-
+                </div>
             </div>
 
         </div>
     </section>
-
+    <!-- TEMPLATE PREVIEW MODAL -->
+    <div id="templateModal"
+         class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-6 w-[90%] max-w-xl relative">
+            <!-- Close -->
+            <button onclick="closeTemplateModal()"
+                    class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl">
+                ✕
+            </button>
+            <h3 class="text-lg font-semibold text-center mb-4"
+                th:text="#{modal.template.preview}">
+                Template Preview
+            </h3>
+            <img id="templatePreviewImg"
+                 class="mx-auto max-h-[70vh] rounded border modal-preview-img"/>
+            <div class="text-center mt-5">
+                <a id="useTemplateBtn"
+                   class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md"
+                   th:text="#{modal.template.use}">
+                    Use Template
+                </a>
+            </div>
+        </div>
+    </div>
 </div> 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\layout\base.html" 
@@ -5550,6 +6024,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\lay
         <link rel="stylesheet" th:href="@{/css/style.css}">
         <link rel="stylesheet" th:href="@{/css/dashboard.css}">
         <link rel="stylesheet" th:href="@{/css/templates.css}">
+        <link rel="stylesheet" th:href="@{/css/preview.css}">
     </head>
 
     <body class="bg-gray-50 text-gray-800">
@@ -6352,19 +6827,12 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\tem
                 <div class="mb-2">
                     <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="mx-auto h-52 w-auto object-contain"/>
                 </div>
-
                 <div class="flex flex-col items-center gap-4">
                     <h2 class="text-[28px] font-bold text-[#7a1f1f] leading-tight" th:text="${data.mantra}">॥ श्री गणेशाय नमः ॥</h2>
-                    <h1 class="text-[40px] font-extrabold text-[#7a1f1f] border-b-4 border-[#7a1f1f] inline-block px-14 pb-2 leading-tight" th:text="#{preview.header}">
-                        लग्नासाठी माहिती
-                    </h1>
                 </div>
             </div>
-
             <div class="w-full flex flex-row gap-10 mt-6">
-
                 <div th:class="${data.profileImagePath != null and data.profileImagePath != ''} ? 'w-[70%] space-y-10' : 'w-full space-y-10'">
-
                     <section>
                         <h3 class="text-center font-bold text-[28px] mb-6 text-[#7a1f1f] underline underline-offset-8 decoration-2"
                             th:text="#{editor.section.personal}">वैयक्तिक माहिती</h3>
@@ -6406,6 +6874,75 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\tem
                                 <div class="col-span-7 font-semibold text-[#222]" th:text="${data.caste}">कुंभार</div>
                             </div>
 
+                            <!-- ================= GOTRA ================= -->
+                            <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.gotra}">गोत्र</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.gotra}"></div>
+                            </div>
+
+                            <!-- ================= KULDAIVAT ================= -->
+                            <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.kuldaivat}">कुलदैवत</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.kuldaivat}"></div>
+                            </div>
+
+                            <!-- ================= RASHI ================= -->
+                            <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.rashi}">राशी</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.rashi}"></div>
+                            </div>
+
+                            <!-- ================= NAKSHATRA ================= -->
+                            <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.nakshatra}">नक्षत्र</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.nakshatra}"></div>
+                            </div>
+
+                            <!-- ================= GAN ================= -->
+                            <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.gan}">गण</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.gan}"></div>
+                            </div>
+
+                            <!-- ================= NADI ================= -->
+                            <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.nadi}">नाडी</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.nadi}"></div>
+                            </div>
+
+                            <!-- ================= MANGAL ================= -->
+                            <div th:if="${data.mangal != null and !#strings.isEmpty(#strings.trim(data.mangal))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.mangal}">मंगळ</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.mangal}"></div>
+                            </div>
+
+                            <!-- ================= HEIGHT ================= -->
+                            <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.height}">उंची</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.height}"></div>
+                            </div>
+
+                            <!-- ================= COMPLEXION ================= -->
+                            <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.complexion}">वर्ण</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.complexion}"></div>
+                            </div>
+                            <!-- ================= BLOOD GROUP ================= -->
+                            <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.bloodGroup}">रक्तगट</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.bloodGroup}"></div>
+                            </div>
+
                             <div class="grid grid-cols-12 items-baseline">
                                 <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.education}">शिक्षण</div>
                                 <div class="col-span-1 text-center font-bold text-[#333]">:</div>
@@ -6415,6 +6952,12 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\tem
                                 <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.profession}">शिक्षण</div>
                                 <div class="col-span-1 text-center font-bold text-[#333]">:</div>
                                 <div class="col-span-7 font-semibold text-[#222]" th:text="${data.profession}"></div>
+                            </div>
+                            <!-- ================= INCOME ================= -->
+                            <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="grid grid-cols-12 items-baseline">
+                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.income}">उत्पन्न</div>
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+                                <div class="col-span-7 font-semibold text-[#222]" th:text="${data.income}"></div>
                             </div>
                         </div>
                     </section>
@@ -6453,20 +6996,71 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\tem
                                 <div class="col-span-1 text-center font-bold text-[#333]">:</div>
                                 <div class="col-span-7 font-semibold text-[#222]" th:text="${data.relatives}"></div>
                             </div>
+
+                            <!-- ================= MAMA ================= -->
+                            <div th:if="${data.mama != null and !#strings.isEmpty(#strings.trim(data.mama))}"
+                                 class="grid grid-cols-12 items-start">
+
+                                <div class="col-span-4 font-semibold text-[#555]"
+                                     th:text="#{editor.form.mamaName}">मामा</div>
+
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+
+                                <div class="col-span-7 font-semibold text-[#222] flex flex-col leading-relaxed">
+
+                                    <span th:each="m, iterStat : ${#strings.arraySplit(data.mama, ',')}"
+                                          th:text="${m}"></span>
+
+                                </div>
+                            </div>
+                            <!-- ================= KAKA ================= -->
+                            <div th:if="${data.kaka != null and !#strings.isEmpty(#strings.trim(data.kaka))}"
+                                 class="grid grid-cols-12 items-start">
+
+                                <div class="col-span-4 font-semibold text-[#555]"
+                                     th:text="#{editor.form.kakaName}">काका</div>
+
+                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
+
+                                <div class="col-span-7 font-semibold text-[#222] flex flex-col leading-relaxed">
+
+                                    <span th:each="k, iterStat : ${#strings.arraySplit(data.kaka, ',')}"
+                                          th:text="${k}"></span>
+
+                                </div>
+                            </div>
                         </div>
                     </section>
 
-                    <section>
-                        <h3 class="text-center font-bold text-[28px] mb-6 text-[#7a1f1f] underline underline-offset-8 decoration-2"
-                            th:text="#{editor.section.contact}">संपर्क माहिती</h3>
+                    <section class="mt-8 text-center">
 
-                        <div class="space-y-3 text-[23px] leading-relaxed">
-                            <div class="grid grid-cols-12 items-baseline">
-                                <div class="col-span-4 font-semibold text-[#555]" th:text="#{editor.form.mobile}">मोबाईल नंबर</div>
-                                <div class="col-span-1 text-center font-bold text-[#333]">:</div>
-                                <div class="col-span-7 font-bold text-black" th:text="${isPaid} ? ${data.mobile} : ''"></div>
+                        <h3 class="font-bold text-[26px] mb-4 text-[#7a1f1f] underline underline-offset-8 decoration-2"
+                            th:text="#{editor.section.contact}">
+                            संपर्क माहिती
+                        </h3>
+
+                        <div class="space-y-2 text-[22px] font-semibold text-[#222] leading-snug">
+
+                            <!-- 📞 Mobile -->
+                            <div>
+                                <span>📞 </span>
+                                <span th:text="${isPaid ? data.mobile : '99999 99999'}"></span>
                             </div>
+
+                            <!-- ✉️ Email -->
+                            <div th:if="${isPaid ? (data.email != null and !#strings.isEmpty(#strings.trim(data.email))) : true}">
+                                <span>✉️ </span>
+                                <span th:text="${isPaid ? data.email : 'yourname@weddingbio.in'}"></span>
+                            </div>
+
+                            <!-- 📍 Address -->
+                            <div>
+                                <span>📍 </span>
+                                <span th:text="${isPaid ? data.address : 'Flat No. 101, Sai Residency, Wakad, Pune'}"></span>
+                            </div>
+
                         </div>
+
                     </section>
 
                 </div>

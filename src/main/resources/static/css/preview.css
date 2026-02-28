@@ -1,88 +1,349 @@
 /* =====================================================
-   📄 BIODATA RESPONSIVE PRINT MODES
+   📦 GLOBAL RESET
 ===================================================== */
-
-/* ================= NORMAL (default) ================= */
-#biodata-preview.normal-mode {
-    font-size: 23px;
-    line-height: 1.6;
+*{
+    box-sizing:border-box !important;
 }
 
-#biodata-preview.normal-mode .god-img {
-    height: 210px;
+body{
+    padding-bottom:90px; /* space for sticky bar */
+    overflow-x:hidden;
 }
 
-
-/* ================= MEDIUM ================= */
-#biodata-preview.medium-mode {
-    font-size: 21px;
+/* =====================================================
+   📦 PAGE LAYOUT WRAPPER
+===================================================== */
+.preview-page-container{
+    width:100%;
+    max-width:1280px;
+    margin:0 auto;
+    padding:0 16px;
 }
 
-#biodata-preview.medium-mode h1 { font-size: 34px !important; }
-#biodata-preview.medium-mode h2 { font-size: 24px !important; }
-#biodata-preview.medium-mode h3 { font-size: 24px !important; }
-
-#biodata-preview.medium-mode .god-img {
-    height: 160px;
+.preview-split-container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
 }
 
-#biodata-preview.medium-mode .space-y-3 > * {
-    margin-top: 6px !important;
+.pay-highlight {
+    background: #e6fffa;
+    border: 1px solid #10b981;
+    color: #065f46;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 14px;
 }
 
-
-/* ================= COMPACT ================= */
-#biodata-preview.compact-mode {
-    font-size: 20px;
-    line-height: 1.35;
+/* =====================================================
+   📄 BIODATA CANVAS (A4)
+===================================================== */
+#biodata-preview{
+    width:1033px !important;
+    height:1540px !important;
+    margin:0 auto !important;
+    position:relative;
 }
 
-/* hide title */
-#biodata-preview.compact-mode .biodata-title {
-    display: none;
+/* =====================================================
+   👁 PREVIEW WRAPPER (CENTER)
+===================================================== */
+.preview-wrapper{
+    display:flex;
+    justify-content:center;
+    width:100%;
+    margin-top:15px;
 }
 
-/* smaller god image */
-#biodata-preview.compact-mode .god-img {
-    height: 120px !important;
+/* =====================================================
+   📱 MOBILE VIEW (FINAL FIXED CENTER + SCALE)
+===================================================== */
+@media (max-width:768px){
+
+    .mobile-preview-scale{
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:flex-start;
+
+        overflow:hidden;
+        margin-top:15px;
+        background:#f7f7f7;
+        padding:0 10px;
+
+        min-height:520px;   /* ✔ keeps minimum but allows grow */
+        height:auto;        /* ✔ important */
+    }
+
+    .pay-highlight {
+        background: #e6fffa;
+        border: 1px solid #10b981;
+        color: #065f46;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 10px 14px;
+    }
+
+    /* container */
+    .preview-wrapper{
+        position:relative;
+        width:100%;
+        height:100%;
+    }
+
+    /* fake viewport */
+    .preview-wrapper::before{
+        content:"";
+        display:block;
+        width:330px;
+        height:520px;
+        margin:0 auto;
+    }
+
+    /* scaled biodata */
+    .preview-wrapper > div{
+        position:absolute;
+        top:0;
+        left:50%;
+        transform:translateX(-50%) scale(0.30);
+        transform-origin:top center;
+    }
+
+    #biodata-preview{
+        width:1033px !important;
+        height:1540px !important;
+    }
+
+    /* ===== PAYMENT BOX MOBILE ===== */
+    .action-buttons{
+        border-radius:22px 22px 0 0;
+        padding:22px 16px 90px;
+        margin-top:16px;
+        background:#fff;
+        z-index:50;
+        box-shadow:0 -6px 18px rgba(0,0,0,0.08);
+        border-top:1px solid #f1f1f1;
+
+        display:flex;
+        flex-direction:column;
+        gap:14px;
+    }
+
+    #payBtn{
+        width:100%;
+        max-width:350px;
+        min-height:58px;
+        font-size:16px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    #couponInput{
+        border:2px solid #e2e8f0;
+        height:48px;
+    }
+
+    #couponInput:focus{
+        border-color:#ef4444;
+        outline:none;
+    }
+
+    /* ===== MOBILE STICKY PAY BAR ===== */
+    #mobilePayBar{
+        position:fixed;
+        bottom:0;
+        left:0;
+        width:100%;
+        height:70px;
+        background:#fff;
+        border-top:1px solid #e5e7eb;
+        padding:10px 14px;
+        z-index:9999;
+        box-shadow:0 -4px 12px rgba(0,0,0,0.08);
+    }
+
+    .paybar-content{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        height:100%;
+        max-width:420px;
+        margin:auto;
+    }
+
+    .paybar-price{
+        font-size:18px;
+        font-weight:700;
+        color:#dc2626;
+        min-width:50px;
+    }
+
+    .paybar-btn{
+        background:#16a34a;
+        color:#fff;
+        border:none;
+        padding:10px 18px;
+        border-radius:10px;
+        font-weight:600;
+        font-size:14px;
+        white-space:nowrap;
+    }
+
+    body{
+        padding-bottom:80px;
+    }
 }
 
-/* headings */
-#biodata-preview.compact-mode h1 { font-size: 32px !important; }
-#biodata-preview.compact-mode h2 { font-size: 22px !important; }
-#biodata-preview.compact-mode h3 {
-    font-size: 22px !important;
-    margin-bottom: 10px !important;
+/* =====================================================
+   🖥️ DESKTOP SPLIT LAYOUT
+===================================================== */
+@media (min-width:1024px){
+
+    main{
+        background:#f8fafc;
+        padding-bottom:80px;
+    }
+
+    .preview-split-container{
+        display:flex;
+        flex-direction:row;
+        justify-content:center;
+        align-items:flex-start;
+        gap:40px;
+    }
+
+    .action-buttons{
+        flex:0 0 380px;
+        position:sticky;
+        top:100px;
+        background:#fff;
+        padding:30px 25px;
+        border-radius:20px;
+        border:1px solid #e2e8f0;
+        box-shadow:0 20px 40px rgba(0,0,0,0.06);
+    }
+
+    .mobile-preview-scale{
+        margin-top:0 !important;
+    }
+
+    #payBtn{
+        height:60px;
+        font-size:18px !important;
+    }
 }
 
-/* spacing tighten */
-#biodata-preview.compact-mode .space-y-3 > * {
-    margin-top: 4px !important;
+/* =====================================================
+   💰 PAYMENT BOX
+===================================================== */
+.payment-box{
+    width:100%;
+    max-width:420px;
+    margin:auto;
 }
 
-#biodata-preview.compact-mode .mb-6 { margin-bottom: 10px !important; }
-#biodata-preview.compact-mode .mt-6 { margin-top: 10px !important; }
-#biodata-preview.compact-mode .gap-10 { gap: 16px !important; }
-
-/* 🔥 important: reduce section spacing */
-#biodata-preview.compact-mode .space-y-10 {
-    margin-top: 10px !important;
+.price-original{
+    text-decoration:line-through;
+    color:#999;
+    margin-right:6px;
 }
 
-/* 🔥 reduce container bottom padding */
-#biodata-preview.compact-mode .absolute.inset-0 {
-    padding-bottom: 40px !important;
+.price-final{
+    color:#16a34a;
+    font-weight:bold;
+    font-size:20px;
 }
 
-/* 🔥 reduce line spacing */
-#biodata-preview.compact-mode .leading-relaxed {
-    line-height: 1.25 !important;
+/* =====================================================
+   📱 STICKY PAY BAR (GLOBAL - NO DUPLICATE)
+===================================================== */
+#mobilePayBar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#fff;
+    border-top:2px solid #e5e7eb;
+    padding:10px 12px;
+    z-index:9999;
+    box-shadow:0 -2px 10px rgba(0,0,0,0.08);
 }
 
-
-/* ================= LAST RESCUE SCALE ================= */
-/* If still overflow after compact */
-#biodata-preview.compact-mode.scale-down {
-    transform: scale(0.97);
-    transform-origin: top center;
+@media(min-width:768px){
+    #mobilePayBar{
+        display:none;
+    }
 }
+
+.paybar-content{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:500px;
+    margin:auto;
+}
+
+.paybar-price{
+    font-size:20px;
+    font-weight:700;
+    color:#b91c1c;
+}
+
+.paybar-btn{
+    background:#16a34a;
+    color:#fff;
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.04);
+    }
+    100%{
+        transform:scale(1);
+    }
+}
+
+/* =====================================================
+   ✨ UTILITIES
+===================================================== */
+.hidden{
+    display:none !important;
+}
+.marathi-text{
+    letter-spacing:normal !important;
+}
+
+.export-wrapper{
+    width:794px;
+    margin:0 auto;
+    background:#fff;
+}
+
+/* =====================================================
+   🖨 PRINT
+===================================================== */
+@media print{
+    body{
+        margin:0;
+        padding:0;
+        background:#fff;
+    }
+    #biodata-preview{
+        box-shadow:none !important;
+        page-break-inside:avoid;
+    }
+}
+
