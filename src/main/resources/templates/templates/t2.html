@@ -1,83 +1,122 @@
 <div th:fragment="content">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" th:href="@{/css/templates/t2.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/templates/t2.css}">
 
-<div id="biodata-preview"
-     th:class="'template-t2 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
-     style="width:1033px;height:1540px;font-family:'Noto Sans Devanagari',sans-serif;"
-     th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:100% 100%; width:1033px;height:1540px;font-family:\'Noto Sans Devanagari\',sans-serif;'">
+    <div id="biodata-preview"
+         th:class="'template-t2 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
+         style="width:1033px;height:1540px;font-family:'Noto Sans Devanagari',sans-serif;"
+         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:100% 100%; width:1033px;height:1540px;font-family:\'Noto Sans Devanagari\',sans-serif;'">
 
-    <!-- PREVIEW RIBBON -->
-    <div th:if="${!isPaid}" class="preview-ribbon">PREVIEW</div>
+        <!-- PREVIEW RIBBON -->
+        <div th:if="${!isPaid}" class="preview-ribbon">PREVIEW</div>
 
-    <!-- CENTER WATERMARK -->
-    <div th:if="${!isPaid}" class="watermark-text flex justify-center items-center absolute inset-0 pointer-events-none z-40">
-        Weddingbio.in
-    </div>
+        <!-- CENTER WATERMARK -->
+        <div th:if="${!isPaid}" class="watermark-text flex justify-center items-center absolute inset-0 pointer-events-none z-40">
+            Weddingbio.in
+        </div>
 
-    <!-- PROFILE IMAGE -->
-    <div th:if="${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))}" class="photo-wrapper">
-        <div class="profile-box">
-            <img th:src="@{'/generated/' + ${data.profileImagePath}}" />
+        <!-- PROFILE IMAGE -->
+        <div th:if="${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))}" class="photo-wrapper">
+            <div class="profile-box">
+                <img th:src="@{'/generated/' + ${data.profileImagePath}}" />
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="absolute inset-0 inner-content flex flex-col items-center text-[#3a2a2a]">
+
+            <!-- GOD + MANTRA -->
+            <div class="text-center mb-4">
+                <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-40 mx-auto mb-2"/>
+                <div class="mantra" th:text="${data.mantra}"></div>
+            </div>
+
+            <!-- PERSONAL -->
+            <h3 class="section-title" th:text="#{editor.section.personal}"></h3>
+
+            <div th:class="'w-full text-[22px] leading-relaxed space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.name}"></div><div class="colon">:</div><div class="value name" th:text="${data.name}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthDate}"></div><div class="colon">:</div><div class="value" th:text="${data.birthDate}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthPlace}"></div><div class="colon">:</div><div class="value" th:text="${data.birthPlace}"></div></div>
+
+                <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}" class="row"><div class="label" th:text="#{editor.form.birthTime}"></div><div class="colon">:</div><div class="value" th:text="${data.birthTime}"></div></div>
+                <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="row"><div class="label" th:text="#{editor.form.religion}"></div><div class="colon">:</div><div class="value" th:text="${data.religion}"></div></div>
+                <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="row"><div class="label" th:text="#{editor.form.caste}"></div><div class="colon">:</div><div class="value" th:text="${data.caste}"></div></div>
+                <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="row"><div class="label" th:text="#{editor.form.gotra}"></div><div class="colon">:</div><div class="value" th:text="${data.gotra}"></div></div>
+                <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="row"><div class="label" th:text="#{editor.form.kuldaivat}"></div><div class="colon">:</div><div class="value" th:text="${data.kuldaivat}"></div></div>
+
+                <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}" class="row"><div class="label" th:text="#{editor.form.rashi}"></div><div class="colon">:</div><div class="value" th:text="${data.rashi}"></div></div>
+                <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}" class="row"><div class="label" th:text="#{editor.form.nakshatra}"></div><div class="colon">:</div><div class="value" th:text="${data.nakshatra}"></div></div>
+                <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}" class="row"><div class="label" th:text="#{editor.form.gan}"></div><div class="colon">:</div><div class="value" th:text="${data.gan}"></div></div>
+                <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}" class="row"><div class="label" th:text="#{editor.form.nadi}"></div><div class="colon">:</div><div class="value" th:text="${data.nadi}"></div></div>
+                <div th:if="${data.mangal != null and !#strings.isEmpty(#strings.trim(data.mangal))}" class="row"><div class="label" th:text="#{editor.form.mangal}"></div><div class="colon">:</div><div class="value" th:text="${data.mangal}"></div></div>
+
+                <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="row"><div class="label" th:text="#{editor.form.height}"></div><div class="colon">:</div><div class="value" th:text="${data.height}"></div></div>
+                <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="row"><div class="label" th:text="#{editor.form.complexion}"></div><div class="colon">:</div><div class="value" th:text="${data.complexion}"></div></div>
+                <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="row"><div class="label" th:text="#{editor.form.bloodGroup}"></div><div class="colon">:</div><div class="value" th:text="${data.bloodGroup}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.education}"></div><div class="colon">:</div><div class="value" th:text="${data.education}"></div></div>
+                <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="row"><div class="label" th:text="#{editor.form.profession}"></div><div class="colon">:</div><div class="value" th:text="${data.profession}"></div></div>
+                <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="row"><div class="label" th:text="#{editor.form.income}"></div><div class="colon">:</div><div class="value" th:text="${data.income}"></div></div>
+
+            </div>
+
+            <!-- FAMILY -->
+            <h3 class="section-title mt-6" th:text="#{editor.section.family}"></h3>
+
+            <div th:class="'w-full text-[22px] space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.fatherName}"></div><div class="colon">:</div><div class="value" th:text="${data.fatherName}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.motherName}"></div><div class="colon">:</div><div class="value" th:text="${data.motherName}"></div></div>
+
+                <div th:if="${data.brothers != null and !#strings.isEmpty(#strings.trim(data.brothers))}" class="row"><div class="label" th:text="#{editor.form.brothers}"></div><div class="colon">:</div><div class="value" th:text="${data.brothers}"></div></div>
+
+                <div th:if="${data.sisters != null and !#strings.isEmpty(#strings.trim(data.sisters))}" class="row"><div class="label" th:text="#{editor.form.sisters}"></div><div class="colon">:</div><div class="value" th:text="${data.sisters}"></div></div>
+
+                <div th:if="${data.relatives != null and !#strings.isEmpty(#strings.trim(data.relatives))}" class="row"><div class="label" th:text="#{editor.form.relatives}"></div><div class="colon">:</div><div class="value" th:text="${data.relatives}"></div></div>
+
+                <div th:if="${data.mama != null and !#strings.isEmpty(#strings.trim(data.mama))}" class="row">
+                    <div class="label" th:text="#{editor.form.mamaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="m : ${#strings.arraySplit(data.mama, ',')}" th:text="${m}"></span>
+                    </div>
+                </div>
+
+                <div th:if="${data.kaka != null and !#strings.isEmpty(#strings.trim(data.kaka))}" class="row">
+                    <div class="label" th:text="#{editor.form.kakaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="k : ${#strings.arraySplit(data.kaka, ',')}" th:text="${k}"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CONTACT -->
+            <div class="contact-section">
+
+                <div class="contact-item">
+                    📞 <span th:text="${isPaid ? data.mobile : (data.mobile != null and !#strings.isEmpty(#strings.trim(data.mobile)) ? #strings.substring(data.mobile,0,5) + 'XXXXX' : '99999XXXXX')}"></span>
+                </div>
+
+                <div th:if="${data.alternateMobile != null and !#strings.isEmpty(#strings.trim(data.alternateMobile))}"
+                     class="contact-item">
+                    📞 <span th:text="${isPaid ? data.alternateMobile : #strings.substring(data.alternateMobile,0,5) + 'XXXXX'}"></span>
+                </div>
+
+                <div th:if="${data.email != null and !#strings.isEmpty(#strings.trim(data.email))}" class="contact-item">
+                    ✉️ <span th:text="${isPaid ? data.email : 'vaibhav@weddingbio.in'}"></span>
+                </div>
+
+                <div  class="contact-item">
+                    📍 <span th:text="${isPaid ? data.address : 'Pune, Maharashtra'}"></span>
+                </div>
+
+            </div>
+
         </div>
     </div>
-
-    <!-- MAIN CONTENT -->
-    <div class="absolute inset-0 inner-content flex flex-col items-center text-[#3a2a2a]">
-
-        <!-- GOD + MANTRA -->
-        <div class="text-center mb-4">
-            <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-40 mx-auto mb-2"/>
-            <div class="mantra" th:text="${data.mantra}"></div>
-        </div>
-
-        <!-- PERSONAL -->
-        <h3 class="section-title" th:text="#{editor.section.personal}"></h3>
-
-        <div th:class="'w-full text-[22px] leading-relaxed space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
-
-            <div class="row"><div class="label" th:text="#{editor.form.name}"></div><div class="colon">:</div><div class="value name" th:text="${data.name}"></div></div>
-            <div class="row"><div class="label" th:text="#{editor.form.birthDate}"></div><div class="colon">:</div><div class="value" th:text="${data.birthDate}"></div></div>
-            <div class="row"><div class="label" th:text="#{editor.form.birthPlace}"></div><div class="colon">:</div><div class="value" th:text="${data.birthPlace}"></div></div>
-
-            <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}" class="row"><div class="label" th:text="#{editor.form.birthTime}"></div><div class="colon">:</div><div class="value" th:text="${data.birthTime}"></div></div>
-            <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="row"><div class="label" th:text="#{editor.form.religion}"></div><div class="colon">:</div><div class="value" th:text="${data.religion}"></div></div>
-            <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="row"><div class="label" th:text="#{editor.form.caste}"></div><div class="colon">:</div><div class="value" th:text="${data.caste}"></div></div>
-            <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="row"><div class="label" th:text="#{editor.form.gotra}"></div><div class="colon">:</div><div class="value" th:text="${data.gotra}"></div></div>
-            <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="row"><div class="label" th:text="#{editor.form.kuldaivat}"></div><div class="colon">:</div><div class="value" th:text="${data.kuldaivat}"></div></div>
-
-            <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}" class="row"><div class="label" th:text="#{editor.form.rashi}"></div><div class="colon">:</div><div class="value" th:text="${data.rashi}"></div></div>
-            <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}" class="row"><div class="label" th:text="#{editor.form.nakshatra}"></div><div class="colon">:</div><div class="value" th:text="${data.nakshatra}"></div></div>
-            <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}" class="row"><div class="label" th:text="#{editor.form.gan}"></div><div class="colon">:</div><div class="value" th:text="${data.gan}"></div></div>
-            <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}" class="row"><div class="label" th:text="#{editor.form.nadi}"></div><div class="colon">:</div><div class="value" th:text="${data.nadi}"></div></div>
-            <div th:if="${data.mangal != null and !#strings.isEmpty(#strings.trim(data.mangal))}" class="row"><div class="label" th:text="#{editor.form.mangal}"></div><div class="colon">:</div><div class="value" th:text="${data.mangal}"></div></div>
-
-            <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="row"><div class="label" th:text="#{editor.form.height}"></div><div class="colon">:</div><div class="value" th:text="${data.height}"></div></div>
-            <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="row"><div class="label" th:text="#{editor.form.complexion}"></div><div class="colon">:</div><div class="value" th:text="${data.complexion}"></div></div>
-            <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="row"><div class="label" th:text="#{editor.form.bloodGroup}"></div><div class="colon">:</div><div class="value" th:text="${data.bloodGroup}"></div></div>
-
-            <div class="row"><div class="label" th:text="#{editor.form.education}"></div><div class="colon">:</div><div class="value" th:text="${data.education}"></div></div>
-            <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="row"><div class="label" th:text="#{editor.form.profession}"></div><div class="colon">:</div><div class="value" th:text="${data.profession}"></div></div>
-            <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="row"><div class="label" th:text="#{editor.form.income}"></div><div class="colon">:</div><div class="value" th:text="${data.income}"></div></div>
-
-        </div>
-
-        <!-- FAMILY -->
-        <h3 class="section-title mt-6" th:text="#{editor.section.family}"></h3>
-
-        <div th:class="'w-full text-[22px] space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
-            <div class="row"><div class="label" th:text="#{editor.form.fatherName}"></div><div class="colon">:</div><div class="value" th:text="${data.fatherName}"></div></div>
-            <div class="row"><div class="label" th:text="#{editor.form.motherName}"></div><div class="colon">:</div><div class="value" th:text="${data.motherName}"></div></div>
-        </div>
-
-        <!-- CONTACT -->
-        <div class="contact-section">
-            <div class="contact-item">📞 <span th:text="${isPaid ? data.mobile : (data.mobile != null ? #strings.substring(data.mobile,0,5) + 'XXXXX' : '99999XXXXX')}"></span></div>
-            <div class="contact-item">📞 <span th:text="${isPaid ? data.alternateMobile : (data.alternateMobile != null ? #strings.substring(data.alternateMobile,0,5) + 'XXXXX' : '88888XXXXX')}"></span></div>
-            <div class="contact-item">✉️ <span th:text="${isPaid ? data.email : 'yourname@weddingbio.in'}"></span></div>
-            <div class="contact-item">📍 <span th:text="${isPaid ? data.address : 'Pune, Maharashtra'}"></span></div>
-        </div>
-
-    </div>
-</div>
 </div>

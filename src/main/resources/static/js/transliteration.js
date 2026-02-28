@@ -93,7 +93,8 @@ document.addEventListener("keyup", async function (e) {
     activeSuggestionIndex = -1;
 
     // fetch suggestions from Google API
-    const suggestions = await fetchSuggestions(word);
+    const normalized = normalizeSpecialCases(word);
+    const suggestions = await fetchSuggestions(normalized);
 
     // show dropdown suggestions
     showInlineSuggestions(input, suggestions);
@@ -297,4 +298,10 @@ function updateHighlight(items) {
         }
     });
 
+}
+function normalizeSpecialCases(text) {
+    return text
+        .replace(/x/g, "ksh")   // convert x → ksh
+        .replace(/Ksh/g, "Ksh")
+        .replace(/kSh/g, "ksh");
 }

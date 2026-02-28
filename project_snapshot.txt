@@ -1,6 +1,6 @@
 =============================== 
 PROJECT SNAPSHOT 
-Generated on Sat 02/28/2026 13:46:21.76 
+Generated on Sat 02/28/2026 17:10:48.12 
 =============================== 
  
  
@@ -1743,7 +1743,9 @@ filter.buddhist=Buddhist
 payment.privacy.hidden=Your personal contact details are hidden for privacy.
 payment.privacy.reveal.before=Complete the payment to instantly reveal your
 payment.privacy.reveal.items=real mobile number, email and address
-payment.privacy.reveal.after=in the biodata. 
+payment.privacy.reveal.after=in the biodata.
+
+preview.pay.highlight=\ud83d\udc8e Pay just \u20b949 and download high-quality biodata with full details 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\messages_mr.properties" 
 -------------------------------------------------- 
@@ -2376,7 +2378,8 @@ filter.buddhist=\u092c\u094c\u0926\u094d\u0927
 payment.privacy.hidden=\u0924\u0941\u092e\u091a\u0940 \u0935\u0948\u092f\u0915\u094d\u0924\u093f\u0915 \u0938\u0902\u092a\u0930\u094d\u0915 \u092e\u093e\u0939\u093f\u0924\u0940 \u0938\u0941\u0930\u0915\u094d\u0937\u093f\u0924 \u0920\u0947\u0935\u0932\u0940 \u0906\u0939\u0947.
 payment.privacy.reveal.before=\u092a\u0947\u092e\u0947\u0902\u091f \u092a\u0942\u0930\u094d\u0923 \u0915\u0947\u0932\u094d\u092f\u093e\u0935\u0930 \u0924\u0941\u092e\u091a\u093e
 payment.privacy.reveal.items=\u0916\u0930\u093e \u092e\u094b\u092c\u093e\u0908\u0932 \u0928\u0902\u092c\u0930, \u0908\u092e\u0947\u0932 \u0906\u0923\u093f \u092a\u0924\u094d\u0924\u093e
-payment.privacy.reveal.after=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e\u092e\u0927\u094d\u092f\u0947 \u0932\u0917\u0947\u091a \u0926\u093f\u0938\u0947\u0932. 
+payment.privacy.reveal.after=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e\u092e\u0927\u094d\u092f\u0947 \u0932\u0917\u0947\u091a \u0926\u093f\u0938\u0947\u0932.
+preview.pay.highlight=\ud83d\udc8e \u092b\u0915\u094d\u0924 \u20b949 \u092e\u0927\u094d\u092f\u0947 \u092a\u0942\u0930\u094d\u0923 \u092e\u093e\u0939\u093f\u0924\u0940 \u0905\u0938\u0932\u0947\u0932\u093e \u0909\u091a\u094d\u091a-\u0917\u0941\u0923\u0935\u0924\u094d\u0924\u0947\u091a\u093e \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0921\u093e\u0909\u0928\u0932\u094b\u0921 \u0915\u0930\u093e 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\config\templates.json" 
 -------------------------------------------------- 
@@ -2586,444 +2589,355 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\da
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\preview.css" 
 -------------------------------------------------- 
 /* =====================================================
-   📄 BIODATA RESPONSIVE PRINT MODES
+   📦 GLOBAL RESET
 ===================================================== */
-
-/* ================= NORMAL (default) ================= */
-#biodata-preview.normal-mode {
-    font-size: 23px;
-    line-height: 1.6;
+*{
+    box-sizing:border-box !important;
 }
 
-#biodata-preview.normal-mode .god-img {
-    height: 210px;
+body{
+    padding-bottom:90px; /* space for sticky bar */
+    overflow-x:hidden;
 }
-
-
-/* ================= MEDIUM ================= */
-#biodata-preview.medium-mode {
-    font-size: 21px;
-}
-
-#biodata-preview.medium-mode h1 { font-size: 34px !important; }
-#biodata-preview.medium-mode h2 { font-size: 24px !important; }
-#biodata-preview.medium-mode h3 { font-size: 24px !important; }
-
-#biodata-preview.medium-mode .god-img {
-    height: 160px;
-}
-
-#biodata-preview.medium-mode .space-y-3 > * {
-    margin-top: 6px !important;
-}
-
-
-/* ================= COMPACT ================= */
-#biodata-preview.compact-mode {
-    font-size: 20px;
-    line-height: 1.35;
-}
-
-/* hide title */
-#biodata-preview.compact-mode .biodata-title {
-    display: none;
-}
-
-/* smaller god image */
-#biodata-preview.compact-mode .god-img {
-    height: 120px !important;
-}
-
-/* headings */
-#biodata-preview.compact-mode h1 { font-size: 32px !important; }
-#biodata-preview.compact-mode h2 { font-size: 22px !important; }
-#biodata-preview.compact-mode h3 {
-    font-size: 22px !important;
-    margin-bottom: 10px !important;
-}
-
-/* spacing tighten */
-#biodata-preview.compact-mode .space-y-3 > * {
-    margin-top: 4px !important;
-}
-
-#biodata-preview.compact-mode .mb-6 { margin-bottom: 10px !important; }
-#biodata-preview.compact-mode .mt-6 { margin-top: 10px !important; }
-#biodata-preview.compact-mode .gap-10 { gap: 16px !important; }
-
-/* 🔥 important: reduce section spacing */
-#biodata-preview.compact-mode .space-y-10 {
-    margin-top: 10px !important;
-}
-
-/* 🔥 reduce container bottom padding */
-#biodata-preview.compact-mode .absolute.inset-0 {
-    padding-bottom: 40px !important;
-}
-
-/* 🔥 reduce line spacing */
-#biodata-preview.compact-mode .leading-relaxed {
-    line-height: 1.25 !important;
-}
-
-
-/* ================= LAST RESCUE SCALE ================= */
-/* If still overflow after compact */
-#biodata-preview.compact-mode.scale-down {
-    transform: scale(0.97);
-    transform-origin: top center;
-} 
--------------------------------------------------- 
-FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\style.css" 
--------------------------------------------------- 
-
-
 
 /* =====================================================
-   📄 BIODATA PREVIEW (A4 CONTAINER)
+   📦 PAGE LAYOUT WRAPPER
 ===================================================== */
-
-* {
-    box-sizing: border-box !important;
+.preview-page-container{
+    width:100%;
+    max-width:1280px;
+    margin:0 auto;
+    padding:0 16px;
 }
 
-#biodata-preview {
-    width: 1033px !important;
-    height: 1540px !important;
-    max-height: 1540px !important; /* Force a hard limit */
-    overflow: hidden !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: relative;
+.preview-split-container{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
 }
 
-
-/* =====================================================
-   👁 PREVIEW WRAPPER + SCALE
-===================================================== */
-
-.preview-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-    padding-bottom: 0px; /* Change from 20px to 0px to stop 2nd page spill */
-}
-
-
-
-
-/* =====================================================
-   🖨 PRINT MODE
-===================================================== */
-
-@media print {
-
-    body {
-        margin: 0;
-        padding: 0;
-        background: #fff;
-    }
-
-    #biodata-preview {
-        margin: 0 !important;
-        box-shadow: none !important;
-        page-break-inside: avoid;
-    }
-
-    * {
-        page-break-inside: avoid !important;
-    }
-}
-
-
-/* =====================================================
-   🔠 MARATHI TEXT RENDER FIX
-===================================================== */
-
-.marathi-text {
-    letter-spacing: normal !important;
-}
-
-
-/* =====================================================
-   📦 EXPORT WRAPPER (FOR IMAGE/PDF EXPORT)
-===================================================== */
-
-.export-wrapper {
-    width: 794px;
-    margin: 0 auto;
-    background: #fff;
-}
-
-
-/* =====================================================
-   🎯 ACTION BUTTON BAR (DESKTOP)
-===================================================== */
-
-.action-buttons {
-    position: static;
-    margin-top: 10px;
-    padding-bottom: 20px;
-
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    text-align: center;
-}
-
-.action-buttons button {
-    min-width: 200px;
+.pay-highlight {
+    background: #e6fffa;
+    border: 1px solid #10b981;
+    color: #065f46;
     font-weight: 600;
-    border-radius: 8px;
-}
-
-
-/* =====================================================
-   🎟 COUPON SECTION
-===================================================== */
-
-#couponInput {
-    border: 1px solid #ccc;
-    padding: 8px 10px;
-    border-radius: 6px;
-    text-align: center;
-}
-
-#couponMsg {
-    font-size: 13px;
-    margin-top: 6px;
-}
-
-
-/* =====================================================
-   💰 PAYMENT BOX CENTER ALIGN
-===================================================== */
-
-.payment-box {
-    width: 100%;
-    max-width: 420px;
-    margin: auto;
-}
-
-
-/* =====================================================
-   🧾 PRICE TEXT STYLING
-===================================================== */
-
-.price-original {
-    text-decoration: line-through;
-    color: #999;
-    margin-right: 6px;
-}
-
-.price-final {
-    color: #16a34a;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-
-/* =====================================================
-   🔒 WATERMARK STYLE
-===================================================== */
-
-.watermark {
-    position: absolute;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-25deg);
-    font-size: 40px;
-    color: rgba(0,0,0,0.08);
-    font-weight: bold;
-    pointer-events: none;
-    user-select: none;
-}
-
-
-/* =====================================================
-   📊 UTILITY
-===================================================== */
-
-.hidden {
-    display: none !important;
-}
-
-
-/* =====================================================
-   📱 MOBILE RESPONSIVE DESIGN (PRO VERSION)
-===================================================== */
-
-/* =====================================================
-   📱 MOBILE VIEW RESPONSIVENESS (WeddingBio.in)#biodata-preview
-===================================================== */
-@media (max-width: 768px) {
-    body {
-        overflow-x: hidden;
-    }
-
-    /* 1. The Container (Ensures no horizontal scroll) */
-    .mobile-preview-scale {
-        width: 100% !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: flex-start;
-        overflow: hidden;
-        height: 520px; /* Space for the scaled preview */
-        margin-top: 15px;
-        background: #f7f7f7;
-    }
-
-    /* 2. The Scaler (Shrinks 1033px to fit phone width) */
-    .preview-wrapper {
-        width: 1033px !important;
-        transform: scale(0.32) !important;
-        transform-origin: top center;
-        display: flex;
-        justify-content: center;
-        padding-bottom: 0px !important; /* Critical for 1-page PDF */
-    }
-
-    /* Fix for extra div inserted by Thymeleaf inside the wrapper */
-    .preview-wrapper > div {
-        width: 1033px !important;
-    }
-
-    /* 3. The Biodata Canvas (Fixed Template Size) */
-    #biodata-preview {
-        width: 1033px !important;
-        height: 1540px !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-        display: block !important;
-    }
-
-    /* 4. Refined Action Buttons (Payment Box) */
-    .action-buttons {
-        border-radius: 24px 24px 0 0;
-        padding: 30px 20px;
-        gap: 15px;
-        margin-top: -20px;
-        position: sticky;
-        top: 80px; /* Sticks below shrunken header */
-        transition: top 0.3s ease;
-        background: white;
-        z-index: 50;
-    }
-
-    /* 5. Button & UI Improvements */
-    #payBtn {
-        width: 100% !important;
-        max-width: 350px;
-        min-height: 58px;
-        font-size: 16px !important;
-        padding: 10px 15px !important;
-        line-height: 1.3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-    }
-
-    #couponInput {
-        border: 2px solid #e2e8f0 !important;
-        height: 48px;
-        transition: border-color 0.2s;
-    }
-
-    #couponInput:focus {
-        border-color: #ef4444 !important; /* Brand Red */
-        outline: none;
-    }
-
-    .action-buttons .text-sm.text-gray-600 {
-        text-align: left !important;
-        display: inline-block;
-        width: auto;
-        margin: 10px auto;
-        line-height: 1.8;
-    }
-}
-
-.mobile-preview-scale {
-    transform-origin: top center;
-}
-
-
-.preview-wrapper {
-    line-height: 0; /* Prevents tiny gaps between divs */
+    border-radius: 10px;
+    padding: 10px 14px;
 }
 
 /* =====================================================
-   🖥️ DESKTOP SIDE-BY-SIDE LAYOUT (min-width: 1024px)
+   📄 BIODATA CANVAS (A4)
 ===================================================== */
+#biodata-preview{
+    width:1033px !important;
+    height:1540px !important;
+    margin:0 auto !important;
+    position:relative;
+}
 
 /* =====================================================
-   🖥️ PREMIUM DESKTOP SIDE-BY-SIDE (min-width: 1024px)
+   👁 PREVIEW WRAPPER (CENTER)
 ===================================================== */
+.preview-wrapper{
+    display:flex;
+    justify-content:center;
+    width:100%;
+    margin-top:15px;
+}
 
-@media (min-width: 1024px) {
-    main {
-        background-color: #f8fafc;
-        padding-bottom: 80px;
+/* =====================================================
+   📱 MOBILE VIEW (FINAL FIXED CENTER + SCALE)
+===================================================== */
+@media (max-width:768px){
+
+    .mobile-preview-scale{
+        width:100%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:flex-start;
+
+        overflow:hidden;
+        margin-top:15px;
+        background:#f7f7f7;
+        padding:0 10px;
+
+        min-height:520px;   /* ✔ keeps minimum but allows grow */
+        height:auto;        /* ✔ important */
     }
 
-    /* 2. Target the specific split container */
-    .preview-split-container {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: flex-start !important;
-        max-width: 1440px;
-        margin: 0 auto;
-        gap: 40px;
+    .pay-highlight {
+        background: #e6fffa;
+        border: 1px solid #10b981;
+        color: #065f46;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 10px 14px;
     }
 
-    /* 3. The Sync Fix for the Payment Box */
-    .action-buttons {
-        flex: 0 0 380px;
-        position: sticky;
-
-        /* CALCULATION: 
-           80px (Initial Header Height) + 20px (Main Padding) = 100px 
-           We set top to 100px so it 'sticks' exactly where it starts.
-        */
-        top: 100px;
-
-        margin-top: 0 !important;
-        z-index: 10;
-
-        /* Smoothly move the box up ONLY when the header shrinks */
-        transition: top 0.3s ease-in-out;
-
-        background: #ffffff;
-        padding: 30px 25px !important;
-        border-radius: 20px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    /* container */
+    .preview-wrapper{
+        position:relative;
+        width:100%;
+        height:100%;
     }
 
-    /* Ensure the biodata starts at the same level */
-    .mobile-preview-scale {
-        margin-top: 0 !important;
+    /* fake viewport */
+    .preview-wrapper::before{
+        content:"";
+        display:block;
+        width:330px;
+        height:520px;
+        margin:0 auto;
     }
 
-
-    /* Ensure benefits are easy to read in the sidebar */
-    .action-buttons .text-sm {
-        text-align: left !important;
-        padding-left: 10px;
-        border-left: 2px solid #f1f5f9;
-        margin: 15px 0;
+    /* scaled biodata */
+    .preview-wrapper > div{
+        position:absolute;
+        top:0;
+        left:50%;
+        transform:translateX(-50%) scale(0.30);
+        transform-origin:top center;
     }
 
-    #payBtn {
-        height: 60px; /* Larger desktop call-to-action */
-        font-size: 18px !important;
+    #biodata-preview{
+        width:1033px !important;
+        height:1540px !important;
     }
 
+    /* ===== PAYMENT BOX MOBILE ===== */
+    .action-buttons{
+        border-radius:22px 22px 0 0;
+        padding:22px 16px 90px;
+        margin-top:16px;
+        background:#fff;
+        z-index:50;
+        box-shadow:0 -6px 18px rgba(0,0,0,0.08);
+        border-top:1px solid #f1f1f1;
 
-} 
+        display:flex;
+        flex-direction:column;
+        gap:14px;
+    }
+
+    #payBtn{
+        width:100%;
+        max-width:350px;
+        min-height:58px;
+        font-size:16px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    #couponInput{
+        border:2px solid #e2e8f0;
+        height:48px;
+    }
+
+    #couponInput:focus{
+        border-color:#ef4444;
+        outline:none;
+    }
+
+    /* ===== MOBILE STICKY PAY BAR ===== */
+    #mobilePayBar{
+        position:fixed;
+        bottom:0;
+        left:0;
+        width:100%;
+        height:70px;
+        background:#fff;
+        border-top:1px solid #e5e7eb;
+        padding:10px 14px;
+        z-index:9999;
+        box-shadow:0 -4px 12px rgba(0,0,0,0.08);
+    }
+
+    .paybar-content{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        height:100%;
+        max-width:420px;
+        margin:auto;
+    }
+
+    .paybar-price{
+        font-size:18px;
+        font-weight:700;
+        color:#dc2626;
+        min-width:50px;
+    }
+
+    .paybar-btn{
+        background:#16a34a;
+        color:#fff;
+        border:none;
+        padding:10px 18px;
+        border-radius:10px;
+        font-weight:600;
+        font-size:14px;
+        white-space:nowrap;
+    }
+
+    body{
+        padding-bottom:80px;
+    }
+}
+
+/* =====================================================
+   🖥️ DESKTOP SPLIT LAYOUT
+===================================================== */
+@media (min-width:1024px){
+
+    main{
+        background:#f8fafc;
+        padding-bottom:80px;
+    }
+
+    .preview-split-container{
+        display:flex;
+        flex-direction:row;
+        justify-content:center;
+        align-items:flex-start;
+        gap:40px;
+    }
+
+    .action-buttons{
+        flex:0 0 380px;
+        position:sticky;
+        top:100px;
+        background:#fff;
+        padding:30px 25px;
+        border-radius:20px;
+        border:1px solid #e2e8f0;
+        box-shadow:0 20px 40px rgba(0,0,0,0.06);
+    }
+
+    .mobile-preview-scale{
+        margin-top:0 !important;
+    }
+
+    #payBtn{
+        height:60px;
+        font-size:18px !important;
+    }
+}
+
+/* =====================================================
+   💰 PAYMENT BOX
+===================================================== */
+.payment-box{
+    width:100%;
+    max-width:420px;
+    margin:auto;
+}
+
+.price-original{
+    text-decoration:line-through;
+    color:#999;
+    margin-right:6px;
+}
+
+.price-final{
+    color:#16a34a;
+    font-weight:bold;
+    font-size:20px;
+}
+
+/* =====================================================
+   📱 STICKY PAY BAR (GLOBAL - NO DUPLICATE)
+===================================================== */
+#mobilePayBar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#fff;
+    border-top:2px solid #e5e7eb;
+    padding:10px 12px;
+    z-index:9999;
+    box-shadow:0 -2px 10px rgba(0,0,0,0.08);
+}
+
+@media(min-width:768px){
+    #mobilePayBar{
+        display:none;
+    }
+}
+
+.paybar-content{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:500px;
+    margin:auto;
+}
+
+.paybar-price{
+    font-size:20px;
+    font-weight:700;
+    color:#b91c1c;
+}
+
+.paybar-btn{
+    background:#16a34a;
+    color:#fff;
+    padding:10px 16px;
+    border:none;
+    border-radius:6px;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%{
+        transform:scale(1);
+    }
+    50%{
+        transform:scale(1.04);
+    }
+    100%{
+        transform:scale(1);
+    }
+}
+
+/* =====================================================
+   ✨ UTILITIES
+===================================================== */
+.hidden{
+    display:none !important;
+}
+.marathi-text{
+    letter-spacing:normal !important;
+}
+
+.export-wrapper{
+    width:794px;
+    margin:0 auto;
+    background:#fff;
+}
+
+/* =====================================================
+   🖨 PRINT
+===================================================== */
+@media print{
+    body{
+        margin:0;
+        padding:0;
+        background:#fff;
+    }
+    #biodata-preview{
+        box-shadow:none !important;
+        page-break-inside:avoid;
+    }
+}
+
+ 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\templates.css" 
 -------------------------------------------------- 
@@ -3070,6 +2984,271 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\te
     background: #dc2626;
     color: #fff;
     border-color: #dc2626;
+} 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\templates\t1.css" 
+-------------------------------------------------- 
+.template-t1 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: #333;
+}
+
+/* headings */
+.template-t1 h3 {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #7a1f1f;
+    text-decoration: underline;
+}
+
+/* label column */
+.template-t1 .label {
+    font-weight: 600;
+    color: #555;
+}
+
+/* value column */
+.template-t1 .value {
+    font-weight: 600;
+    color: #222;
+}
+
+/* colon */
+.template-t1 .colon {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* grid fix */
+.template-t1 .row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 7fr;
+    align-items: baseline;
+    margin-bottom: 6px;
+} 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\templates\t2.css" 
+-------------------------------------------------- 
+/* ===============================
+   🎨 TEMPLATE T2 (ROYAL RED FRAME)
+================================= */
+
+.template-t2 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: #3a2a2a;
+}
+
+/* ===== Container inner spacing ===== */
+.template-t2 .inner-content {
+    padding-left: 155px;   /* was 140px */
+    padding-right: 140px;
+    padding-top: 90px;
+    padding-bottom: 80px;
+}
+.template-t2 .label {
+    padding-left: 5px;   /* small inner spacing */
+}
+/* ===== Headings ===== */
+.template-t2 .section-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 26px;
+    color: #7a1f1f;
+    text-decoration: underline;
+    margin-bottom: 14px;
+}
+
+/* ===== God Image ===== */
+.template-t2 .god-img {
+    height: 160px;
+    margin: 0 auto 6px auto;
+}
+
+/* ===== Mantra ===== */
+.template-t2 .mantra {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #7a1f1f;
+    margin-bottom: 8px;
+}
+
+/* ===== Rows ===== */
+.template-t2 .row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 7fr;
+    align-items: baseline;
+    font-size: 22px;
+    margin-bottom: 4px;
+    padding-left: 10px;
+}
+
+/* label */
+.template-t2 .label {
+    font-weight: 600;
+    color: #3d2c2c;
+}
+
+/* colon */
+.template-t2 .colon {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* value */
+.template-t2 .value {
+    font-weight: 500;
+    color: #222;
+}
+
+/* strong name */
+.template-t2 .value.name {
+    font-weight: 700;
+}
+
+/* ===== FAMILY SECTION SPACING ===== */
+.template-t2 .family-section {
+    margin-top: 18px;
+}
+
+/* ===== CONTACT SECTION ===== */
+.template-t2 .contact-section {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.template-t2 .contact-item {
+    margin-bottom: 4px;
+}
+
+/* ===== MULTI LINE RELATIVES ===== */
+.template-t2 .multi-line span {
+    display: block;
+    line-height: 1.3;
+}
+
+/* ===== PROFILE IMAGE ===== */
+.template-t2 .profile-box {
+    width: 210px;
+    height: 300px;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.template-t2 .profile-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== WATERMARK FIX ===== */
+.template-t2 .watermark-text {
+    font-size: 90px;
+    color: rgba(0,0,0,0.05);
+    transform: rotate(-35deg);
+    font-weight: 900;
+    letter-spacing: 6px;
+}
+
+/* ===== IMPORTANT FIXES ===== */
+
+/* prevent external css breaking spacing */
+.template-t2 .space-y-2 > * {
+    margin-top: 4px !important;
+}
+
+.template-t2 .space-y-10 {
+    margin-top: 16px !important;
+}
+
+/* fix line height override */
+.template-t2 {
+    line-height: 1.4 !important;
+}
+
+/* when profile image exists */
+.template-t2.has-photo .inner-content {
+    padding-right: 260px; /* create space for photo */
+}
+
+/* reduce gap between label & value */
+.template-t2.has-photo .row {
+    grid-template-columns: 3.5fr 0.8fr 7.7fr;
+}
+
+.template-t2 .photo-wrapper {
+    position: absolute;
+    top: 120px;
+    right: 110px;
+}
+
+.template-t2 .profile-box {
+    width: 200px;
+    height: 260px;
+}
+
+
+
+/* blur unpaid content */
+.preview-blur{
+    filter: blur(1.8px);
+    user-select: none;
+}
+
+/* ribbon */
+.preview-ribbon{
+    position:absolute;
+    top:0;
+    left:0;
+    background:#b91c1c;
+    color:#fff;
+    padding:8px 40px;
+    transform:rotate(-45deg) translate(-30px,20px);
+    font-size:14px;
+    font-weight:bold;
+    z-index:60;
+}
+
+/* tiled watermark */
+.watermark-tiles::before{
+    content:"WeddingBio.in   WeddingBio.in   WeddingBio.in";
+    position:absolute;
+    inset:0;
+    font-size:48px;
+    color:rgba(0,0,0,0.06);
+    transform:rotate(-30deg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+}
+
+
+.pay-highlight{
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+    color:#065f46;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    padding:10px 16px;
+    border-radius:8px;
+    width:fit-content;
+    margin:10px auto;
+    animation:blinkOnce 1.5s ease-in-out;
+}
+
+/* blink only once */
+@keyframes blinkOnce{
+    0%{opacity:0;}
+    40%{opacity:1;}
+    70%{opacity:0.3;}
+    100%{opacity:1;}
 } 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\base.js" 
@@ -3303,7 +3482,18 @@ function adjustLayout() {
     }
 }
 
-window.onload = adjustLayout; 
+window.onload = adjustLayout;
+
+
+function scrollToPayment(){
+    const el = document.getElementById("paymentBox");
+    if(el){
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        el.classList.add("highlight");
+        setTimeout(()=> el.classList.remove("highlight"),2000);
+    }
+} 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\biodata-editor.js" 
 -------------------------------------------------- 
@@ -4307,69 +4497,69 @@ function updateHighlight(items) {
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\dashboard.html" 
 -------------------------------------------------- 
 <div th:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <section class="relative h-[72vh] md:h-[70vh] lg:h-[80vh] overflow-hidden">
 
-<section class="relative h-[72vh] md:h-[70vh] lg:h-[80vh] overflow-hidden">
+        <img src="/images/hero-couple.jpg"
+             class="absolute inset-0 w-full h-full object-cover object-center md:object-[center_25%]"
+             alt="Happy couple">
 
-    <img src="/images/hero-couple.jpg"
-         class="absolute inset-0 w-full h-full object-cover object-center md:object-[center_25%]"
-         alt="Happy couple">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
 
-    <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col justify-center pb-16">
+            <div class="text-white max-w-sm md:max-w-md lg:max-w-lg space-y-5">
 
-    <div class="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col justify-center pb-16">
-        <div class="text-white max-w-sm md:max-w-md lg:max-w-lg space-y-5">
-            
-            <h1 class="text-4xl md:text-5xl lg:text-7xl font-extrabold leading-[1.15] md:leading-tight">
-                <span th:text="#{hero.title.line1}">Create a beautiful</span>
-                <br class="hidden md:block">
-                <span th:text="#{hero.title.line2}">Marriage Biodata</span>
-                <br class="hidden md:block">
-                <span class="flex items-center gap-3 mt-1">
-                    <span th:text="#{hero.title.in}">in</span>
-                    <span class="text-red-500 drop-shadow-2xl animate-pulse" th:text="#{hero.title.time}">2 minutes</span>
-                </span>
-            </h1>
+                <h1 class="text-4xl md:text-5xl lg:text-7xl font-extrabold leading-[1.15] md:leading-tight">
+                    <span th:text="#{hero.title.line1}">Create a beautiful</span>
+                    <br class="hidden md:block">
+                    <span th:text="#{hero.title.line2}">Marriage Biodata</span>
+                    <br class="hidden md:block">
+                    <span class="flex items-center gap-3 mt-1">
+                        <span th:text="#{hero.title.in}">in</span>
+                        <span class="text-red-500 drop-shadow-2xl animate-pulse" th:text="#{hero.title.time}">2 minutes</span>
+                    </span>
+                </h1>
 
-            <p class="text-base md:text-xl text-gray-200 font-medium opacity-90"
-               th:text="#{hero.subtitle}">
-                Ready-to-use professional templates for marriage
-            </p>
+                <p class="text-base md:text-xl text-gray-200 font-medium opacity-90"
+                   th:text="#{hero.subtitle}">
+                    Ready-to-use professional templates for marriage
+                </p>
 
-            <div class="flex flex-col md:flex-row items-start md:items-center gap-8 pt-4">
-                <a href="/templates"
-                   class="inline-block bg-red-600 hover:bg-red-700 hover:scale-105 active:scale-95 text-white px-10 py-4 rounded-xl shadow-[0_20px_50px_rgba(220,38,38,0.4)] transition-all duration-300 font-bold tracking-wide text-lg">
-                    Create Now
-                </a>
-                
-                <ul class="space-y-2 text-sm text-gray-300 font-semibold border-l-2 border-red-600/30 pl-4">
-                    <li class="flex items-center gap-2"> <span class="text-green-500">✔</span> <span th:text="#{hero.point1}">PDF Download</span></li>
-                    <li class="flex items-center gap-2"> <span class="text-green-500">✔</span> <span th:text="#{hero.point3}">No login required</span></li>
-                </ul>
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-8 pt-4">
+                    <a href="/templates"
+                       class="inline-block bg-red-600 hover:bg-red-700 hover:scale-105 active:scale-95 text-white px-10 py-4 rounded-xl shadow-[0_20px_50px_rgba(220,38,38,0.4)] transition-all duration-300 font-bold tracking-wide text-lg">
+                        Create Now
+                    </a>
+
+                    <ul class="space-y-2 text-sm text-gray-300 font-semibold border-l-2 border-red-600/30 pl-4">
+                        <li class="flex items-center gap-2"> <span class="text-green-500">✔</span> <span th:text="#{hero.point1}">PDF Download</span></li>
+                        <li class="flex items-center gap-2"> <span class="text-green-500">✔</span> <span th:text="#{hero.point3}">No login required</span></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="absolute bottom-0 w-full bg-black/60 backdrop-blur-xl border-t border-white/10 py-4 z-20">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between md:justify-start items-center gap-4 md:gap-12 overflow-x-auto no-scrollbar">
-            
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <span class="text-lg">🔐</span>
-                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.privacy}">Privacy First</span>
-            </div>
+        <div class="absolute bottom-0 w-full bg-black/60 backdrop-blur-xl border-t border-white/10 py-4 z-20">
+            <div class="max-w-7xl mx-auto px-6 flex justify-between md:justify-start items-center gap-4 md:gap-12 overflow-x-auto no-scrollbar">
 
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <span class="text-lg">🚫</span>
-                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.nologin}">No Login</span>
-            </div>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <span class="text-lg">🔐</span>
+                    <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.privacy}">Privacy First</span>
+                </div>
 
-            <div class="flex items-center gap-2 flex-shrink-0">
-                <span class="text-lg">📄</span>
-                <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.safe}">Safe PDF</span>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <span class="text-lg">🚫</span>
+                    <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.nologin}">No Login</span>
+                </div>
+
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <span class="text-lg">📄</span>
+                    <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.safe}">Safe PDF</span>
+                </div>
+
             </div>
-            
         </div>
-    </div>
-</section>
+    </section>
 
 
     <!-- =========================
@@ -4498,6 +4688,8 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\das
             </div>
         </div>
     </div>
+    <script th:src="@{/js/dashboard.js}" defer></script>
+
 </div>
  
 -------------------------------------------------- 
@@ -5670,123 +5862,143 @@ generateAll();
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\preview.html" 
 -------------------------------------------------- 
 <div th:fragment="content">
-    <div class="preview-split-container">
-        <div class="mobile-preview-scale">
-            <!-- ================= PREVIEW ================= -->
-            <div class="preview-wrapper">
-                <div th:replace="~{|templates/${template.id}| :: content}"></div>
+    <link rel="stylesheet" th:href="@{/css/preview.css}">
+    <div class="preview-page-container">
+        <div class="preview-split-container">
+
+            <div class="mobile-preview-scale">
+                <!-- place outside -->
+                <div th:if="${!isPaid}" class="pay-highlight"
+                     th:text="#{preview.pay.highlight}">
+                </div>
+                <!-- ================= PREVIEW ================= -->
+                <div class="preview-wrapper">
+                    <div th:replace="~{|templates/${template.id}| :: content}"></div>
+                </div>
+
+            </div>
+            <!-- ================= ACTION SECTION ================= -->
+            <div class="action-buttons">
+
+                <!-- STATUS MESSAGE -->
+                <div id="action-status"
+                     style="width:100%; text-align:center; font-weight:600; color:#444; display:none;">
+                </div>
+
+                <div th:if="${!isPaid}"
+                     class="mt-4 text-center text-sm text-gray-700 leading-relaxed max-w-md mx-auto
+                     bg-red-50 border border-red-200 rounded-lg p-3 shadow-sm blink-once">
+
+                    🔒 <span class="font-semibold text-red-700"
+                             th:text="#{payment.privacy.hidden}">
+                        तुमची वैयक्तिक संपर्क माहिती सुरक्षित ठेवली आहे.
+                    </span>
+
+                    <div class="mt-1">
+                        <span th:text="#{payment.privacy.reveal.before}">
+                            पेमेंट पूर्ण केल्यावर तुमचा
+                        </span>
+
+                        <span class="font-semibold text-green-700"
+                              th:text="#{payment.privacy.reveal.items}">
+                            खरा मोबाईल नंबर, ईमेल आणि पत्ता
+                        </span>
+
+                        <span th:text="#{payment.privacy.reveal.after}">
+                            बायोडाटामध्ये लगेच दिसेल.
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- ================= BEFORE PAYMENT ================= -->
+                <div th:if="${!isPaid}" class="payment-box" id="paymentBox">
+
+                    <!-- 🎁 COUPON -->
+                    <div class="text-center">
+                        <div class="text-sm font-semibold text-gray-600 mb-1 mt-2">
+                            🎁 Have a Coupon?
+                        </div>
+
+                        <div class="flex justify-center items-center gap-2 flex-wrap">
+                            <input id="couponInput" type="text"
+                                   placeholder="Enter coupon code"
+                                   class="border px-3 py-2 rounded text-center"/>
+
+                            <button onclick="applyCoupon()"
+                                    class="bg-gray-800 text-white px-4 py-2 rounded">
+                                Apply
+                            </button>
+                        </div>
+
+                        <!-- coupon message -->
+                        <div id="couponMsg"
+                             class="text-sm mt-2 text-green-600 font-semibold"></div>
+                    </div>
+
+                    <!-- 💰 PRICE -->
+                    <div class="text-lg font-semibold mt-2 text-center">
+                        Price:
+                        <span id="originalPrice" class="price-original hidden">₹49</span>
+                        <span id="finalPrice" class="price-final">₹49</span>
+                    </div>
+
+                    <!-- 💳 PAY BUTTON -->
+                    <button id="payBtn"
+                            class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded text-lg font-semibold shadow">
+                        💳 Pay ₹49 & Download Instantly
+                    </button>
+
+                    <!-- ✔ BENEFITS -->
+                    <div class="text-sm text-gray-600 mt-2 text-center space-y-1">
+                        <div>✔ High-quality PDF (Print ready)</div>
+                        <div>✔ HD Image format</div>
+                        <div>✔ WhatsApp sharing ready</div>
+                        <div>✔ No watermark after payment</div>
+                    </div>
+
+                    <!-- 🔒 TRUST -->
+                    <div class="text-xs text-gray-500 text-center mt-2">
+                        🔒 100% Secure payment powered by Razorpay
+                    </div>
+
+                </div>
+
+
+
+
+                <!-- ================= AFTER PAYMENT ================= -->
+                <div th:if="${isPaid}"
+                     class="flex gap-3 flex-wrap justify-center payment-box">
+
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+                            onclick="downloadImage()">
+                        📷 Download Image
+                    </button>
+
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                            onclick="downloadPDF()">
+                        📄 Download PDF
+                    </button>
+
+                    <button class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded"
+                            onclick="shareOnWhatsApp()">
+                        📲 WhatsApp वर पाठवा
+                    </button>
+
+                </div>
             </div>
         </div>
-        <!-- ================= ACTION SECTION ================= -->
-        <div class="action-buttons">
-
-            <!-- STATUS MESSAGE -->
-            <div id="action-status"
-                 style="width:100%; text-align:center; font-weight:600; color:#444; display:none;">
-            </div>
-
-            <!-- ================= BEFORE PAYMENT ================= -->
-            <div th:if="${!isPaid}" class="payment-box">
-
-                <!-- 🎁 COUPON -->
-                <div class="text-center">
-                    <div class="text-sm font-semibold text-gray-600 mb-1">
-                        🎁 Have a Coupon?
-                    </div>
-
-                    <div class="flex justify-center items-center gap-2 flex-wrap">
-                        <input id="couponInput" type="text"
-                               placeholder="Enter coupon code"
-                               class="border px-3 py-2 rounded text-center"/>
-
-                        <button onclick="applyCoupon()"
-                                class="bg-gray-800 text-white px-4 py-2 rounded">
-                            Apply
-                        </button>
-                    </div>
-
-                    <!-- coupon message -->
-                    <div id="couponMsg"
-                         class="text-sm mt-2 text-green-600 font-semibold"></div>
-                </div>
-
-                <!-- 💰 PRICE -->
-                <div class="text-lg font-semibold mt-2 text-center">
-                    Price:
-                    <span id="originalPrice" class="price-original hidden">₹49</span>
-                    <span id="finalPrice" class="price-final">₹49</span>
-                </div>
-
-                <!-- 💳 PAY BUTTON -->
-                <button id="payBtn"
-                        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded text-lg font-semibold shadow">
-                    💳 Pay ₹49 & Download Instantly
-                </button>
-
-                <!-- ✔ BENEFITS -->
-                <div class="text-sm text-gray-600 mt-2 text-center space-y-1">
-                    <div>✔ High-quality PDF (Print ready)</div>
-                    <div>✔ HD Image format</div>
-                    <div>✔ WhatsApp sharing ready</div>
-                    <div>✔ No watermark after payment</div>
-                </div>
-
-                <!-- 🔒 TRUST -->
-                <div class="text-xs text-gray-500 text-center mt-2">
-                    🔒 100% Secure payment powered by Razorpay
-                </div>
-
-            </div>
-
-<div th:if="${!isPaid}"
-     class="mt-4 text-center text-sm text-gray-700 leading-relaxed max-w-md mx-auto
-            bg-red-50 border border-red-200 rounded-lg p-3 shadow-sm blink-once">
-
-    🔒 <span class="font-semibold text-red-700"
-             th:text="#{payment.privacy.hidden}">
-        तुमची वैयक्तिक संपर्क माहिती सुरक्षित ठेवली आहे.
-    </span>
-
-    <div class="mt-1">
-        <span th:text="#{payment.privacy.reveal.before}">
-            पेमेंट पूर्ण केल्यावर तुमचा
-        </span>
-
-        <span class="font-semibold text-green-700"
-              th:text="#{payment.privacy.reveal.items}">
-            खरा मोबाईल नंबर, ईमेल आणि पत्ता
-        </span>
-
-        <span th:text="#{payment.privacy.reveal.after}">
-            बायोडाटामध्ये लगेच दिसेल.
-        </span>
     </div>
+    <!-- ================= MOBILE STICKY PAY BAR ================= -->
+    <div id="mobilePayBar" th:if="${!isPaid}">
+        <div class="paybar-content">
+            <div class="paybar-price">₹49</div>
 
-</div>
-
-
-            <!-- ================= AFTER PAYMENT ================= -->
-            <div th:if="${isPaid}"
-                 class="flex gap-3 flex-wrap justify-center payment-box">
-
-                <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-                        onclick="downloadImage()">
-                    📷 Download Image
-                </button>
-
-                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-                        onclick="downloadPDF()">
-                    📄 Download PDF
-                </button>
-
-                <button class="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded"
-                        onclick="shareOnWhatsApp()">
-                    📲 WhatsApp वर पाठवा
-                </button>
-
-            </div>
+            <button class="paybar-btn" onclick="scrollToPayment()">
+                🔒 <span>Download Biodata</span>
+            </button>
         </div>
-
     </div>
 
     <!-- ================= JS FILES ================= -->
@@ -5801,6 +6013,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\pre
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\templates.html" 
 -------------------------------------------------- 
 <div th:fragment="content">
+     <link rel="stylesheet" th:href="@{/css/templates.css}">
 
     <!-- ================= HEADER ================= -->
     <section class="bg-gradient-to-r from-red-600 via-pink-600 to-red-500 text-white py-12 md:py-14">
@@ -6021,10 +6234,6 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\lay
         <!-- ================= STYLES ================= -->
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" th:href="@{/css/base.css}">
-        <link rel="stylesheet" th:href="@{/css/style.css}">
-        <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-        <link rel="stylesheet" th:href="@{/css/templates.css}">
-        <link rel="stylesheet" th:href="@{/css/preview.css}">
     </head>
 
     <body class="bg-gray-50 text-gray-800">
@@ -6154,8 +6363,6 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\lay
         </footer>
         <!-- ================= SCRIPTS ================= -->
         <script th:src="@{/js/base.js}" defer></script>
-        <script th:src="@{/js/dashboard.js}" defer></script>
-
     </body>
 </html> 
 -------------------------------------------------- 
@@ -7092,153 +7299,87 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\tem
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\templates\t2.html" 
 -------------------------------------------------- 
 <div th:fragment="content">
-    <div id="biodata-preview"
-         class="w-[794px] h-[1120px] mx-auto bg-white relative shadow"
-         style="font-family: 'NotoDevanagari', serif;"
-         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:cover;'">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/templates/t2.css}">
 
-        <!-- INNER MARGIN -->
-        <div class="absolute inset-0 px-28 py-16">
+<div id="biodata-preview"
+     th:class="'template-t2 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
+     style="width:1033px;height:1540px;font-family:'Noto Sans Devanagari',sans-serif;"
+     th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:100% 100%; width:1033px;height:1540px;font-family:\'Noto Sans Devanagari\',sans-serif;'">
 
-            <!-- 🔱 HEADER -->
-            <div class="text-center mb-6">
-                <div class="mb-2">
-                    <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="mx-auto h-16"/>
-                </div>
+    <!-- PREVIEW RIBBON -->
+    <div th:if="${!isPaid}" class="preview-ribbon">PREVIEW</div>
 
-                <h2 class="text-[18px] font-semibold " th:text="${data.mantra}"></h2>
+    <!-- CENTER WATERMARK -->
+    <div th:if="${!isPaid}" class="watermark-text flex justify-center items-center absolute inset-0 pointer-events-none z-40">
+        Weddingbio.in
+    </div>
 
-                <h1 class="text-[26px] font-bold mt-2 inline-block px-8 pb-1">
-                    <span th:text="#{preview.header}">Biodata</span>
-                </h1>
-            </div>
-
-
-            <div class="flex gap-6">
-
-                <!-- LEFT CONTENT -->
-                <div th:class="${data.profileImagePath != null and data.profileImagePath != ''} ? 'w-3/4 space-y-6 text-[16px] leading-7' : 'w-full space-y-6 text-[16px] leading-7'">
-
-                    <!-- ================= PERSONAL ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[18px] mb-2 text-[#7a1f1f]"
-                            th:text="#{editor.section.personal}"></h3>
-
-                        <div class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.name} + ' :'"></div>
-                            <div class="col-span-2 font-bold" th:text="${data.name}"></div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.birthDate} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.birthDate}"></div>
-                        </div>
-
-                        <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}"
-                             class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.birthTime} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.birthTime}"></div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.birthPlace} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.birthPlace}"></div>
-                        </div>
-
-                        <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}"
-                             class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.religion} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.religion}"></div>
-                        </div>
-
-                        <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}"
-                             class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.caste} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.caste}"></div>
-                        </div>
-
-                        <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}"
-                             class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.rashi} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.rashi}"></div>
-                        </div>
-
-                        <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}"
-                             class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.nakshatra} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.nakshatra}"></div>
-                        </div>
-
-                        <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}"
-                             class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.gan} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.gan}"></div>
-                        </div>
-
-                        <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}"
-                             class="grid grid-cols-3 gap-x-4">
-                            <div class="font-semibold" th:text="#{editor.form.nadi} + ' :'"></div>
-                            <div class="col-span-2" th:text="${data.nadi}"></div>
-                        </div>
-
-                    </div>
-
-
-
-
-
-                    <!-- ================= EDUCATION ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase  text-[#7a1f1f]" th:text="#{editor.section.education}"></h3>
-
-                        <div class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.education} + ' :'"></div><div class="col-span-2" th:text="${data.education}"></div></div>
-
-                        <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.profession} + ' :'"></div><div class="col-span-2" th:text="${data.profession}"></div></div>
-
-                        <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.income} + ' :'"></div><div class="col-span-2" th:text="${data.income}"></div></div>
-                    </div>
-
-
-                    <!-- ================= FAMILY ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase  text-[#7a1f1f]" th:text="#{editor.section.family}"></h3>
-
-                        <div th:if="${data.fatherName != null and !#strings.isEmpty(#strings.trim(data.fatherName))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.fatherName} + ' :'"></div><div class="col-span-2" th:text="${data.fatherName}"></div></div>
-
-                        <div th:if="${data.motherName != null and !#strings.isEmpty(#strings.trim(data.motherName))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.motherName} + ' :'"></div><div class="col-span-2" th:text="${data.motherName}"></div></div>
-
-                        <div th:if="${data.brothers != null and !#strings.isEmpty(#strings.trim(data.brothers))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.brothers} + ' :'"></div><div class="col-span-2" th:text="${data.brothers}"></div></div>
-
-                        <div th:if="${data.sisters != null and !#strings.isEmpty(#strings.trim(data.sisters))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.sisters} + ' :'"></div><div class="col-span-2" th:text="${data.sisters}"></div></div>
-
-                        <div th:if="${data.relatives != null and !#strings.isEmpty(#strings.trim(data.relatives))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.relatives} + ' :'"></div><div class="col-span-2" th:text="${data.relatives}"></div></div>
-                    </div>
-
-
-                    <!-- ================= CONTACT ================= -->
-                    <div>
-                        <h3 class="text-center font-semibold text-[16px] mb-2 uppercase  text-[#7a1f1f]" th:text="#{editor.section.contact}"></h3>
-
-                        <div class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.mobile} + ' :'"></div><div class="col-span-2" th:text="${data.mobile}"></div></div>
-
-                        <div th:if="${data.address != null and !#strings.isEmpty(#strings.trim(data.address))}" class="grid grid-cols-3 gap-x-4"><div class="font-semibold" th:text="#{editor.form.address} + ' :'"></div><div class="col-span-2" th:text="${data.address}"></div></div>
-                    </div>
-
-                </div>
-
-
-                <!-- ================= PHOTO ================= -->
-                <div class="w-1/4 flex justify-center"
-                     th:if="${data.profileImagePath != null and data.profileImagePath != ''}">
-                    <div class="w-36 h-44 border border-gray-400 bg-white shadow-sm">
-                        <img th:src="@{'/generated/' + ${data.profileImagePath}}" class="object-cover w-full h-full"/>
-                    </div>
-                </div>
-
-            </div>
-
+    <!-- PROFILE IMAGE -->
+    <div th:if="${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))}" class="photo-wrapper">
+        <div class="profile-box">
+            <img th:src="@{'/generated/' + ${data.profileImagePath}}" />
         </div>
     </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="absolute inset-0 inner-content flex flex-col items-center text-[#3a2a2a]">
+
+        <!-- GOD + MANTRA -->
+        <div class="text-center mb-4">
+            <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-40 mx-auto mb-2"/>
+            <div class="mantra" th:text="${data.mantra}"></div>
+        </div>
+
+        <!-- PERSONAL -->
+        <h3 class="section-title" th:text="#{editor.section.personal}"></h3>
+
+        <div th:class="'w-full text-[22px] leading-relaxed space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+            <div class="row"><div class="label" th:text="#{editor.form.name}"></div><div class="colon">:</div><div class="value name" th:text="${data.name}"></div></div>
+            <div class="row"><div class="label" th:text="#{editor.form.birthDate}"></div><div class="colon">:</div><div class="value" th:text="${data.birthDate}"></div></div>
+            <div class="row"><div class="label" th:text="#{editor.form.birthPlace}"></div><div class="colon">:</div><div class="value" th:text="${data.birthPlace}"></div></div>
+
+            <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}" class="row"><div class="label" th:text="#{editor.form.birthTime}"></div><div class="colon">:</div><div class="value" th:text="${data.birthTime}"></div></div>
+            <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="row"><div class="label" th:text="#{editor.form.religion}"></div><div class="colon">:</div><div class="value" th:text="${data.religion}"></div></div>
+            <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="row"><div class="label" th:text="#{editor.form.caste}"></div><div class="colon">:</div><div class="value" th:text="${data.caste}"></div></div>
+            <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="row"><div class="label" th:text="#{editor.form.gotra}"></div><div class="colon">:</div><div class="value" th:text="${data.gotra}"></div></div>
+            <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="row"><div class="label" th:text="#{editor.form.kuldaivat}"></div><div class="colon">:</div><div class="value" th:text="${data.kuldaivat}"></div></div>
+
+            <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}" class="row"><div class="label" th:text="#{editor.form.rashi}"></div><div class="colon">:</div><div class="value" th:text="${data.rashi}"></div></div>
+            <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}" class="row"><div class="label" th:text="#{editor.form.nakshatra}"></div><div class="colon">:</div><div class="value" th:text="${data.nakshatra}"></div></div>
+            <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}" class="row"><div class="label" th:text="#{editor.form.gan}"></div><div class="colon">:</div><div class="value" th:text="${data.gan}"></div></div>
+            <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}" class="row"><div class="label" th:text="#{editor.form.nadi}"></div><div class="colon">:</div><div class="value" th:text="${data.nadi}"></div></div>
+            <div th:if="${data.mangal != null and !#strings.isEmpty(#strings.trim(data.mangal))}" class="row"><div class="label" th:text="#{editor.form.mangal}"></div><div class="colon">:</div><div class="value" th:text="${data.mangal}"></div></div>
+
+            <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="row"><div class="label" th:text="#{editor.form.height}"></div><div class="colon">:</div><div class="value" th:text="${data.height}"></div></div>
+            <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="row"><div class="label" th:text="#{editor.form.complexion}"></div><div class="colon">:</div><div class="value" th:text="${data.complexion}"></div></div>
+            <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="row"><div class="label" th:text="#{editor.form.bloodGroup}"></div><div class="colon">:</div><div class="value" th:text="${data.bloodGroup}"></div></div>
+
+            <div class="row"><div class="label" th:text="#{editor.form.education}"></div><div class="colon">:</div><div class="value" th:text="${data.education}"></div></div>
+            <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="row"><div class="label" th:text="#{editor.form.profession}"></div><div class="colon">:</div><div class="value" th:text="${data.profession}"></div></div>
+            <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="row"><div class="label" th:text="#{editor.form.income}"></div><div class="colon">:</div><div class="value" th:text="${data.income}"></div></div>
+
+        </div>
+
+        <!-- FAMILY -->
+        <h3 class="section-title mt-6" th:text="#{editor.section.family}"></h3>
+
+        <div th:class="'w-full text-[22px] space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+            <div class="row"><div class="label" th:text="#{editor.form.fatherName}"></div><div class="colon">:</div><div class="value" th:text="${data.fatherName}"></div></div>
+            <div class="row"><div class="label" th:text="#{editor.form.motherName}"></div><div class="colon">:</div><div class="value" th:text="${data.motherName}"></div></div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="contact-section">
+            <div class="contact-item">📞 <span th:text="${isPaid ? data.mobile : (data.mobile != null ? #strings.substring(data.mobile,0,5) + 'XXXXX' : '99999XXXXX')}"></span></div>
+            <div class="contact-item">📞 <span th:text="${isPaid ? data.alternateMobile : (data.alternateMobile != null ? #strings.substring(data.alternateMobile,0,5) + 'XXXXX' : '88888XXXXX')}"></span></div>
+            <div class="contact-item">✉️ <span th:text="${isPaid ? data.email : 'yourname@weddingbio.in'}"></span></div>
+            <div class="contact-item">📍 <span th:text="${isPaid ? data.address : 'Pune, Maharashtra'}"></span></div>
+        </div>
+
+    </div>
+</div>
 </div> 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\validation\minimum-validation.html" 

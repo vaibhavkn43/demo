@@ -252,7 +252,7 @@
                     </div>
 
                     <!-- ================= PERSONAL SECTION ================= -->
-                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-visible">
 
                         <!-- Header -->
                         <button type="button"
@@ -379,7 +379,7 @@
 
 
                     <!-- ================= BIRTH SECTION ================= -->
-                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-visible">
 
                         <!-- Header -->
                         <button type="button"
@@ -621,7 +621,7 @@
                     </div>
 
                     <!-- ================= PHYSICAL SECTION ================= -->
-                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-visible">
 
                         <!-- Header -->
                         <button type="button"
@@ -701,7 +701,7 @@
                         </div>
                     </div>
                     <!-- ================= EDUCATION SECTION ================= -->
-                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-visible">
                         <button type="button"
                                 onclick="toggleSection('educationSection', 'iconEducation')"
                                 class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
@@ -741,7 +741,7 @@
                         </div>
                     </div>
                     <!-- ================= FAMILY SECTION ================= -->
-                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-visible">
                         <button type="button"
                                 onclick="toggleSection('familySection', 'iconFamily')"
                                 class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">
@@ -760,16 +760,24 @@
                                     <label class="block text-sm font-medium text-gray-800 mb-1"
                                            th:text="#{editor.form.fatherName}"></label>
 
-                                    <div class="ime-wrapper relative mb-4">
+                                    <div class="ime-wrapper relative mb-4 flex gap-2">
+                                        <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
+                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                            <option value="" th:text="#{editor.prefix.select}"></option>
+                                            <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
+                                            <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
+                                            <option th:value="#{editor.prefix.adv}" th:text="#{editor.prefix.adv}"></option>
+                                            <option th:value="#{editor.prefix.late_short}" th:text="#{editor.prefix.late_short}"></option>
+                                            <option th:value="#{editor.prefix.late_full}" th:text="#{editor.prefix.late_full}"></option>
+                                        </select>
                                         <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
                                                th:field="*{fatherName}"
                                                th:placeholder="#{editor.instruction.fatherName}"/>
-
-                                        <!-- Inline Suggestions Dropdown -->
                                         <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
+                                             bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -795,7 +803,32 @@
                                     <label class="block text-sm font-medium text-gray-800 mb-1"
                                            th:text="#{editor.form.motherName}"></label>
 
-                                    <div class="ime-wrapper relative mb-4">
+
+
+                                    <div class="ime-wrapper relative mb-4 flex gap-2"> 
+
+                                        <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
+                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+
+                                            <!-- default -->
+                                            <option value="" th:text="#{editor.prefix.select}"></option>
+
+                                            <!-- main female prefixes -->
+                                            <option th:value="#{editor.prefix.mrs}" th:text="#{editor.prefix.mrs}"></option>
+                                            <option th:value="#{editor.prefix.shreemati}" th:text="#{editor.prefix.shreemati}"></option>
+                                            <option th:value="#{editor.prefix.gangabhagirathi}" th:text="#{editor.prefix.gangabhagirathi}"></option>
+
+                                            <!-- professional -->
+                                            <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
+                                            <option th:value="#{editor.prefix.adv}" th:text="#{editor.prefix.adv}"></option>
+
+                                            <!-- late / expired -->
+                                            <option th:value="#{editor.prefix.late_short}" th:text="#{editor.prefix.late_short}"></option>
+                                            <option th:value="#{editor.prefix.late_full}" th:text="#{editor.prefix.late_full}"></option>
+
+                                        </select>
+
+
                                         <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
                                                th:field="*{motherName}"
@@ -868,7 +901,16 @@
                                 <div class="mama-row grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 
                                     <!-- Name -->
-                                    <div class="ime-wrapper relative">
+                                    <div class="ime-wrapper relative flex gap-2"> 
+                                        <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
+                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                            <option value="" th:text="#{editor.prefix.select}"></option>
+                                            <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
+                                            <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
+                                            <option th:value="#{editor.prefix.adv}" th:text="#{editor.prefix.adv}"></option>
+                                            <option th:value="#{editor.prefix.late_short}" th:text="#{editor.prefix.late_short}"></option>
+                                            <option th:value="#{editor.prefix.late_full}" th:text="#{editor.prefix.late_full}"></option>
+                                        </select>
                                         <input type="text"
                                                name="mamaName"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
@@ -924,7 +966,17 @@
                                 <div class="kaka-row grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
 
                                     <!-- Kaka Name -->
-                                    <div class="ime-wrapper relative">
+                                    <div class="ime-wrapper relative flex gap-2">
+                                        <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
+                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                            <option value="" th:text="#{editor.prefix.select}"></option>
+                                            <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
+                                            <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
+                                            <option th:value="#{editor.prefix.adv}" th:text="#{editor.prefix.adv}"></option>
+                                            <option th:value="#{editor.prefix.late_short}" th:text="#{editor.prefix.late_short}"></option>
+                                            <option th:value="#{editor.prefix.late_full}" th:text="#{editor.prefix.late_full}"></option>
+                                        </select>
+
                                         <input type="text"
                                                name="kakaName"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
@@ -1000,10 +1052,19 @@
                                  th:data-married="#{dropdown.marital.married}"
                                  th:data-unmarried="#{dropdown.marital.unmarried}">
                             </div>
+                            <div id="prefixMessages"
+                                 th:data-select="#{editor.prefix.select}"
+                                 th:data-mr="#{editor.prefix.mr}"
+                                 th:data-chi="#{editor.prefix.chi}"
+                                 th:data-kun="#{editor.prefix.kun}"
+                                 th:data-miss="#{editor.prefix.miss}"
+                                 th:data-mrs="#{editor.prefix.mrs}"
+                                 th:data-shreemati="#{editor.prefix.shreemati}">
+                            </div>
                         </div>
                     </div>
                     <!-- ================= RELATIVES / CUSTOM SECTION ================= -->
-                    <div class="border border-gray-200 rounded-xl mb-5 overflow-hidden">
+                    <div class="border border-gray-200 rounded-xl mb-5 overflow-visible">
                         <button type="button"
                                 onclick="toggleSection('customSection', 'iconCustom')"
                                 class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100">

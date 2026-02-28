@@ -14,6 +14,14 @@ document.addEventListener("DOMContentLoaded", function () {
     window.msgBrotherLabel = msgContainer.dataset.brotherLabel;
     window.msgSisterLabel = msgContainer.dataset.sisterLabel;
 
+    const prefixBox = document.getElementById("prefixMessages");
+    window.prefSelect = prefixBox.dataset.select;
+    window.prefMr = prefixBox.dataset.mr;
+    window.prefChi = prefixBox.dataset.chi;
+    window.prefMiss = prefixBox.dataset.miss;
+    window.prefMrs = prefixBox.dataset.mrs;
+    window.prefShreemati = prefixBox.dataset.shreemati;
+
     // ---------- DEFAULT GOD ----------
     const godField = document.getElementById("godImageHidden");
     if (godField && !godField.value) {
@@ -29,6 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
     /* ================= SUBMIT ================= */
     document.getElementById("submitBtn")?.addEventListener("click", function () {
 
+        mergePrefixWithNames();
+
         updateFamily("brothers", msgBrotherLabel, "brotherInputs");
         updateFamily("sisters", msgSisterLabel, "sisterInputs");
 
@@ -43,6 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const kakaCombined = collectMultiValues("kakaName", "kakaExtra");
         console.log(kakaCombined, "kakaCombined")
         document.querySelector('[name="kaka"]').value = kakaCombined;
+
+
 
         document.getElementById("biodataForm").submit();
     });
@@ -113,26 +125,44 @@ function updateBirthTime() {
 function renderPersonInputs(count, containerId, isBrother) {
 
     const container = document.getElementById(containerId);
-    if (!container)
-        return;
+    if (!container) return;
 
     container.innerHTML = "";
 
     for (let i = 1; i <= count; i++) {
         container.insertAdjacentHTML("beforeend", `
-            <div class="grid grid-cols-12 gap-2 mb-2">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-3">
 
-                <div class="col-span-7 ime-wrapper relative">
-                    <input class="w-full border p-2 ime-marathi"
+                <!-- PREFIX -->
+                <div class="col-span-1 md:col-span-2">
+                    <select class="prefix-select w-full border p-2 rounded bg-white">
+                        <option value="">${prefSelect}</option>
+
+                        ${isBrother ? `
+                            <option value="${prefMr}">${prefMr}</option>
+                            <option value="${prefChi}">${prefChi}</option>
+                        ` : `
+                            <option value="${prefMiss}">${prefMiss}</option>
+                            <option value="${prefMrs}">${prefMrs}</option>
+                            <option value="${prefShreemati}">${prefShreemati}</option>
+                        `}
+                    </select>
+                </div>
+
+                <!-- NAME INPUT -->
+                <div class="col-span-1 md:col-span-5 ime-wrapper relative overflow-visible">
+                    <input class="w-full border p-2 ime-marathi rounded"
                            data-name
                            placeholder="${isBrother ? msgBrotherName : msgSisterName}">
 
-                    <!-- Suggestion dropdown -->
-                    <div class="suggestion-dropdown hidden absolute z-50 bg-white border rounded shadow w-full mt-1 max-h-40 overflow-y-auto"></div>
+                    <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                        bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] max-h-48 overflow-auto">
+                    </div>
                 </div>
 
-                <div class="col-span-5">
-                    <select class="w-full border p-2" data-status>
+                <!-- STATUS -->
+                <div class="col-span-1 md:col-span-5">
+                    <select class="w-full border p-2 rounded" data-status>
                         <option value="">${msgStatusSelect}</option>
                         <option value="Married">${msgMarried}</option>
                         <option value="Unmarried">${msgUnmarried}</option>
@@ -416,7 +446,8 @@ document.getElementById("photoInput")?.addEventListener("change", function (e) {
     const container = document.getElementById("kaka-container");
     const addBtn = document.getElementById("add-kaka");
 
-    if (!container || !addBtn) return;
+    if (!container || !addBtn)
+        return;
 
     addBtn.addEventListener("click", () => {
 
@@ -470,3 +501,33 @@ function collectMultiValues(nameField, extraField) {
     // join with comma
     return result.join(", ");
 }
+
+function mergePrefixWithNames() {
+
+    document.querySelectorAll(".prefix-select").forEach(select => {
+
+        // go to parent flex container (more stable than ime-wrapper)
+        const container = select.parentElement;
+
+        if (!container)
+            return;
+
+        // find the first text input inside same container
+        const input = container.querySelector("input[type='text'], input.ime-marathi");
+
+        if (!input)
+            return;
+
+        const prefix = select.value ? select.value.trim() : "";
+        const name = input.value ? input.value.trim() : "";
+
+        if (!name)
+            return;
+
+        // prevent duplicate prefix
+        if (prefix && !name.startsWith(prefix)) {
+            input.value = prefix + " " + name;
+        }
+    });
+}
+
