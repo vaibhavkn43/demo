@@ -1,5 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+    const count = window.innerWidth < 768 ? 8 : 15;
+    for (let i = 0; i < count; i++) {
+        let petal = document.createElement("div");
+        petal.className = "petal";
+
+        petal.style.left = Math.random() * 100 + "vw";
+        petal.style.animationDuration = (6 + Math.random() * 6) + "s";
+        petal.style.opacity = Math.random();
+
+        document.body.appendChild(petal);
+    }
+
     document.querySelectorAll(".template-card").forEach(card => {
 
         card.addEventListener("click", function () {
@@ -31,4 +43,18 @@ function openTemplateModal(templateId, imageUrl) {
 
 function closeTemplateModal() {
     document.getElementById("templateModal").classList.add("hidden");
+}
+
+
+function toggleFaq(id) {
+    const content = document.getElementById("faq-" + id);
+    const icon = document.getElementById("icon-" + id);
+
+    if (content.classList.contains("hidden")) {
+        content.classList.remove("hidden");
+        icon.innerHTML = "−";
+    } else {
+        content.classList.add("hidden");
+        icon.innerHTML = "+";
+    }
 }

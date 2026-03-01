@@ -1,68 +1,363 @@
 <div th:fragment="content">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <section class="relative h-[72vh] md:h-[70vh] lg:h-[80vh] overflow-hidden">
 
-        <img src="/images/hero-couple.jpg"
-             class="absolute inset-0 w-full h-full object-cover object-center md:object-[center_25%]"
-             alt="Happy couple">
+    <section class="bg-gradient-to-r from-red-600 to-pink-600 text-white overflow-hidden">
 
-        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent"></div>
+        <div class="max-w-7xl mx-auto px-6 py-14 md:py-16 
+             grid md:grid-cols-[1.1fr_0.9fr] lg:grid-cols-[1fr_1fr] 
+             gap-10 items-center">
 
-        <div class="relative z-10 max-w-7xl mx-auto px-6 h-full flex flex-col justify-center pb-16">
-            <div class="text-white max-w-sm md:max-w-md lg:max-w-lg space-y-5">
+            <!-- 🔹 LEFT CONTENT -->
+            <div class="space-y-5 text-center md:text-left order-1 md:order-1">
 
-                <h1 class="text-4xl md:text-5xl lg:text-7xl font-extrabold leading-[1.15] md:leading-tight">
-                    <span th:text="#{hero.title.line1}">Create a beautiful</span>
-                    <br class="hidden md:block">
-                    <span th:text="#{hero.title.line2}">Marriage Biodata</span>
-                    <br class="hidden md:block">
-                    <span class="flex items-center gap-3 mt-1">
-                        <span th:text="#{hero.title.in}">in</span>
-                        <span class="text-red-500 drop-shadow-2xl animate-pulse" th:text="#{hero.title.time}">2 minutes</span>
+                <!-- Topline -->
+                <p class="text-xs sm:text-sm uppercase tracking-wider text-white/80 font-semibold"
+                   th:text="#{hero.topline}">
+                    Free Marathi Biodata Maker (PDF, Image & Word)
+                </p>
+
+                <!-- Heading -->
+                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight tracking-tight">
+                    <span th:text="#{hero.title.line1}">Biodata For Marriage</span>
+
+                    <span class="text-yellow-300" th:text="#{hero.title.line2}">
+                        in Marathi
+                    </span>
+
+                    <!-- 🔥 Speed Badge (desktop + mobile consistent) -->
+                    <span class="inline-block mt-2 bg-yellow-400 text-red-900 px-3 py-1 rounded-full font-bold text-xs md:text-sm">
+                        <span th:text="#{hero.title.time}">2 minutes</span>
                     </span>
                 </h1>
 
-                <p class="text-base md:text-xl text-gray-200 font-medium opacity-90"
+                <!-- 🔹 MOBILE IMAGE (emotional hook first) -->
+                <div class="block md:hidden mt-2">
+
+                    <div class="relative w-full max-w-[320px] mx-auto aspect-[16/10] pb-4">
+
+                        <!-- LIGHT BACKGROUND SHAPES -->
+                        <div class="absolute inset-0 bg-yellow-400/30 rounded-2xl rotate-[-4deg] translate-x-2 translate-y-2 shadow-[0_6px_18px_rgba(255,193,7,0.2)] z-0"></div>
+
+                        <div class="absolute inset-0 bg-[#be185d]/30 rounded-2xl rotate-[2deg] translate-x-1 translate-y-1 shadow-[0_6px_16px_rgba(190,24,93,0.2)] z-0"></div>
+
+                        <!-- LEFT BIODATA (bigger + higher + visible) -->
+                        <img src="/images/biodata_templates/FilledBiodataTemplates/t1.jpg"
+                             class="absolute left-[-10px] top-[25px] w-[110px]
+                             rotate-[-10deg] scale-105 opacity-95
+                             rounded-lg border border-gray-200
+                             shadow-[0_8px_18px_rgba(0,0,0,0.18)] z-30"/>
+
+                        <!-- RIGHT BIODATA -->
+                        <img src="/images/biodata_templates/FilledBiodataTemplates/t2.jpg"
+                             class="absolute right-[-10px] top-[25px] w-[110px]
+                             rotate-[10deg] scale-105 opacity-95
+                             rounded-lg border border-gray-200
+                             shadow-[0_8px_18px_rgba(0,0,0,0.18)] z-30"/>
+
+                        <!-- MAIN COUPLE IMAGE -->
+                        <img src="/images/hero-couple.jpg"
+                             alt="Happy couple"
+                             class="relative z-20 w-full h-auto object-cover object-[center_20%]
+                             rounded-2xl border border-white/30
+                             shadow-[0_12px_30px_rgba(0,0,0,0.25)]
+                             contrast-105 brightness-102">
+                    </div>
+
+                </div>
+
+                <!-- Subtitle -->
+                <p class="mt-10 text-sm md:text-lg text-white/90 max-w-lg mx-auto md:mx-0 leading-7  "
                    th:text="#{hero.subtitle}">
-                    Ready-to-use professional templates for marriage
+                    Create your perfect marriage biodata in Marathi with our free online tool.
+                    Simple, fast, and easy to download in PDF or Word format. No login required.
                 </p>
 
-                <div class="flex flex-col md:flex-row items-start md:items-center gap-8 pt-4">
-                    <a href="/templates"
-                       class="inline-block bg-red-600 hover:bg-red-700 hover:scale-105 active:scale-95 text-white px-10 py-4 rounded-xl shadow-[0_20px_50px_rgba(220,38,38,0.4)] transition-all duration-300 font-bold tracking-wide text-lg">
-                        Create Now
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 w-full justify-center md:justify-start pt-4 md:pt-6">
+
+                    <!-- Primary -->
+                    <a href="/editor/t1"
+                       class="w-full sm:w-auto text-center bg-white text-red-600 hover:bg-gray-100
+                       px-7 py-3 md:px-8 md:py-4 rounded-xl font-bold text-base md:text-lg transition shadow-lg">
+                        <span th:text="#{hero.cta.create}">Create Biodata</span>
                     </a>
 
-                    <ul class="space-y-2 text-sm text-gray-300 font-semibold border-l-2 border-red-600/30 pl-4">
-                        <li class="flex items-center gap-2"> <span class="text-green-500">✔</span> <span th:text="#{hero.point1}">PDF Download</span></li>
-                        <li class="flex items-center gap-2"> <span class="text-green-500">✔</span> <span th:text="#{hero.point3}">No login required</span></li>
-                    </ul>
+                    <!-- Secondary -->
+                    <a href="/templates"
+                       class="w-full sm:w-auto text-center border-2 border-white bg-white/10 text-white
+                       px-7 py-3 md:px-8 md:py-4 rounded-xl font-semibold text-base md:text-lg
+                       hover:bg-white/20 transition">
+                        <span th:text="#{hero.cta.view}">View Templates</span>
+                    </a>
+
                 </div>
+
+                <!-- Trust Points -->
+                <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3 pt-4 text-sm text-white/90 font-medium justify-center md:justify-start">
+
+                    <div class="flex items-start gap-2">
+                        ✔ <span th:text="#{hero.point.download}">Instant Image, PDF & Word Download</span>
+                    </div>
+
+                    <div class="flex items-start gap-2">
+                        ✔ <span th:text="#{hero.point.nologin}">No login required</span>
+                    </div>
+
+                    <div class="flex items-start gap-2">
+                        🔒 <span th:text="#{hero.point.secure}">100% Secure</span>
+                    </div>
+
+                </div>
+
             </div>
+
+<!-- 🔹 RIGHT IMAGE (desktop only) -->
+<div class="hidden md:flex relative justify-end items-center order-2 md:order-2">
+
+    <div class="relative w-[280px] sm:w-[320px] md:w-[420px] lg:w-[480px] aspect-[16/10] pb-4">
+
+        <!-- BACKGROUND -->
+        <div class="absolute inset-0 bg-yellow-400/40 rounded-2xl rotate-[-4deg] translate-x-2 translate-y-3 shadow-[0_8px_25px_rgba(255,193,7,0.2)] z-0"></div>
+        <div class="absolute inset-0 bg-[#be185d]/40 rounded-2xl rotate-[2deg] translate-x-1 translate-y-2 shadow-[0_8px_20px_rgba(190,24,93,0.2)] z-0"></div>
+
+        <!-- LEFT BIODATA -->
+        <img src="/images/biodata_templates/FilledBiodataTemplates/t1.jpg"
+             class="absolute left-[-55px] md:left-[-65px] top-[35px]
+             w-[190px] md:w-[210px]
+             rotate-[-6deg]
+             rounded-xl border border-white/60
+             shadow-[0_10px_25px_rgba(0,0,0,0.20)]
+             object-cover bg-white
+             contrast-105 brightness-105
+             z-30"/>
+
+        <!-- RIGHT BIODATA -->
+        <img src="/images/biodata_templates/FilledBiodataTemplates/t2.jpg"
+             class="absolute right-[-55px] md:right-[-65px] top-[35px]
+             w-[190px] md:w-[210px]
+             rotate-[6deg]
+             rounded-xl border border-white/60
+             shadow-[0_10px_25px_rgba(0,0,0,0.20)]
+             object-cover bg-white
+             contrast-105 brightness-105
+             z-30"/>
+
+        <!-- COUPLE IMAGE -->
+        <img src="/images/hero-couple.jpg"
+             alt="Happy couple"
+             class="relative z-20 w-full h-auto object-cover object-[center_20%]
+             rounded-2xl border border-white/40
+             shadow-[0_15px_40px_rgba(0,0,0,0.25)]
+             contrast-105 brightness-102">
+    </div>
+
+</div>
+
         </div>
 
-        <div class="absolute bottom-0 w-full bg-black/60 backdrop-blur-xl border-t border-white/10 py-4 z-20">
-            <div class="max-w-7xl mx-auto px-6 flex justify-between md:justify-start items-center gap-4 md:gap-12 overflow-x-auto no-scrollbar">
+    </section>
 
-                <div class="flex items-center gap-2 flex-shrink-0">
-                    <span class="text-lg">🔐</span>
-                    <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.privacy}">Privacy First</span>
+    <section id="testimonials" class="bg-gradient-to-b from-pink-50 to-white py-14 px-4">
+        <div class="max-w-7xl mx-auto text-center">
+
+            <!-- Heading -->
+            <h2 class="text-3xl md:text-4xl font-bold text-pink-700 flex items-center justify-center gap-2">
+                ❤️ <span th:text="#{testimonial.title}">Users Trust, Our Identity!</span> ❤️
+            </h2>
+
+            <!-- Subheading -->
+            <p class="text-gray-600 mt-3 text-sm md:text-base"
+               th:text="#{testimonial.subtitle}">
+                Thousands created biodata in minutes – see what they say!
+            </p>
+
+            <!-- Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-7 mt-12">
+
+                <!-- Card 1 -->
+                <div class="bg-white rounded-xl border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition duration-300 p-5 text-left">
+                    <div class="flex items-center gap-3 mb-3">
+                        <img th:src="@{/images/testimonial/1.jpg}" 
+                             class="w-12 h-12 rounded-full object-cover border-2 border-pink-200 shadow-sm"/>
+                        <div>
+                            <p class="font-semibold text-pink-700 text-sm" th:text="#{testimonial.user1.name}">Rahul Sharma</p>
+                            <p class="text-xs text-gray-500" th:text="#{testimonial.user1.city}">Delhi</p>
+                            <p class="text-[10px] text-green-600 font-medium">✔ Verified User</p>
+                        </div>
+                    </div>
+
+                    <div class="text-yellow-600 text-lg tracking-wide mb-2">★★★★★</div>
+
+                    <p class="text-sm text-gray-700 leading-7  mt-2"
+                       th:text="#{testimonial.user1.msg}">
+                        This website made my work very easy!
+                    </p>
                 </div>
 
-                <div class="flex items-center gap-2 flex-shrink-0">
-                    <span class="text-lg">🚫</span>
-                    <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.nologin}">No Login</span>
+                <!-- Card 2 -->
+                <div class="bg-white rounded-xl border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition duration-300 p-5 text-left">
+                    <div class="flex items-center gap-3 mb-3">
+                        <img th:src="@{/images/testimonial/2.jpg}" 
+                             class="w-12 h-12 rounded-full object-cover border-2 border-pink-200 shadow-sm"/>
+                        <div>
+                            <p class="font-semibold text-pink-700 text-sm" th:text="#{testimonial.user2.name}">Sneha Kulkarni</p>
+                            <p class="text-xs text-gray-500" th:text="#{testimonial.user2.city}">Mumbai</p>
+                            <p class="text-[10px] text-green-600 font-medium">✔ Verified User</p>
+                        </div>
+                    </div>
+
+                    <div class="text-yellow-600 text-lg tracking-wide mb-2">★★★★★</div>
+
+                    <p class="text-sm text-gray-700 leading-7  mt-2"
+                       th:text="#{testimonial.user2.msg}">
+                        Amazing! Created my biodata in minutes.
+                    </p>
                 </div>
 
-                <div class="flex items-center gap-2 flex-shrink-0">
-                    <span class="text-lg">📄</span>
-                    <span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white" th:text="#{home.trust.safe}">Safe PDF</span>
+                <!-- Card 3 -->
+                <div class="bg-white rounded-xl border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition duration-300 p-5 text-left">
+                    <div class="flex items-center gap-3 mb-3">
+                        <img th:src="@{/images/testimonial/3.jpg}" 
+                             class="w-12 h-12 rounded-full object-cover border-2 border-pink-200 shadow-sm"/>
+                        <div>
+                            <p class="font-semibold text-pink-700 text-sm" th:text="#{testimonial.user3.name}">सुनिता देशमुख</p>
+                            <p class="text-xs text-gray-500" th:text="#{testimonial.user3.city}">नागपूर</p>
+                            <p class="text-[10px] text-green-600 font-medium">✔ Verified User</p>
+                        </div>
+                    </div>
+
+                    <div class="text-yellow-600 text-lg tracking-wide mb-2">★★★★★</div>
+
+                    <p class="text-sm text-gray-700 leading-7  mt-2"
+                       th:text="#{testimonial.user3.msg}">
+                        खूप सोपं! माझं बायोडाटा काही मिनिटांत तयार झाला.
+                    </p>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="bg-white rounded-xl border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transform transition duration-300 p-5 text-left">
+                    <div class="flex items-center gap-3 mb-3">
+                        <img th:src="@{/images/testimonial/4.jpg}" 
+                             class="w-12 h-12 rounded-full object-cover border-2 border-pink-200 shadow-sm"/>
+                        <div>
+                            <p class="font-semibold text-pink-700 text-sm" th:text="#{testimonial.user4.name}">Vikram Sharma</p>
+                            <p class="text-xs text-gray-500" th:text="#{testimonial.user4.city}">Patna</p>
+                            <p class="text-[10px] text-green-600 font-medium">✔ Verified User</p>
+                        </div>
+                    </div>
+
+                    <div class="text-yellow-600 text-lg tracking-wide mb-2">★★★★★</div>
+
+                    <p class="text-sm text-gray-700 leading-7  mt-2"
+                       th:text="#{testimonial.user4.msg}">
+                        Created biodata for my daughter easily. Great templates!
+                    </p>
                 </div>
 
             </div>
         </div>
     </section>
 
+
+    <section id="faq" class="bg-white py-14 px-4">
+        <div class="max-w-5xl mx-auto">
+
+            <!-- Heading -->
+            <h2 class="text-3xl md:text-4xl font-bold text-pink-700 text-center">
+                ❓ <span th:text="#{faq.title}">Frequently Asked Questions</span>
+            </h2>
+
+            <p class="text-gray-600 text-center mt-3 text-sm md:text-base"
+               th:text="#{faq.subtitle}">
+                Everything you need to know about creating your biodata
+            </p>
+
+            <!-- Accordion -->
+            <div class="mt-10 space-y-4">
+
+                <!-- Item 1 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(1)"
+                            class="w-full flex justify-between items-center p-4 text-left bg-pink-50 hover:bg-pink-100 transition">
+
+                        <span class="font-medium text-gray-800"
+                              th:text="#{faq.q1}">
+                            How to create biodata in this app?
+                        </span>
+
+                        <span id="icon-1" class="text-pink-600 text-xl">+</span>
+                    </button>
+
+                    <div id="faq-1" class="hidden p-4 text-sm text-gray-700 bg-white border-t">
+                        <p th:text="#{faq.a1}">
+                            Just fill the form step by step and click generate. Your biodata PDF will be ready instantly.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(2)"
+                            class="w-full flex justify-between items-center p-4 text-left bg-pink-50 hover:bg-pink-100 transition">
+
+                        <span class="font-medium text-gray-800"
+                              th:text="#{faq.q2}">
+                            Can I download biodata in PDF and Word?
+                        </span>
+
+                        <span id="icon-2" class="text-pink-600 text-xl">+</span>
+                    </button>
+
+                    <div id="faq-2" class="hidden p-4 text-sm text-gray-700 bg-white border-t">
+                        <p th:text="#{faq.a2}">
+                            Yes, you can download your biodata in both PDF and Word formats.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(3)"
+                            class="w-full flex justify-between items-center p-4 text-left bg-pink-50 hover:bg-pink-100 transition">
+
+                        <span class="font-medium text-gray-800"
+                              th:text="#{faq.q3}">
+                            Is this app free to use?
+                        </span>
+
+                        <span id="icon-3" class="text-pink-600 text-xl">+</span>
+                    </button>
+
+                    <div id="faq-3" class="hidden p-4 text-sm text-gray-700 bg-white border-t">
+                        <p th:text="#{faq.a3}">
+                            Yes, basic biodata creation is free. Some premium templates may be paid.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden">
+                    <button onclick="toggleFaq(4)"
+                            class="w-full flex justify-between items-center p-4 text-left bg-pink-50 hover:bg-pink-100 transition">
+
+                        <span class="font-medium text-gray-800"
+                              th:text="#{faq.q4}">
+                            Can I edit biodata after downloading?
+                        </span>
+
+                        <span id="icon-4" class="text-pink-600 text-xl">+</span>
+                    </button>
+
+                    <div id="faq-4" class="hidden p-4 text-sm text-gray-700 bg-white border-t">
+                        <p th:text="#{faq.a4}">
+                            Yes, you can re-edit your biodata anytime by loading your saved data.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
     <!-- =========================
          TEMPLATE GRID
@@ -136,35 +431,6 @@
         </div>
     </section>
 
-
-    <!-- =========================
-         FAQ
-    ========================= -->
-    <section class="bg-gray-50 py-12">
-        <div class="max-w-5xl mx-auto px-6">
-
-            <h2 class="text-2xl font-semibold text-center mb-8"
-                th:text="#{home.faq.title}">
-            </h2>
-
-            <div class="space-y-4">
-
-                <div>
-                    <h4 class="font-semibold"
-                        th:text="#{home.faq.q1}"></h4>
-                    <p class="text-gray-600"
-                       th:text="#{home.faq.a1}"></p>
-                </div>
-
-                <div>
-                    <h4 class="font-semibold"
-                        th:text="#{home.faq.q2}"></h4>
-                    <p class="text-gray-600"
-                       th:text="#{home.faq.a2}"></p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- TEMPLATE PREVIEW MODAL -->
     <div id="templateModal"
