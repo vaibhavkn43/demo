@@ -37,13 +37,22 @@ document.addEventListener("DOMContentLoaded", function () {
     /* ================= SUBMIT ================= */
     document.getElementById("submitBtn")?.addEventListener("click", function () {
 
+        // 🔴 run validation first
+        if (!runValidation()) {
+            e.preventDefault();
+
+            // scroll to first error
+            const firstError = document.querySelector(".border-red-500");
+            firstError?.scrollIntoView({behavior: "smooth", block: "center"});
+
+            return;
+        }
+
         mergePrefixWithNames();
 
         updateFamily("brothers", msgBrotherLabel, "brotherInputs");
         updateFamily("sisters", msgSisterLabel, "sisterInputs");
 
-//        if (!runValidation())
-//            return;
 
 
         const mamaCombined = collectMultiValues("mamaName", "mamaExtra");
@@ -81,23 +90,53 @@ document.addEventListener("DOMContentLoaded", function () {
 /* =========================================================
  VALIDATION
  ========================================================= */
-function runValidation() {
 
-    const required = ["name", "birthDate", "religion", "caste", "height", "education", "mobile", "address"];
-
-    let missing = [];
-
-    required.forEach(name => {
-        const input = document.querySelector(`[name="${name}"]`);
-        if (!input || !input.value.trim())
-            missing.push(name);
+["name","birthDate","birthPlace","religion","caste","complexion","height",
+ "education","fatherName","motherName","relatives","mobile","address"]
+.forEach(id => {
+    document.getElementById(id)?.addEventListener("blur", () => {
+        validateField(id, "error-" + id);
     });
+});
 
-    if (missing.length) {
-        alert("Please fill required fields: " + missing.join(", "));
+function validateField(inputId, errorId) {
+    const input = document.getElementById(inputId);
+    const error = document.getElementById(errorId);
+
+    if (!input) return true;
+
+    const value = input.value ? input.value.trim() : "";
+
+    if (!value) {
+        error?.classList.remove("hidden");
+        input.classList.add("border-red-500");
         return false;
+    } else {
+        error?.classList.add("hidden");
+        input.classList.remove("border-red-500");
+        return true;
     }
-    return true;
+}
+
+
+function runValidation() {
+    let valid = true;
+
+    valid &= validateField("name", "error-name");
+    valid &= validateField("birthDate", "error-birthDate");
+    valid &= validateField("birthPlace", "error-birthPlace");
+    valid &= validateField("religion", "error-religion");
+    valid &= validateField("caste", "error-caste");
+    valid &= validateField("complexion", "error-complexion");
+    valid &= validateField("height", "error-height");
+    valid &= validateField("education", "error-education");
+    valid &= validateField("fatherName", "error-fatherName");
+    valid &= validateField("motherName", "error-motherName");
+    valid &= validateField("relatives", "error-relatives");
+    valid &= validateField("mobile", "error-mobile");
+    valid &= validateField("address", "error-address");
+
+    return !!valid;
 }
 
 /* =========================================================
@@ -125,7 +164,8 @@ function updateBirthTime() {
 function renderPersonInputs(count, containerId, isBrother) {
 
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container)
+        return;
 
     container.innerHTML = "";
 
@@ -265,6 +305,7 @@ function toggleSection(sectionId, iconId) {
 function toggleGuide() {
     const box = document.getElementById("guideContent");
     const text = document.getElementById("guideToggleText");
+    const icon = document.getElementById("guideIcon");
 
     const isHidden = box.classList.toggle("hidden");
 
@@ -272,6 +313,9 @@ function toggleGuide() {
     const hideText = text.dataset.hide;
 
     text.innerText = isHidden ? showText : hideText;
+
+    // change icon
+    icon.innerText = isHidden ? "👁" : "🙈";
 
     localStorage.setItem("guideHidden", isHidden);
 }
@@ -530,4 +574,93 @@ function mergePrefixWithNames() {
         }
     });
 }
+
+// storing form details in local storage
+
+// ===== CONFIG =====
+const form = document.getElementById("biodataForm");
+const templateId = document.querySelector("input[name='templateId']").value;
+const STORAGE_KEY = `biodata_draft_${templateId}`;
+
+// ===== SERIALIZE FORM =====
+function getFormData(form) {
+    const formData = new FormData(form);
+    const data = {};
+
+    formData.forEach((value, key) => {
+        if (data[key]) {
+            if (!Array.isArray(data[key])) {
+                data[key] = [data[key]];
+            }
+            data[key].push(value);
+        } else {
+            data[key] = value;
+        }
+    });
+
+    return data;
+}
+
+// ===== RESTORE FORM =====
+function restoreFormData(form, data) {
+    Object.keys(data).forEach(name => {
+        const field = form.elements[name];
+        if (!field)
+            return;
+
+        if (field instanceof RadioNodeList) {
+            [...field].forEach(el => {
+                if (el.value == data[name])
+                    el.checked = true;
+            });
+        } else if (field.type === "checkbox") {
+            field.checked = true;
+        } else {
+            field.value = data[name];
+        }
+    });
+}
+
+// ===== AUTO SAVE (debounced) =====
+let timeout;
+
+form.addEventListener("input", () => {
+    clearTimeout(timeout);
+
+    timeout = setTimeout(() => {
+        const data = getFormData(form);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        console.log("Draft auto-saved");
+    }, 400);
+});
+
+// ===== RESTORE ON LOAD =====
+window.addEventListener("DOMContentLoaded", () => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (saved) {
+        const data = JSON.parse(saved);
+
+        const shouldRestore = confirm("Resume your previous biodata draft?");
+        if (shouldRestore) {
+            restoreFormData(form, data);
+        }
+    }
+});
+
+// ===== CLEAR AFTER FINAL SUBMIT =====
+form.addEventListener("submit", () => {
+    localStorage.removeItem(STORAGE_KEY);
+});
+
+const urlParams = new URLSearchParams(window.location.search);
+const isResume = urlParams.get("resume");
+
+if (isResume === "true") {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        restoreFormData(form, JSON.parse(saved));
+    }
+}
+
 

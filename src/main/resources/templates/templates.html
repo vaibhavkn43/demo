@@ -2,15 +2,15 @@
      <link rel="stylesheet" th:href="@{/css/templates.css}">
 
     <!-- ================= HEADER ================= -->
-    <section class="bg-gradient-to-r from-red-600 via-pink-600 to-red-500 text-white py-12 md:py-14">
+    <section class="bg-gradient-to-r from-[#DC143C] via-pink-600 to-[#DC143C] text-white py-14 md:py-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
 
-            <h1 class="text-3xl md:text-4xl font-bold tracking-wide"
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-wide drop-shadow-sm"
                 th:text="#{templates.title}">
                 Biodata Templates
             </h1>
 
-            <p class="text-white/90 mt-3 text-sm md:text-base"
+            <p class="text-white/95 mt-4 text-sm md:text-base"
                th:text="#{templates.subtitle}">
                 Choose a design and start creating instantly
             </p>
@@ -35,38 +35,38 @@
                 <!-- FILTER PILLS -->
 
                 <a th:href="@{/templates}"
-                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap"
-                   th:classappend="${selectedReligion == null} ? 'bg-red-600 text-white' : 'bg-white text-gray-700'">
+                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap transition"
+                   th:classappend="${selectedReligion == null} ? 'bg-[#DC143C] text-white border-[#DC143C]' : 'bg-white text-gray-700'">
                     <span th:text="#{filter.all}">All</span>
                 </a>
 
                 <a th:href="@{/templates(religion='HINDU')}"
-                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap"
-                   th:classappend="${selectedReligion == 'HINDU'} ? 'bg-red-600 text-white' : 'bg-white text-gray-700'">
+                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap transition"
+                   th:classappend="${selectedReligion == 'HINDU'} ? 'bg-[#DC143C] text-white border-[#DC143C]' : 'bg-white text-gray-700'">
                     <span th:text="#{filter.hindu}">Hindu</span>
                 </a>
 
                 <a th:href="@{/templates(religion='BUDDHIST')}"
-                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap"
-                   th:classappend="${selectedReligion == 'BUDDHIST'} ? 'bg-red-600 text-white' : 'bg-white text-gray-700'">
+                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap transition"
+                   th:classappend="${selectedReligion == 'BUDDHIST'} ? 'bg-[#DC143C] text-white border-[#DC143C]' : 'bg-white text-gray-700'">
                     <span th:text="#{filter.buddhist}">Buddhist</span>
                 </a>
 
                 <a th:href="@{/templates(religion='MUSLIM')}"
-                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap"
-                   th:classappend="${selectedReligion == 'MUSLIM'} ? 'bg-red-600 text-white' : 'bg-white text-gray-700'">
+                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap transition"
+                   th:classappend="${selectedReligion == 'MUSLIM'} ? 'bg-[#DC143C] text-white border-[#DC143C]' : 'bg-white text-gray-700'">
                     <span th:text="#{filter.muslim}">Muslim</span>
                 </a>
 
                 <a th:href="@{/templates(religion='CHRISTIAN')}"
-                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap"
-                   th:classappend="${selectedReligion == 'CHRISTIAN'} ? 'bg-red-600 text-white' : 'bg-white text-gray-700'">
+                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap transition"
+                   th:classappend="${selectedReligion == 'CHRISTIAN'} ? 'bg-[#DC143C] text-white border-[#DC143C]' : 'bg-white text-gray-700'">
                     <span th:text="#{filter.christian}">Christian</span>
                 </a>
 
                 <a th:href="@{/templates(religion='JAIN')}"
-                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap"
-                   th:classappend="${selectedReligion == 'JAIN'} ? 'bg-red-600 text-white' : 'bg-white text-gray-700'">
+                   class="px-4 py-2 rounded-full border text-sm whitespace-nowrap transition"
+                   th:classappend="${selectedReligion == 'JAIN'} ? 'bg-[#DC143C] text-white border-[#DC143C]' : 'bg-white text-gray-700'">
                     <span th:text="#{filter.jain}">Jain</span>
                 </a>
 
@@ -93,18 +93,18 @@
 
                 <!-- TEMPLATE CARD -->
                 <div th:each="tpl : ${templates}"
-                     class="template-card group relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl hover:scale-[1.02] transition p-3 md:p-4 cursor-pointer"
+                     class="template-card group relative bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition p-3 md:p-4 cursor-pointer"
                      th:data-id="${tpl.id}"
                      th:data-img="${tpl.filledTemplateLocation}">
 
                     <!-- IMAGE WRAPPER -->
                     <div class="h-60 md:h-56 flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden p-3 relative">
 
-                        <!-- 👁 MOBILE BADGE -->
+                        <!-- 👁 MOBILE ICON ONLY -->
                         <div class="absolute top-2 right-2 bg-white/90 backdrop-blur
-                             text-gray-700 text-[10px] px-2 py-0.5
-                             rounded-full shadow md:hidden flex items-center gap-1">
-                            👁 <span th:text="#{home.templates.view}">View</span>
+                             text-gray-700 text-[12px] p-1.5
+                             rounded-full shadow md:hidden flex items-center justify-center">
+                            👁
                         </div>
 
                         <!-- TEMPLATE IMAGE -->
@@ -115,21 +115,21 @@
                         <div class="absolute inset-0 bg-black/40 flex items-center justify-center
                              opacity-0 pointer-events-none md:group-hover:opacity-100 md:pointer-events-auto transition">
 
-                            <div class="bg-white text-gray-800 px-4 py-2 rounded-lg shadow-md text-sm font-semibold">
+                            <div class="bg-white text-gray-800 px-4 py-2 rounded-full shadow-md text-sm font-semibold">
                                 👁 <span th:text="#{home.templates.view}">Preview</span>
                             </div>
                         </div>
 
                     </div>
 
-                    <!-- USE TEMPLATE BUTTON (independent click) -->
+                    <!-- USE TEMPLATE BUTTON -->
                     <div class="mt-3">
                         <a th:href="@{'/editor/' + ${tpl.id}}"
                            onclick="event.stopPropagation()"
                            class="w-full flex items-center justify-center gap-2
-                           bg-red-600 text-white px-4 py-2.5
-                           text-sm font-semibold rounded-lg
-                           hover:bg-red-700 active:scale-95
+                           bg-[#DC143C] text-white px-4 py-2.5
+                           text-sm font-semibold rounded-full
+                           hover:bg-[#b01030] active:scale-95
                            transition-all shadow-sm">
 
                             📄 <span th:text="#{home.templates.use}">Use Template</span>
@@ -141,28 +141,34 @@
 
         </div>
     </section>
+
+
     <!-- TEMPLATE PREVIEW MODAL -->
     <div id="templateModal"
          class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
         <div class="bg-white rounded-xl shadow-2xl p-6 w-[90%] max-w-xl relative">
-            <!-- Close -->
             <button onclick="closeTemplateModal()"
-                    class="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-xl">
+                    class="absolute top-3 right-3 text-gray-500 hover:text-[#DC143C] text-xl">
                 ✕
             </button>
+
             <h3 class="text-lg font-semibold text-center mb-4"
                 th:text="#{modal.template.preview}">
                 Template Preview
             </h3>
+
             <img id="templatePreviewImg"
                  class="mx-auto max-h-[70vh] rounded border modal-preview-img"/>
+
             <div class="text-center mt-5">
                 <a id="useTemplateBtn"
-                   class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md"
+                   class="bg-[#DC143C] hover:bg-[#b01030] text-white px-6 py-3 rounded-full font-semibold shadow-md"
                    th:text="#{modal.template.use}">
                     Use Template
                 </a>
             </div>
         </div>
     </div>
+
+    <script th:src="@{/js/templates.js}" defer></script>
 </div>

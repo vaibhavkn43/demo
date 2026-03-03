@@ -47,7 +47,20 @@
                             💡 <span th:text="#{guide.title}">How to use Biodata Maker</span>
                         </h3>
 
-                        <button onclick="toggleGuide()" class="text-xs md:text-sm text-blue-600 hover:underline">
+                        <button onclick="toggleGuide()"
+                                class="flex items-center gap-1 px-3 py-1.5
+                                text-xs md:text-sm font-medium
+                                text-[#DC143C] bg-[#fff0f3]
+                                border border-[#DC143C]/30
+                                rounded-full
+                                hover:bg-[#ffe3e8]
+                                active:scale-95
+                                transition">
+
+                            <!-- icon -->
+                            <span id="guideIcon">👁</span>
+
+                            <!-- text -->
                             <span id="guideToggleText"
                                   th:data-show="#{guide.show}"
                                   th:data-hide="#{guide.hide}"
@@ -287,6 +300,7 @@
                                 <div class="suggestion-dropdown hidden absolute left-0 right-0 mt-1
                                      bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
                                 </div>
+                                <div th:replace="~{::fieldError('error-name', #{validation.msg.required.name})}"></div>
 
                             </div>
 
@@ -1150,6 +1164,14 @@
                 </form>
             </div>
     </section>
+    <!-- reusable error message -->
+    <div th:fragment="fieldError(id, message)">
+        <p th:id="${id}"
+           class="text-red-600 text-xs mt-1 hidden"
+           th:text="${message}">
+            Error message
+        </p>
+    </div>
     <script th:src="@{/js/transliteration.js}"></script>
     <script th:src="@{/js/biodata-editor.js}"></script>
 </div>

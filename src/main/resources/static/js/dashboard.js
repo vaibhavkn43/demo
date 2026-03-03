@@ -58,3 +58,35 @@ function toggleFaq(id) {
         icon.innerHTML = "+";
     }
 }
+//Detect draft on Dashboard page
+function getDraftTemplates() {
+  const drafts = [];
+
+  Object.keys(localStorage).forEach(key => {
+    if (key.startsWith("biodata_draft_")) {
+      const templateId = key.replace("biodata_draft_", "");
+      drafts.push(templateId);
+    }
+  });
+
+  return drafts;
+}
+
+const drafts = getDraftTemplates();
+const container = document.getElementById("resumeContainer");
+
+if (drafts.length > 0) {
+  drafts.forEach(templateId => {
+    const btn = document.createElement("button");
+
+    btn.innerText = `Resume Biodata (${templateId})`;
+    btn.className = "resume-btn";
+
+    btn.onclick = () => {
+      // redirect to form page with templateId
+      window.location.href = `/form?templateId=${templateId}&resume=true`;
+    };
+
+    container.appendChild(btn);
+  });
+}
