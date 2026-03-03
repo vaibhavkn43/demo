@@ -195,8 +195,17 @@ document.addEventListener("keydown", function (e) {
 
 async function fetchSuggestions(word) {
 
+    const currentLang = document.documentElement.lang || "mr";
+
+    // Disable suggestions for English
+    if (currentLang === "en") return [];
+
+    const itcCode = currentLang === "hi"
+        ? "hi-t-i0-und"
+        : "mr-t-i0-und";
+
     const url =
-            `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=mr-t-i0-und&num=6`;
+        `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=${itcCode}&num=6`;
 
     try {
         const res = await fetch(url);

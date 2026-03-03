@@ -126,43 +126,69 @@
 
                     <input type="hidden" name="templateId" th:value="${templateId}"/>
 
-                    <div class="border border-gray-200 rounded-xl p-4 bg-white space-y-4">
+                    <!-- ================= Sacred Blessings Section ================= -->
+                    <div class="relative bg-amber-50 border border-amber-300 rounded-2xl 
+                         p-6 my-8 shadow-md hover:shadow-lg transition overflow-hidden">
 
-                        <h3 class="font-semibold text-gray-700 text-center">
-                            God Image & Mantra
-                        </h3>
+                        <!-- Soft radial glow background -->
+                        <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
+                            <div class="w-48 h-48 bg-amber-200 rounded-full blur-3xl opacity-20"></div>
+                        </div>
 
+                        <div class="relative z-10 text-center">
 
-                        <!-- CURRENT GOD IMAGE -->
-                        <div class="text-center">
-                            <img id="previewGodImage"
-                                 src="/images/gods/ganesh.png"
-                                 class="h-20 mx-auto mb-2 border p-2 rounded"/>
+                            <!-- Multilingual Title -->
+                            <h3 class="text-xl md:text-2xl font-semibold text-amber-800 tracking-wide mb-5">
+                                ✨ <span th:text="#{editor.blessings.title}">मंगल आशीर्वाद</span>
+                            </h3>
 
+                            <!-- GOD IMAGE -->
+                            <div class="mb-4">
+                                <img id="previewGodImage"
+                                     th:src="@{/images/gods/ganesh.png}"
+                                     class="h-24 md:h-28 mx-auto rounded-lg 
+                                     ring-2 ring-amber-300 shadow-sm 
+                                     transition-transform duration-300 hover:scale-105"/>
+                            </div>
+
+                            <!-- Change God Button -->
                             <button type="button"
                                     onclick="openGodModal()"
-                                    class="text-sm text-red-600 font-medium hover:underline">
-                                Change God Image
+                                    class="text-sm font-medium border border-amber-400 
+                                    px-4 py-1.5 rounded-full 
+                                    text-amber-800
+                                    hover:bg-amber-200 hover:shadow-sm 
+                                    transition">
+                                <span th:text="#{editor.blessings.changeGod}">देव बदला</span>
                             </button>
 
-                            <input type="hidden" name="godImage" id="godImageHidden">
+                            <input type="hidden" name="godImage" id="godImageHidden"/>
+
+                            <!-- MANTRA -->
+                            <div class="mt-6">
+                                <p id="previewMantra"
+                                   class="text-amber-900 text-xl md:text-2xl 
+                                   font-semibold tracking-wide leading-relaxed">
+                                    || श्री गणेशाय नमः ||
+                                </p>
+
+                                <!-- Change Mantra Button -->
+                                <button type="button"
+                                        onclick="openMantraModal()"
+                                        class="mt-3 text-sm font-medium border border-amber-400 
+                                        px-4 py-1.5 rounded-full 
+                                        text-amber-800
+                                        hover:bg-amber-200 hover:shadow-sm 
+                                        transition">
+                                    <span th:text="#{editor.blessings.changeMantra}">
+                                        मंत्र बदला
+                                    </span>
+                                </button>
+
+                                <input type="hidden" name="mantra" id="mantraHidden"/>
+                            </div>
+
                         </div>
-
-                        <!-- CURRENT MANTRA -->
-                        <div class="text-center mt-4">
-                            <p id="previewMantra" class="font-semibold text-gray-700">
-                                || श्री गणेशाय नमः ||
-                            </p>
-
-                            <button type="button"
-                                    onclick="openMantraModal()"
-                                    class="text-sm text-red-600 font-medium hover:underline">
-                                Change Mantra
-                            </button>
-
-                            <input type="hidden" name="mantra" id="mantraHidden">
-                        </div>
-
                     </div>
 
 
@@ -238,30 +264,55 @@
                         </div>
                     </div>
 
+                    <!-- ================= Language Selection Section ================= -->
+                    <div class="relative bg-amber-50 border border-amber-300 rounded-2xl 
+                         p-6 my-6 shadow-md hover:shadow-lg transition overflow-hidden">
 
-
-                    <div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-4">
-
-                        <div>
-                            <p class="text-sm font-semibold text-gray-800"
-                               th:text="#{marathi.typing.title}"></p>
-
-                            <p class="text-xs text-gray-500"
-                               th:text="#{marathi.typing.desc}"></p>
+                        <!-- Soft glow -->
+                        <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
+                            <div class="w-48 h-48 bg-amber-200 rounded-full blur-3xl opacity-10"></div>
                         </div>
 
-                        <!-- Toggle Switch -->
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="marathiToggle" class="sr-only peer" checked>
+                        <div class="relative z-10 text-center">
 
-                            <div class="w-11 h-6 bg-gray-300 rounded-full peer 
-                                 peer-checked:bg-red-500 
-                                 relative transition">
+                            <!-- Title -->
+                            <h3 class="text-xl md:text-2xl font-semibold text-amber-800 tracking-wide mb-5">
+                                🌍 <span th:text="#{editor.language.title}">बायोडेटाची भाषा</span>
+                            </h3>
 
-                                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition
-                                     peer-checked:translate-x-5"></div>
+                            <!-- Segmented Switch -->
+                            <div class="inline-flex rounded-full border border-amber-400 overflow-hidden shadow-sm">
+
+                                <!-- Marathi -->
+                                <a th:href="@{''(lang='mr')}"
+                                   th:classappend="${#locale.language == 'mr'} ?
+                                   'bg-amber-200 text-amber-900' :
+                                   'bg-white text-amber-800 hover:bg-amber-100'"
+                                   class="px-5 py-2 text-sm md:text-base font-medium transition">
+                                    <span th:text="#{editor.language.marathi}">मराठी</span>
+                                </a>
+
+                                <!-- Hindi -->
+                                <a th:href="@{''(lang='hi')}"
+                                   th:classappend="${#locale.language == 'hi'} ?
+                                   'bg-amber-200 text-amber-900' :
+                                   'bg-white text-amber-800 hover:bg-amber-100 border-l border-amber-300'"
+                                   class="px-5 py-2 text-sm md:text-base font-medium transition border-l border-amber-300">
+                                    <span th:text="#{editor.language.hindi}">हिंदी</span>
+                                </a>
+
+                                <!-- English -->
+                                <a th:href="@{''(lang='en')}"
+                                   th:classappend="${#locale.language == 'en'} ?
+                                   'bg-amber-200 text-amber-900' :
+                                   'bg-white text-amber-800 hover:bg-amber-100 border-l border-amber-300'"
+                                   class="px-5 py-2 text-sm md:text-base font-medium transition border-l border-amber-300">
+                                    <span th:text="#{editor.language.english}">English</span>
+                                </a>
+
                             </div>
-                        </label>
+
+                        </div>
                     </div>
 
                     <!-- ================= PERSONAL SECTION ================= -->
@@ -308,19 +359,21 @@
                             <label class="block text-sm font-medium text-gray-800 mb-1">
                                 <span th:text="#{editor.form.religion}"></span>
                             </label>
+                            <div>
+                                <!-- Religion -->
+                                <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3 
+                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        th:field="*{religion}">
+                                    <option value="" th:text="#{dropdown.religion.select}"></option>
 
-                            <!-- Religion -->
-                            <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3 
-                                    focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
-                                    th:field="*{religion}">
-                                <option value="" th:text="#{dropdown.religion.select}"></option>
-
-                                <option th:value="#{dropdown.religion.hindu}" th:text="#{dropdown.religion.hindu}"></option>
-                                <option th:value="#{dropdown.religion.muslim}" th:text="#{dropdown.religion.muslim}"></option>
-                                <option th:value="#{dropdown.religion.christian}" th:text="#{dropdown.religion.christian}"></option>
-                                <option th:value="#{dropdown.religion.buddhist}" th:text="#{dropdown.religion.buddhist}"></option>
-                                <option th:value="#{dropdown.religion.jain}" th:text="#{dropdown.religion.jain}"></option>
-                            </select>
+                                    <option th:value="#{dropdown.religion.hindu}" th:text="#{dropdown.religion.hindu}"></option>
+                                    <option th:value="#{dropdown.religion.muslim}" th:text="#{dropdown.religion.muslim}"></option>
+                                    <option th:value="#{dropdown.religion.christian}" th:text="#{dropdown.religion.christian}"></option>
+                                    <option th:value="#{dropdown.religion.buddhist}" th:text="#{dropdown.religion.buddhist}"></option>
+                                    <option th:value="#{dropdown.religion.jain}" th:text="#{dropdown.religion.jain}"></option>
+                                </select>
+                                <div th:replace="~{::fieldError('error-religion', #{validation.msg.required.religion})}"></div>
+                            </div>
 
                             <!-- Caste -->
 
@@ -460,6 +513,7 @@
                                             th:value="${y}"
                                             th:text="${y}"></option>
                                 </select>
+                                <div th:replace="~{::fieldError('error-birthDate', #{validation.msg.required.birthDate})}"></div>
                             </div>
 
                             <!-- Hidden Date -->
@@ -490,6 +544,7 @@
                                 <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
                                      bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
                                 </div>
+                                <div th:replace="~{::fieldError('error-birthPlace', #{validation.msg.required.birthPlace})}"></div>
                             </div>
 
 
