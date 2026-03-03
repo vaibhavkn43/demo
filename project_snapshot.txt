@@ -1,6 +1,6 @@
 =============================== 
 PROJECT SNAPSHOT 
-Generated on Tue 03/03/2026 13:05:54.59 
+Generated on Tue 03/03/2026 17:44:11.06 
 =============================== 
  
  
@@ -1847,9 +1847,6 @@ faq.a3=Yes, basic biodata creation is free. Premium templates may be paid.
 faq.q4=Can I edit biodata later?
 faq.a4=Yes, you can edit your biodata anytime using saved data.
 
-editor.typing.title=Typing Suggestions
-editor.typing.subtitle=Type in English to get word suggestions automatically
-
 ######
 editor.blessings.title=Sacred Blessings
 editor.blessings.changeGod=Change God Image
@@ -1858,7 +1855,14 @@ editor.language.title=Biodata Language
 editor.language.marathi=Marathi
 editor.language.hindi=Hindi
 editor.language.english=English
- 
+
+editor.form.clearDraft=Clear Form
+editor.form.clearDraft.confirm=Do you want to clear this form?
+editor.form.clearDraft.success=Form cleared successfully.
+
+dashboard.draft.title=Incomplete Biodata
+dashboard.draft.subtitle=Complete your biodata
+dashboard.draft.resume=Continue 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\messages_hi.properties" 
 -------------------------------------------------- 
@@ -2346,7 +2350,19 @@ validation.required.profession=\u0935\u094d\u092f\u0935\u0938\u093e\u092f
 validation.required.mobile=\u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930
 validation.required.address=\u092a\u0924\u093e
 
-
+validation.msg.required.name=\u0915\u0943\u092a\u092f\u093e \u0928\u093e\u092e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902
+validation.msg.required.birthDate=\u0915\u0943\u092a\u092f\u093e \u091c\u0928\u094d\u092e \u0924\u093f\u0925\u093f \u091a\u0941\u0928\u0947\u0902
+validation.msg.required.birthPlace=\u0915\u0943\u092a\u092f\u093e \u091c\u0928\u094d\u092e \u0938\u094d\u0925\u093e\u0928 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902
+validation.msg.required.religion=\u0915\u0943\u092a\u092f\u093e \u0927\u0930\u094d\u092e \u091a\u0941\u0928\u0947\u0902
+validation.msg.required.caste=\u0915\u0943\u092a\u092f\u093e \u091c\u093e\u0924\u093f \u091a\u0941\u0928\u0947\u0902
+validation.msg.required.complexion=\u0915\u0943\u092a\u092f\u093e \u0930\u0902\u0917-\u0930\u0942\u092a \u091a\u0941\u0928\u0947\u0902
+validation.msg.required.height=\u0915\u0943\u092a\u092f\u093e \u090a\u0902\u091a\u093e\u0908 \u091a\u0941\u0928\u0947\u0902
+validation.msg.required.education=\u0915\u0943\u092a\u092f\u093e \u0936\u093f\u0915\u094d\u0937\u093e \u0935\u093f\u0935\u0930\u0923 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902
+validation.msg.required.fatherName=\u0915\u0943\u092a\u092f\u093e \u092a\u093f\u0924\u093e \u0915\u093e \u0928\u093e\u092e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902
+validation.msg.required.motherName=\u0915\u0943\u092a\u092f\u093e \u092e\u093e\u0924\u093e \u0915\u093e \u0928\u093e\u092e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902
+validation.msg.required.relatives=\u0915\u0943\u092a\u092f\u093e \u0930\u093f\u0936\u094d\u0924\u0947\u0926\u093e\u0930\u094b\u0902 \u0915\u0940 \u091c\u093e\u0928\u0915\u093e\u0930\u0940 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902
+validation.msg.required.mobile=\u0915\u0943\u092a\u092f\u093e \u092e\u094b\u092c\u093e\u0907\u0932 \u0928\u0902\u092c\u0930 \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902
+validation.msg.required.address=\u0915\u0943\u092a\u092f\u093e \u092a\u0924\u093e \u0926\u0930\u094d\u091c \u0915\u0930\u0947\u0902
 # =====================================================
 # GUIDE
 # =====================================================
@@ -2608,8 +2624,22 @@ faq.a3=\u0939\u093e\u0901, \u092c\u0941\u0928\u093f\u092f\u093e\u0926\u0940 \u09
 faq.q4=\u0915\u094d\u092f\u093e \u092e\u0948\u0902 \u092c\u093e\u0926 \u092e\u0947\u0902 \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u0938\u0902\u092a\u093e\u0926\u093f\u0924 \u0915\u0930 \u0938\u0915\u0924\u093e \u0939\u0942\u0901?
 faq.a4=\u0939\u093e\u0901, \u0906\u092a \u0938\u0939\u0947\u091c\u0947 \u0917\u090f \u0921\u0947\u091f\u093e \u0915\u093e \u0909\u092a\u092f\u094b\u0917 \u0915\u0930\u0915\u0947 \u0915\u093f\u0938\u0940 \u092d\u0940 \u0938\u092e\u092f \u0905\u092a\u0928\u093e \u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e \u0938\u0902\u092a\u093e\u0926\u093f\u0924 \u0915\u0930 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902\u0964
 
-editor.typing.title=\u0939\u093f\u0902\u0926\u0940 \u091f\u093e\u0907\u092a\u093f\u0902\u0917
-editor.typing.subtitle=\u0905\u0902\u0917\u094d\u0930\u0947\u091c\u093c\u0940 \u092e\u0947\u0902 \u091f\u093e\u0907\u092a \u0915\u0930\u0947\u0902 \u0914\u0930 \u0939\u093f\u0902\u0926\u0940 \u0936\u092c\u094d\u0926 \u0938\u0941\u091d\u093e\u0935 \u092e\u093f\u0932\u0947\u0902\u0917\u0947 
+editor.blessings.title=\u092e\u0902\u0917\u0932 \u0906\u0936\u0940\u0930\u094d\u0935\u093e\u0926
+editor.blessings.changeGod=\u092d\u0917\u0935\u093e\u0928 \u0915\u0940 \u092b\u094b\u091f\u094b \u092c\u0926\u0932\u0947\u0902
+editor.blessings.changeMantra=\u092e\u0902\u0924\u094d\u0930 \u092c\u0926\u0932\u0947\u0902
+editor.language.title=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u0915\u0940 \u092d\u093e\u0937\u093e
+editor.language.marathi=\u092e\u0930\u093e\u0920\u0940
+editor.language.hindi=\u0939\u093f\u0902\u0926\u0940
+editor.language.english=\u0905\u0902\u0917\u094d\u0930\u0947\u091c\u093c\u0940
+
+editor.form.clearDraft=\u092b\u0949\u0930\u094d\u092e \u0938\u093e\u092b \u0915\u0930\u0947\u0902
+editor.form.clearDraft.confirm=\u0915\u094d\u092f\u093e \u0906\u092a \u092f\u0939 \u092b\u0949\u0930\u094d\u092e \u0938\u093e\u092b \u0915\u0930\u0928\u093e \u091a\u093e\u0939\u0924\u0947 \u0939\u0948\u0902?
+editor.form.clearDraft.success=\u092b\u0949\u0930\u094d\u092e \u0938\u092b\u0932\u0924\u093e\u092a\u0942\u0930\u094d\u0935\u0915 \u0938\u093e\u092b \u0939\u0941\u0906\u0964
+
+dashboard.draft.title=\u0905\u0927\u0942\u0930\u093e \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e
+dashboard.draft.subtitle=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u092a\u0942\u0930\u093e \u0915\u0930\u0947\u0902
+dashboard.draft.resume=\u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902
+ 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\messages_mr.properties" 
 -------------------------------------------------- 
@@ -3360,7 +3390,15 @@ editor.blessings.changeMantra=\u092e\u0902\u0924\u094d\u0930 \u092c\u0926\u0932\
 editor.language.title=\u092c\u093e\u092f\u094b\u0921\u0947\u091f\u093e\u091a\u0940 \u092d\u093e\u0937\u093e
 editor.language.marathi=\u092e\u0930\u093e\u0920\u0940
 editor.language.hindi=\u0939\u093f\u0902\u0926\u0940
-editor.language.english=\u0907\u0902\u0917\u094d\u0930\u091c\u0940 
+editor.language.english=\u0907\u0902\u0917\u094d\u0930\u091c\u0940
+
+dashboard.draft.title=\u0905\u092a\u0942\u0930\u094d\u0923 \u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e 
+dashboard.draft.subtitle=\u092c\u093e\u092f\u094b\u0921\u093e\u091f\u093e \u092a\u0942\u0930\u094d\u0923 \u0915\u0930\u093e 
+dashboard.draft.resume=\u0938\u0941\u0930\u0942 \u0920\u0947\u0935\u093e
+
+editor.form.clearDraft=\u092b\u0949\u0930\u094d\u092e \u0930\u093f\u0915\u093e\u092e\u093e \u0915\u0930\u093e
+editor.form.clearDraft.confirm=\u0924\u0941\u092e\u094d\u0939\u093e\u0932\u093e \u0939\u093e \u092b\u0949\u0930\u094d\u092e \u0930\u093f\u0915\u093e\u092e\u093e \u0915\u0930\u093e\u092f\u091a\u093e \u0906\u0939\u0947 \u0915\u093e?
+editor.form.clearDraft.success=\u092b\u0949\u0930\u094d\u092e \u092f\u0936\u0938\u094d\u0935\u0940\u092a\u0923\u0947 \u0930\u093f\u0915\u093e\u092e\u093e \u091d\u093e\u0932\u093e. 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\config\templates.json" 
 -------------------------------------------------- 
@@ -3437,14 +3475,34 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\ba
    🅰️ FONT DEFINITIONS
 ===================================================== */
 
-@font-face {
-    font-family: 'NotoDevanagari';
-    src: url('/fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
+/* ===== Default (Marathi as default in your config) ===== */
+body {
+    font-family: 'Noto Serif Devanagari', serif;
 }
 
-@font-face {
-    font-family: 'Mangal';
-    src: url('/fonts/mangal.ttf') format('truetype');
+/* Marathi */
+.lang-mr {
+    font-family: 'Noto Serif Devanagari', serif;
+}
+
+/* Hindi */
+.lang-hi {
+    font-family: 'Hind', sans-serif;
+}
+
+/* English */
+.lang-en {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Biodata Titles (Premium Look) */
+.lang-en .biodata-title {
+    font-family: 'Playfair Display', serif;
+}
+
+.lang-mr .biodata-title,
+.lang-hi .biodata-title {
+    font-weight: 700;
 }
 
 
@@ -3453,9 +3511,6 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\ba
 ===================================================== */
 
 body {
-     font-family: 'Poppins', 'Mukta', 'Noto Sans Devanagari', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    font-kerning: normal;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -5128,16 +5183,27 @@ form.addEventListener("input", () => {
 });
 
 // ===== RESTORE ON LOAD =====
+// ===== SMART RESTORE LOGIC =====
 window.addEventListener("DOMContentLoaded", () => {
+
     const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
 
-    if (saved) {
-        const data = JSON.parse(saved);
+    const urlParams = new URLSearchParams(window.location.search);
+    const isResume = urlParams.get("resume") === "true";
 
-        const shouldRestore = confirm("Resume your previous biodata draft?");
-        if (shouldRestore) {
-            restoreFormData(form, data);
-        }
+    const data = JSON.parse(saved);
+
+    // If coming from dashboard resume → auto restore
+    if (isResume) {
+        restoreFormData(form, data);
+        return;
+    }
+
+    // Otherwise ask user
+    const shouldRestore = confirm("Resume your previous biodata draft?");
+    if (shouldRestore) {
+        restoreFormData(form, data);
     }
 });
 
@@ -5157,7 +5223,24 @@ if (isResume === "true") {
 }
 
 
- 
+function clearDraft() {
+
+    const msgBox = document.getElementById("draftMessages");
+    const confirmMsg = msgBox?.dataset.confirm;
+    const successMsg = msgBox?.dataset.success;
+
+    if (!confirm(confirmMsg)) {
+        return;
+    }
+
+    localStorage.removeItem(STORAGE_KEY);
+    document.getElementById("biodataForm").reset();
+
+    document.querySelectorAll(".border-red-500")
+        .forEach(el => el.classList.remove("border-red-500"));
+
+    alert(successMsg);
+} 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\checkout.js" 
 -------------------------------------------------- 
@@ -5396,35 +5479,54 @@ function toggleFaq(id) {
 }
 //Detect draft on Dashboard page
 function getDraftTemplates() {
-  const drafts = [];
+    const drafts = [];
 
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith("biodata_draft_")) {
-      const templateId = key.replace("biodata_draft_", "");
-      drafts.push(templateId);
-    }
-  });
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("biodata_draft_")) {
+            const templateId = key.replace("biodata_draft_", "");
+            drafts.push(templateId);
+        }
+    });
 
-  return drafts;
+    return drafts;
 }
 
 const drafts = getDraftTemplates();
 const container = document.getElementById("resumeContainer");
 
 if (drafts.length > 0) {
-  drafts.forEach(templateId => {
-    const btn = document.createElement("button");
 
-    btn.innerText = `Resume Biodata (${templateId})`;
-    btn.className = "resume-btn";
+    const msgBox = document.getElementById("draftMessages");
 
-    btn.onclick = () => {
-      // redirect to form page with templateId
-      window.location.href = `/form?templateId=${templateId}&resume=true`;
-    };
+    const title = msgBox.dataset.title;
+    const subtitle = msgBox.dataset.subtitle;
+    const resumeText = msgBox.dataset.resume;
 
-    container.appendChild(btn);
-  });
+    drafts.forEach(templateId => {
+
+        const card = document.createElement("div");
+        card.className =
+                "bg-white border rounded-xl shadow-md p-4 mb-6 flex justify-between items-center hover:shadow-lg transition";
+
+        const left = document.createElement("div");
+        left.innerHTML = `
+  <h4 class="font-semibold text-gray-800">📝 ${title}</h4>
+  <p class="text-sm text-gray-500">${subtitle}</p>
+`;
+
+        const right = document.createElement("button");
+        right.innerText = resumeText;
+        right.className =
+                "bg-gradient-to-r from-red-600 to-pink-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition";
+
+        card.onclick = () => {
+            window.location.href = `/editor/${templateId}?resume=true`;
+        };
+
+        card.appendChild(left);
+        card.appendChild(right);
+        container.appendChild(card);
+    });
 } 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\html-to-image.min.js" 
@@ -5473,28 +5575,19 @@ function closeTemplateModal() {
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\transliteration.js" 
 -------------------------------------------------- 
 /* ============================================================
- Marathi Transliteration + Inline Suggestions
- ------------------------------------------------------------
- Features:
- ✔ English → Marathi transliteration
- ✔ Inline dropdown suggestions under input
- ✔ Arrow key navigation (↑ ↓)
- ✔ Enter / Space selection
- ✔ Auto hide on outside click
- ✔ Works with multiple inputs (.ime-marathi)
+ Marathi Transliteration + Inline Suggestions (Optimized)
  ============================================================ */
 
-/* ============================================================
- GLOBAL STATE (shared across typing session)
- ============================================================ */
+let marathiEnabled = true;
+let activeInput = null;
+let activeWordRange = null;
+let activeSuggestionIndex = -1;
 
-let marathiEnabled = true;            // toggle for enabling/disabling IME
-let activeInput = null;               // currently focused input element
-let activeWordRange = null;           // {start, end} of current word
-let activeSuggestionIndex = -1;       // index of highlighted suggestion
+// 🔥 Cache to reduce API calls
+const suggestionCache = new Map();
 
 /* ============================================================
- DOM READY → Initialize toggle listener
+ INIT
  ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -5507,47 +5600,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/* ============================================================
- CLICK OUTSIDE → close suggestion dropdown
- ============================================================ */
-
 document.addEventListener("click", function (e) {
     if (!e.target.closest(".ime-wrapper")) {
         hideSuggestions();
     }
 });
 
-
 /* ============================================================
- KEYUP EVENT
- Trigger: user types letters
- Purpose: detect English word and fetch Marathi suggestions
+ KEYUP → Word suggestions
  ============================================================ */
 
 document.addEventListener("keyup", async function (e) {
 
     const input = e.target;
-
-    // allow only inputs with class .ime-marathi
-    if (!input.classList.contains("ime-marathi"))
-        return;
-
-    // if toggle disabled, stop
-    if (!marathiEnabled)
-        return;
-
-    // ignore navigation keys
-    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
-        return;
-    }
+    if (!input.classList.contains("ime-marathi")) return;
+    if (!marathiEnabled) return;
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) return;
 
     const cursor = input.selectionStart;
     const text = input.value || "";
-
-    // get word before cursor
     const left = text.slice(0, cursor);
 
-// 🔥 find last English word ignoring trailing commas/spaces
     const match = left.match(/([a-zA-Z]+)(?=[^a-zA-Z]*$)/);
 
     if (!match) {
@@ -5556,122 +5629,111 @@ document.addEventListener("keyup", async function (e) {
     }
 
     const word = match[1];
-
-// 🔥 get correct start index of that word
     const start = left.lastIndexOf(word);
     const end = start + word.length;
 
-// 🔥 IMPORTANT: store actual word range only (not comma part)
     activeInput = input;
-    activeWordRange = {start, end};
+    activeWordRange = { start, end };
     activeSuggestionIndex = -1;
 
-    // fetch suggestions from Google API
     const normalized = normalizeSpecialCases(word);
     const suggestions = await fetchSuggestions(normalized);
 
-    // show dropdown suggestions
     showInlineSuggestions(input, suggestions);
 });
 
-
 /* ============================================================
- KEYDOWN EVENT
- Trigger: arrow keys / enter / space
- Purpose: navigate and select suggestions
+ KEYDOWN → Navigation
  ============================================================ */
 
 document.addEventListener("keydown", function (e) {
 
-    if (!activeInput)
-        return;
+    if (!activeInput) return;
 
     const wrapper = activeInput.closest(".ime-wrapper");
     const dropdown = wrapper.querySelector(".suggestion-dropdown");
-
-    if (!dropdown)
-        return;
+    if (!dropdown) return;
 
     const items = dropdown.querySelectorAll("div");
+    if (!items.length) return;
 
-    if (!items.length)
-        return;
-
-
-    /* ---------- ARROW DOWN ---------- */
     if (e.key === "ArrowDown") {
         e.preventDefault();
-
         activeSuggestionIndex =
-                (activeSuggestionIndex + 1) % items.length;
-
+            (activeSuggestionIndex + 1) % items.length;
         updateHighlight(items);
     }
 
-
-    /* ---------- ARROW UP ---------- */
     else if (e.key === "ArrowUp") {
         e.preventDefault();
-
         activeSuggestionIndex =
-                (activeSuggestionIndex - 1 + items.length) % items.length;
-
+            (activeSuggestionIndex - 1 + items.length) % items.length;
         updateHighlight(items);
     }
 
-
-    /* ---------- ENTER ---------- */
-    else if (e.key === "Enter") {
+    else if (e.key === "Enter" || e.key === " ") {
         if (activeSuggestionIndex >= 0) {
             e.preventDefault();
-
-            // simulate click on selected item
-            items[activeSuggestionIndex].click();
-
-            // add space after word
-            const pos = activeInput.selectionStart;
-
-            activeInput.value =
-                    activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
-
-            activeInput.setSelectionRange(pos + 1, pos + 1);
-
-            hideSuggestions();
-        }
-    }
-
-
-    /* ---------- SPACE ---------- */
-    else if (e.key === " ") {
-        if (activeSuggestionIndex >= 0) {
-            e.preventDefault();
-
-            // simulate click on selected item
             items[activeSuggestionIndex].click();
 
             const pos = activeInput.selectionStart;
-
             activeInput.value =
-                    activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
+                activeInput.value.slice(0, pos) + " " +
+                activeInput.value.slice(pos);
 
             activeInput.setSelectionRange(pos + 1, pos + 1);
-
             hideSuggestions();
         }
     }
-
 });
 
+/* ============================================================
+ INPUT EVENT → Paste + Mobile Autofill Support
+ ============================================================ */
+
+document.addEventListener("input", async function (e) {
+
+    const input = e.target;
+    if (!input.classList.contains("ime-marathi")) return;
+    if (!marathiEnabled) return;
+
+    const text = input.value.trim();
+
+    // Convert only if full English sentence detected
+    if (/^[a-zA-Z\s]+$/.test(text) && text.includes(" ")) {
+
+        // Avoid infinite loop (store flag)
+        if (input.dataset.converted === "true") {
+            input.dataset.converted = "false";
+            return;
+        }
+
+        const words = text.split(/\s+/);
+        let converted = [];
+
+        for (let w of words) {
+            const normalized = normalizeSpecialCases(w);
+            const suggestions = await fetchSuggestions(normalized);
+            converted.push(suggestions[0] || w);
+        }
+
+        input.dataset.converted = "true";
+        input.value = converted.join(" ");
+        hideSuggestions();
+    }
+});
 
 /* ============================================================
- FETCH SUGGESTIONS FROM GOOGLE INPUT TOOLS API
+ FETCH SUGGESTIONS (With Cache)
  ============================================================ */
 
 async function fetchSuggestions(word) {
 
-    const currentLang = document.documentElement.lang || "mr";
+    if (suggestionCache.has(word)) {
+        return suggestionCache.get(word);
+    }
 
-    // Disable suggestions for English
+    const currentLang = document.documentElement.lang || "mr";
     if (currentLang === "en") return [];
 
     const itcCode = currentLang === "hi"
@@ -5684,8 +5746,10 @@ async function fetchSuggestions(word) {
     try {
         const res = await fetch(url);
         const data = await res.json();
+        const result = data?.[1]?.[0]?.[1] || [];
 
-        return data?.[1]?.[0]?.[1] || [];
+        suggestionCache.set(word, result);
+        return result;
 
     } catch (err) {
         console.error("Suggestion fetch error:", err);
@@ -5693,53 +5757,42 @@ async function fetchSuggestions(word) {
     }
 }
 
-
 /* ============================================================
- SHOW INLINE DROPDOWN UNDER INPUT
+ SHOW INLINE SUGGESTIONS
  ============================================================ */
 
 function showInlineSuggestions(input, suggestions) {
 
     const wrapper = input.closest(".ime-wrapper");
     const dropdown = wrapper.querySelector(".suggestion-dropdown");
-
     dropdown.innerHTML = "";
 
-    // if no suggestions, hide dropdown
     if (!suggestions || suggestions.length === 0) {
         dropdown.classList.add("hidden");
         return;
     }
 
-    // create suggestion items
     suggestions.slice(0, 6).forEach((word, index) => {
 
         const div = document.createElement("div");
-
         div.className = "px-3 py-2 cursor-pointer hover:bg-gray-100";
         div.innerText = word;
 
-        // click handler (user selects suggestion)
         div.onclick = () => {
 
             activeSuggestionIndex = index;
 
-            const {start, end} = activeWordRange;
+            const { start, end } = activeWordRange;
             const text = input.value;
 
-            const newText =
-                    text.slice(0, start) + word + text.slice(end);
-
-            input.value = newText;
+            input.value =
+                text.slice(0, start) + word + text.slice(end);
 
             const pos = start + word.length;
-
             input.setSelectionRange(pos, pos);
             input.focus();
 
             dropdown.classList.add("hidden");
-
-            // reset index to avoid override
             activeSuggestionIndex = -1;
         };
 
@@ -5747,44 +5800,32 @@ function showInlineSuggestions(input, suggestions) {
     });
 
     dropdown.classList.remove("hidden");
-
-    // default highlight first suggestion
     activeSuggestionIndex = 0;
     updateHighlight(dropdown.querySelectorAll("div"));
 }
 
-
 /* ============================================================
- HIDE ALL DROPDOWNS
+ HELPERS
  ============================================================ */
 
 function hideSuggestions() {
-
     document.querySelectorAll(".suggestion-dropdown")
-            .forEach(d => d.classList.add("hidden"));
-
+        .forEach(d => d.classList.add("hidden"));
     activeSuggestionIndex = -1;
 }
 
-
-/* ============================================================
- UPDATE HIGHLIGHT DURING KEY NAVIGATION
- ============================================================ */
-
 function updateHighlight(items) {
-
     items.forEach((el, i) => {
         el.classList.remove("bg-gray-200");
-
         if (i === activeSuggestionIndex) {
             el.classList.add("bg-gray-200");
         }
     });
-
 }
+
 function normalizeSpecialCases(text) {
     return text
-        .replace(/x/g, "ksh")   // convert x → ksh
+        .replace(/x/g, "ksh")
         .replace(/Ksh/g, "Ksh")
         .replace(/kSh/g, "ksh");
 } 
@@ -5793,7 +5834,12 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\das
 -------------------------------------------------- 
 <div th:fragment="content">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <div id="resumeContainer"></div>
+    <div id="draftMessages"
+         th:data-title="#{dashboard.draft.title}"
+         th:data-subtitle="#{dashboard.draft.subtitle}"
+         th:data-resume="#{dashboard.draft.resume}">
+    </div>
+    <div id="resumeContainer" class="max-w-7xl mx-auto px-4 mt-4"></div>
     <section class="bg-gradient-to-r from-red-600 to-pink-600 text-white overflow-hidden">
 
         <div class="max-w-7xl mx-auto px-6 py-14 md:py-16 
@@ -6387,7 +6433,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                     <!-- ================= Sacred Blessings Section ================= -->
                     <div class="relative bg-amber-50 border border-amber-300 rounded-2xl 
-                         p-6 my-8 shadow-md hover:shadow-lg transition overflow-hidden">
+                         p-6 my-8 shadow-md hover:shadow-lg transition overflow-hidden mb-5">
 
                         <!-- Soft radial glow background -->
                         <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
@@ -7389,6 +7435,10 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                  th:data-mrs="#{editor.prefix.mrs}"
                                  th:data-shreemati="#{editor.prefix.shreemati}">
                             </div>
+                              <div id="draftMessages"
+                                 th:data-confirm="#{editor.form.clearDraft.confirm}"
+                                 th:data-success="#{editor.form.clearDraft.success}">
+                            </div>
                         </div>
                     </div>
                     <!-- ================= RELATIVES / CUSTOM SECTION ================= -->
@@ -7469,11 +7519,26 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
 
                     <!-- ================= SUBMIT ================= -->
-                    <div class="sticky bottom-0 bg-white pt-4 pb-2 border-t mt-6">
-                        <button type="button" id="submitBtn"
-                                class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 mt-6 rounded-lg shadow-lg font-semibold text-lg transition"
-                                th:text="#{editor.form.submit}">
-                        </button>
+                    <div class="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+                        <div class="max-w-md mx-auto px-4 py-3 space-y-2">
+
+                            <!-- Primary Submit -->
+                            <button type="button" id="submitBtn"
+                                    class="w-full bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg shadow-md font-semibold text-lg transition"
+                                    th:text="#{editor.form.submit}">
+                            </button>
+
+                            <!-- Secondary Clear Draft -->
+                            <!-- Secondary Clear Draft -->
+                            <button type="button"
+                                    onclick="clearDraft()"
+                                    class="w-full text-sm text-gray-500 hover:text-red-600 transition"
+                                    th:text="#{editor.form.clearDraft}">
+                                Clear Saved Draft
+                            </button>
+
+                          
+                        </div>
                     </div>
                 </form>
             </div>
@@ -7899,31 +7964,28 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\lay
 
         <!-- ================= SEO ================= -->
 
-        <!-- Title -->
-        <title th:text="${pageTitle ?: 'VivahPatra – Free Marriage Biodata Maker (Marathi & English)'}">
+        <title th:text="${pageTitle ?: 'VivahPatra – Free Marriage Biodata Maker (Marathi, Hindi & English)'}">
             VivahPatra – Free Marriage Biodata Maker
         </title>
 
-        <!-- Description -->
         <meta name="description"
-              th:content="${pageDescription ?: 'Create beautiful marriage biodata online in Marathi and English. Free printable biodata templates. No login required.'}"/>
+              th:content="${pageDescription ?: 'Create beautiful marriage biodata online in Marathi, Hindi and English. Free printable biodata templates. No login required.'}"/>
 
-        <!-- Canonical -->
         <link rel="canonical" href="https://vivahpatra.com"/>
 
-        <!-- Open Graph -->
         <meta property="og:title"
               th:content="${pageTitle ?: 'VivahPatra Biodata Maker'}"/>
 
         <meta property="og:description"
-              th:content="${pageDescription ?: 'Free Marathi marriage biodata maker with modern templates and PDF download.'}"/>
+              th:content="${pageDescription ?: 'Free Marathi, Hindi & English marriage biodata maker with modern templates and PDF download.'}"/>
 
         <meta property="og:type" content="website"/>
         <meta property="og:url" content="https://vivahpatra.com"/>
 
         <!-- Multilingual SEO -->
-        <link rel="alternate" hreflang="en" href="https://vivahpatra.com/about?lang=en"/>
-        <link rel="alternate" hreflang="mr" href="https://vivahpatra.com/about?lang=mr"/>
+        <link rel="alternate" hreflang="en" href="https://vivahpatra.com?lang=en"/>
+        <link rel="alternate" hreflang="mr" href="https://vivahpatra.com?lang=mr"/>
+        <link rel="alternate" hreflang="hi" href="https://vivahpatra.com?lang=hi"/>
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -7933,13 +7995,16 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\lay
             "name": "VivahPatra Biodata Maker",
             "url": "https://vivahpatra.com",
             "logo": "https://vivahpatra.com/images/logo.png",
-            "description": "Free online Marathi marriage biodata maker with PDF download and modern templates."
+            "description": "Free online Marathi, Hindi and English marriage biodata maker with PDF download and modern templates."
             }
         </script>
 
         <!-- ================= STYLES ================= -->
         <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <!-- Google Fonts - Multilingual -->
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600;700&family=Hind:wght@400;500;600&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
         <link rel="stylesheet" th:href="@{/css/base.css}">
     </head>
 
@@ -7974,7 +8039,10 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\lay
                         <button onclick="toggleLangDropdown()"
                                 class="flex items-center gap-2 text-sm md:text-base font-medium text-red-700 border-b-2 border-red-700 pb-1">
                             🌐
-                            <span th:text="${#locale.language == 'mr'} ? 'मराठी' : 'English'"></span>
+                            <span th:text="
+                                  ${#locale.language == 'mr'} ? 'मराठी' :
+                                  (${#locale.language == 'hi'} ? 'हिंदी' : 'English')
+                                  "></span>
                             ▾
                         </button>
 

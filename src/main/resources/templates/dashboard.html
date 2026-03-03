@@ -1,6 +1,15 @@
 <div th:fragment="content">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-    <div id="resumeContainer"></div>
+    <div id="draftMessages"
+         th:data-title="#{dashboard.draft.title}"
+         th:data-subtitle="#{dashboard.draft.subtitle}"
+         th:data-resume="#{dashboard.draft.resume}">
+    </div>
+    <div class="bg-gray-50">
+        <div id="resumeContainer"
+             class="max-w-4xl mx-auto px-6 pt-8 pb-2">
+        </div>
+    </div>
     <section class="bg-gradient-to-r from-red-600 to-pink-600 text-white overflow-hidden">
 
         <div class="max-w-7xl mx-auto px-6 py-14 md:py-16 

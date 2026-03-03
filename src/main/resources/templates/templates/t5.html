@@ -1,9 +1,9 @@
 <div th:fragment="content">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/templates/t3.css}">
+    <link rel="stylesheet" th:href="@{/css/templates/t5.css}">
 
     <div id="biodata-preview"
-         th:class="'template-t3 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
+         th:class="'template-t5 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
          style="width:1033px;height:1540px;font-family:'Noto Sans Devanagari',sans-serif;"
          th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:100% 100%; width:1033px;height:1540px;font-family:\'Noto Sans Devanagari\',sans-serif;'">
 

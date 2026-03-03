@@ -1,26 +1,17 @@
 /* ============================================================
- Marathi Transliteration + Inline Suggestions
- ------------------------------------------------------------
- Features:
- ✔ English → Marathi transliteration
- ✔ Inline dropdown suggestions under input
- ✔ Arrow key navigation (↑ ↓)
- ✔ Enter / Space selection
- ✔ Auto hide on outside click
- ✔ Works with multiple inputs (.ime-marathi)
+ Marathi Transliteration + Inline Suggestions (Optimized)
  ============================================================ */
 
-/* ============================================================
- GLOBAL STATE (shared across typing session)
- ============================================================ */
+let marathiEnabled = true;
+let activeInput = null;
+let activeWordRange = null;
+let activeSuggestionIndex = -1;
 
-let marathiEnabled = true;            // toggle for enabling/disabling IME
-let activeInput = null;               // currently focused input element
-let activeWordRange = null;           // {start, end} of current word
-let activeSuggestionIndex = -1;       // index of highlighted suggestion
+// 🔥 Cache to reduce API calls
+const suggestionCache = new Map();
 
 /* ============================================================
- DOM READY → Initialize toggle listener
+ INIT
  ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -33,47 +24,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-/* ============================================================
- CLICK OUTSIDE → close suggestion dropdown
- ============================================================ */
-
 document.addEventListener("click", function (e) {
     if (!e.target.closest(".ime-wrapper")) {
         hideSuggestions();
     }
 });
 
-
 /* ============================================================
- KEYUP EVENT
- Trigger: user types letters
- Purpose: detect English word and fetch Marathi suggestions
+ KEYUP → Word suggestions
  ============================================================ */
 
 document.addEventListener("keyup", async function (e) {
 
     const input = e.target;
-
-    // allow only inputs with class .ime-marathi
-    if (!input.classList.contains("ime-marathi"))
-        return;
-
-    // if toggle disabled, stop
-    if (!marathiEnabled)
-        return;
-
-    // ignore navigation keys
-    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) {
-        return;
-    }
+    if (!input.classList.contains("ime-marathi")) return;
+    if (!marathiEnabled) return;
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) return;
 
     const cursor = input.selectionStart;
     const text = input.value || "";
-
-    // get word before cursor
     const left = text.slice(0, cursor);
 
-// 🔥 find last English word ignoring trailing commas/spaces
     const match = left.match(/([a-zA-Z]+)(?=[^a-zA-Z]*$)/);
 
     if (!match) {
@@ -82,122 +53,111 @@ document.addEventListener("keyup", async function (e) {
     }
 
     const word = match[1];
-
-// 🔥 get correct start index of that word
     const start = left.lastIndexOf(word);
     const end = start + word.length;
 
-// 🔥 IMPORTANT: store actual word range only (not comma part)
     activeInput = input;
-    activeWordRange = {start, end};
+    activeWordRange = { start, end };
     activeSuggestionIndex = -1;
 
-    // fetch suggestions from Google API
     const normalized = normalizeSpecialCases(word);
     const suggestions = await fetchSuggestions(normalized);
 
-    // show dropdown suggestions
     showInlineSuggestions(input, suggestions);
 });
 
-
 /* ============================================================
- KEYDOWN EVENT
- Trigger: arrow keys / enter / space
- Purpose: navigate and select suggestions
+ KEYDOWN → Navigation
  ============================================================ */
 
 document.addEventListener("keydown", function (e) {
 
-    if (!activeInput)
-        return;
+    if (!activeInput) return;
 
     const wrapper = activeInput.closest(".ime-wrapper");
     const dropdown = wrapper.querySelector(".suggestion-dropdown");
-
-    if (!dropdown)
-        return;
+    if (!dropdown) return;
 
     const items = dropdown.querySelectorAll("div");
+    if (!items.length) return;
 
-    if (!items.length)
-        return;
-
-
-    /* ---------- ARROW DOWN ---------- */
     if (e.key === "ArrowDown") {
         e.preventDefault();
-
         activeSuggestionIndex =
-                (activeSuggestionIndex + 1) % items.length;
-
+            (activeSuggestionIndex + 1) % items.length;
         updateHighlight(items);
     }
 
-
-    /* ---------- ARROW UP ---------- */
     else if (e.key === "ArrowUp") {
         e.preventDefault();
-
         activeSuggestionIndex =
-                (activeSuggestionIndex - 1 + items.length) % items.length;
-
+            (activeSuggestionIndex - 1 + items.length) % items.length;
         updateHighlight(items);
     }
 
-
-    /* ---------- ENTER ---------- */
-    else if (e.key === "Enter") {
+    else if (e.key === "Enter" || e.key === " ") {
         if (activeSuggestionIndex >= 0) {
             e.preventDefault();
-
-            // simulate click on selected item
-            items[activeSuggestionIndex].click();
-
-            // add space after word
-            const pos = activeInput.selectionStart;
-
-            activeInput.value =
-                    activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
-
-            activeInput.setSelectionRange(pos + 1, pos + 1);
-
-            hideSuggestions();
-        }
-    }
-
-
-    /* ---------- SPACE ---------- */
-    else if (e.key === " ") {
-        if (activeSuggestionIndex >= 0) {
-            e.preventDefault();
-
-            // simulate click on selected item
             items[activeSuggestionIndex].click();
 
             const pos = activeInput.selectionStart;
-
             activeInput.value =
-                    activeInput.value.slice(0, pos) + " " + activeInput.value.slice(pos);
+                activeInput.value.slice(0, pos) + " " +
+                activeInput.value.slice(pos);
 
             activeInput.setSelectionRange(pos + 1, pos + 1);
-
             hideSuggestions();
         }
     }
-
 });
 
+/* ============================================================
+ INPUT EVENT → Paste + Mobile Autofill Support
+ ============================================================ */
+
+document.addEventListener("input", async function (e) {
+
+    const input = e.target;
+    if (!input.classList.contains("ime-marathi")) return;
+    if (!marathiEnabled) return;
+
+    const text = input.value.trim();
+
+    // Convert only if full English sentence detected
+    if (/^[a-zA-Z\s]+$/.test(text) && text.includes(" ")) {
+
+        // Avoid infinite loop (store flag)
+        if (input.dataset.converted === "true") {
+            input.dataset.converted = "false";
+            return;
+        }
+
+        const words = text.split(/\s+/);
+        let converted = [];
+
+        for (let w of words) {
+            const normalized = normalizeSpecialCases(w);
+            const suggestions = await fetchSuggestions(normalized);
+            converted.push(suggestions[0] || w);
+        }
+
+        input.dataset.converted = "true";
+        input.value = converted.join(" ");
+        hideSuggestions();
+    }
+});
 
 /* ============================================================
- FETCH SUGGESTIONS FROM GOOGLE INPUT TOOLS API
+ FETCH SUGGESTIONS (With Cache)
  ============================================================ */
 
 async function fetchSuggestions(word) {
 
-    const currentLang = document.documentElement.lang || "mr";
+    if (suggestionCache.has(word)) {
+        return suggestionCache.get(word);
+    }
 
-    // Disable suggestions for English
+    const currentLang = document.documentElement.lang || "mr";
     if (currentLang === "en") return [];
 
     const itcCode = currentLang === "hi"
@@ -210,8 +170,10 @@ async function fetchSuggestions(word) {
     try {
         const res = await fetch(url);
         const data = await res.json();
+        const result = data?.[1]?.[0]?.[1] || [];
 
-        return data?.[1]?.[0]?.[1] || [];
+        suggestionCache.set(word, result);
+        return result;
 
     } catch (err) {
         console.error("Suggestion fetch error:", err);
@@ -219,53 +181,42 @@ async function fetchSuggestions(word) {
     }
 }
 
-
 /* ============================================================
- SHOW INLINE DROPDOWN UNDER INPUT
+ SHOW INLINE SUGGESTIONS
  ============================================================ */
 
 function showInlineSuggestions(input, suggestions) {
 
     const wrapper = input.closest(".ime-wrapper");
     const dropdown = wrapper.querySelector(".suggestion-dropdown");
-
     dropdown.innerHTML = "";
 
-    // if no suggestions, hide dropdown
     if (!suggestions || suggestions.length === 0) {
         dropdown.classList.add("hidden");
         return;
     }
 
-    // create suggestion items
     suggestions.slice(0, 6).forEach((word, index) => {
 
         const div = document.createElement("div");
-
         div.className = "px-3 py-2 cursor-pointer hover:bg-gray-100";
         div.innerText = word;
 
-        // click handler (user selects suggestion)
         div.onclick = () => {
 
             activeSuggestionIndex = index;
 
-            const {start, end} = activeWordRange;
+            const { start, end } = activeWordRange;
             const text = input.value;
 
-            const newText =
-                    text.slice(0, start) + word + text.slice(end);
-
-            input.value = newText;
+            input.value =
+                text.slice(0, start) + word + text.slice(end);
 
             const pos = start + word.length;
-
             input.setSelectionRange(pos, pos);
             input.focus();
 
             dropdown.classList.add("hidden");
-
-            // reset index to avoid override
             activeSuggestionIndex = -1;
         };
 
@@ -273,44 +224,32 @@ function showInlineSuggestions(input, suggestions) {
     });
 
     dropdown.classList.remove("hidden");
-
-    // default highlight first suggestion
     activeSuggestionIndex = 0;
     updateHighlight(dropdown.querySelectorAll("div"));
 }
 
-
 /* ============================================================
- HIDE ALL DROPDOWNS
+ HELPERS
  ============================================================ */
 
 function hideSuggestions() {
-
     document.querySelectorAll(".suggestion-dropdown")
-            .forEach(d => d.classList.add("hidden"));
-
+        .forEach(d => d.classList.add("hidden"));
     activeSuggestionIndex = -1;
 }
 
-
-/* ============================================================
- UPDATE HIGHLIGHT DURING KEY NAVIGATION
- ============================================================ */
-
 function updateHighlight(items) {
-
     items.forEach((el, i) => {
         el.classList.remove("bg-gray-200");
-
         if (i === activeSuggestionIndex) {
             el.classList.add("bg-gray-200");
         }
     });
-
 }
+
 function normalizeSpecialCases(text) {
     return text
-        .replace(/x/g, "ksh")   // convert x → ksh
+        .replace(/x/g, "ksh")
         .replace(/Ksh/g, "Ksh")
         .replace(/kSh/g, "ksh");
 }

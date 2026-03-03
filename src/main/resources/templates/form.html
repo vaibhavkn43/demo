@@ -14,6 +14,27 @@
         </ul>
     </div>
 
+    <!-- dataset for JS -->
+    <div id="familyMessages"
+         th:data-brother-name="#{editor.placeholder.brotherName}"
+         th:data-sister-name="#{editor.placeholder.sisterName}"
+         th:data-status-select="#{dropdown.marital.select}"
+         th:data-married="#{dropdown.marital.married}"
+         th:data-unmarried="#{dropdown.marital.unmarried}">
+    </div>
+    <div id="prefixMessages"
+         th:data-select="#{editor.prefix.select}"
+         th:data-mr="#{editor.prefix.mr}"
+         th:data-chi="#{editor.prefix.chi}"
+         th:data-kun="#{editor.prefix.kun}"
+         th:data-miss="#{editor.prefix.miss}"
+         th:data-mrs="#{editor.prefix.mrs}"
+         th:data-shreemati="#{editor.prefix.shreemati}">
+    </div>
+    <div id="draftMessages"
+         th:data-confirm="#{editor.form.clearDraft.confirm}"
+         th:data-success="#{editor.form.clearDraft.success}">
+    </div>
 
 
     <section class="max-w-6xl mx-auto px-4 md:px-6 py-8">
@@ -128,7 +149,7 @@
 
                     <!-- ================= Sacred Blessings Section ================= -->
                     <div class="relative bg-amber-50 border border-amber-300 rounded-2xl 
-                         p-6 my-8 shadow-md hover:shadow-lg transition overflow-hidden">
+                         p-6 my-8 shadow-md hover:shadow-lg transition overflow-hidden mb-5">
 
                         <!-- Soft radial glow background -->
                         <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
@@ -344,7 +365,7 @@
 
                             <div class="ime-wrapper relative mb-6">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{name}"
                                        th:placeholder="#{editor.instruction.name}"/>
 
@@ -362,7 +383,7 @@
                             <div>
                                 <!-- Religion -->
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3 
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{religion}">
                                     <option value="" th:text="#{dropdown.religion.select}"></option>
 
@@ -383,7 +404,7 @@
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{caste}"
                                        th:placeholder="#{editor.instruction.caste}"/>
 
@@ -399,7 +420,7 @@
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{subCaste}"
                                        th:placeholder="#{editor.instruction.subCaste}"/>
 
@@ -416,7 +437,7 @@
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{gotra}"
                                        th:placeholder="#{editor.instruction.gotra}"/>
 
@@ -432,7 +453,7 @@
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{kuldaivat}"
                                        th:placeholder="#{editor.instruction.kuldaivat}" />
 
@@ -476,7 +497,7 @@
 
                                 <select id="birthDay"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none">
                                     <option value="" th:text="#{dropdown.date.select}" >Day</option>
                                     <option th:each="d : ${#numbers.sequence(1,31)}"
                                             th:value="${d}"
@@ -486,7 +507,7 @@
                                 <!-- Month -->
                                 <select id="birthMonth"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none">
 
                                     <option value="" th:text="#{dropdown.month.select}"></option>
                                     <option value="01" th:text="#{dropdown.month.01}"></option>
@@ -506,7 +527,7 @@
                                 <!-- Year -->
                                 <select id="birthYear"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none">
 
                                     <option value="" th:text="#{dropdown.year.select}" >Year</option>
                                     <option th:each="y : ${#numbers.sequence(1960,2010)}"
@@ -525,7 +546,7 @@
                             <!-- Birth Time -->
                             <input type="time"
                                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
-                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                   focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                    th:field="*{birthTime}"
                                    th:placeholder="#{editor.instruction.birthTime}" />
 
@@ -536,7 +557,7 @@
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{birthPlace}"
                                        th:placeholder="#{editor.instruction.birthPlace}"/>
 
@@ -555,7 +576,7 @@
 
                             <!-- Rashi -->
                             <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                    focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                    focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                     th:field="*{rashi}">
 
                                 <option value="" th:text="#{dropdown.rashi.select}"></option>
@@ -580,7 +601,7 @@
                                 </label>
                                 <!-- Nakshatra -->
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{nakshatra}">
 
                                     <option value="" th:text="#{dropdown.nakshatra.select}"></option>
@@ -716,7 +737,7 @@
                                 </label>
                                 <!-- Height -->
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{height}">
 
                                     <option value="" th:text="#{dropdown.height.select}"></option>
@@ -739,7 +760,7 @@
                                 </label>
                                 <!-- Blood Group -->
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{bloodGroup}">
                                     <option value="" th:text="#{dropdown.blood.select}"></option>
                                     <option th:value="#{dropdown.blood.a_pos}" th:text="#{dropdown.blood.a_pos}"></option>
@@ -758,7 +779,7 @@
                                        th:text="#{editor.form.complexion}">
                                 </label>
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{complexion}">
                                     <option value="" th:text="#{dropdown.complexion.select}"></option>
                                     <option th:value="#{dropdown.complexion.veryFair}" th:text="#{dropdown.complexion.veryFair}"></option>
@@ -791,9 +812,10 @@
                                     <label class="block text-sm font-medium text-gray-800 mb-1"
                                            th:text="#{editor.form.education}"></label>
                                     <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                           focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                            th:field="*{education}"
                                            th:placeholder="#{editor.instruction.education}"/>
+                                    <div th:replace="~{::fieldError('error-education', #{validation.msg.required.education})}"></div>
                                 </div>
                                 <!-- Profession -->
                                 <div>
@@ -801,7 +823,7 @@
                                            th:text="#{editor.form.profession}"></label>
 
                                     <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                           focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                            th:field="*{profession}"
                                            th:placeholder="#{editor.instruction.profession}"/>
 
@@ -826,26 +848,38 @@
                         <div id="familySection" class="hidden px-4 py-4 bg-white space-y-5">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-800 mb-1"
-                                           th:text="#{editor.form.fatherName}"></label>
+                                    <!-- Father -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-800 mb-1"
+                                               th:text="#{editor.form.fatherName}">
+                                        </label>
 
-                                    <div class="ime-wrapper relative mb-4 flex gap-2">
-                                        <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
-                                            <option value="" th:text="#{editor.prefix.select}"></option>
-                                            <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
-                                            <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
-                                            <option th:value="#{editor.prefix.adv}" th:text="#{editor.prefix.adv}"></option>
-                                            <option th:value="#{editor.prefix.late_short}" th:text="#{editor.prefix.late_short}"></option>
-                                            <option th:value="#{editor.prefix.late_full}" th:text="#{editor.prefix.late_full}"></option>
-                                        </select>
-                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                               th:field="*{fatherName}"
-                                               th:placeholder="#{editor.instruction.fatherName}"/>
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
+                                        <div class="ime-wrapper relative mb-4 flex gap-2">
+
+                                            <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
+                                                    focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none bg-white">
+                                                <option value="" th:text="#{editor.prefix.select}"></option>
+                                                <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
+                                                <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
+                                                <option th:value="#{editor.prefix.adv}" th:text="#{editor.prefix.adv}"></option>
+                                                <option th:value="#{editor.prefix.late_short}" th:text="#{editor.prefix.late_short}"></option>
+                                                <option th:value="#{editor.prefix.late_full}" th:text="#{editor.prefix.late_full}"></option>
+                                            </select>
+
+                                            <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                                   focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
+                                                   th:field="*{fatherName}"
+                                                   th:placeholder="#{editor.instruction.fatherName}"/>
+
+                                            <!-- Suggestions -->
+                                            <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                                 bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
+                                            </div>
+
                                         </div>
+
+                                        <!-- ✅ Error message moved OUTSIDE flex (like mother) -->
+                                        <div th:replace="~{::fieldError('error-fatherName', #{validation.msg.required.fatherName})}"></div>
 
                                     </div>
                                 </div>
@@ -856,7 +890,7 @@
 
                                     <div class="ime-wrapper relative">
                                         <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                                th:field="*{fatherOccupation}"
                                                th:placeholder="#{editor.instruction.fatherOccupation}"/>
 
@@ -877,7 +911,7 @@
                                     <div class="ime-wrapper relative mb-4 flex gap-2"> 
 
                                         <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                                focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none bg-white">
 
                                             <!-- default -->
                                             <option value="" th:text="#{editor.prefix.select}"></option>
@@ -899,7 +933,7 @@
 
 
                                         <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                                th:field="*{motherName}"
                                                th:placeholder="#{editor.instruction.motherName}"/>
 
@@ -908,6 +942,7 @@
                                              bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
                                         </div>
                                     </div>
+                                    <div th:replace="~{::fieldError('error-motherName', #{validation.msg.required.motherName})}"></div>
                                 </div>
 
                                 <div>
@@ -916,7 +951,7 @@
 
                                     <div class="ime-wrapper relative">
                                         <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                                th:field="*{motherOccupation}"
                                                th:placeholder="#{editor.instruction.motherOccupation}"/>
 
@@ -932,7 +967,7 @@
                                        th:text="#{editor.form.brothers}"></label>
                                 <select id="brotherCount"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition">
                                     <option value="" th:text="#{dropdown.count.select}"></option>
                                     <option th:each="n : ${#numbers.sequence(0,5)}"
                                             th:value="${n}" th:text="${n}"></option>
@@ -947,7 +982,7 @@
                                        th:text="#{editor.form.sisters}"></label>
                                 <select id="sisterCount"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition">
                                     <option value="" th:text="#{dropdown.count.select}"></option>
                                     <option th:each="n : ${#numbers.sequence(0,5)}"
                                             th:value="${n}" th:text="${n}"></option>
@@ -972,7 +1007,7 @@
                                     <!-- Name -->
                                     <div class="ime-wrapper relative flex gap-2"> 
                                         <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                                focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none bg-white">
                                             <option value="" th:text="#{editor.prefix.select}"></option>
                                             <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
                                             <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
@@ -983,7 +1018,7 @@
                                         <input type="text"
                                                name="mamaName"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                                th:placeholder="#{editor.instruction.mamaName}" />
 
                                         <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
@@ -996,7 +1031,7 @@
                                         <input type="text"
                                                name="mamaExtra"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                                th:placeholder="#{editor.instruction.mamaExtra}" />
 
                                         <!-- Remove Button -->
@@ -1037,7 +1072,7 @@
                                     <!-- Kaka Name -->
                                     <div class="ime-wrapper relative flex gap-2">
                                         <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                                focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none bg-white">
                                             <option value="" th:text="#{editor.prefix.select}"></option>
                                             <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
                                             <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
@@ -1049,7 +1084,7 @@
                                         <input type="text"
                                                name="kakaName"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                                th:placeholder="#{editor.instruction.kakaName}" />
 
                                         <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
@@ -1062,7 +1097,7 @@
                                         <input type="text"
                                                name="kakaExtra"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                                th:placeholder="#{editor.instruction.kakaExtra}" />
 
                                         <!-- Remove -->
@@ -1100,7 +1135,7 @@
                                 <div class="ime-wrapper relative mb-4">
 
                                     <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                           focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                            th:field="*{relatives}"
                                            th:placeholder="#{editor.instruction.relatives}"/>
 
@@ -1113,23 +1148,7 @@
 
                             </div>
 
-                            <!-- dataset for JS -->
-                            <div id="familyMessages"
-                                 th:data-brother-name="#{editor.placeholder.brotherName}"
-                                 th:data-sister-name="#{editor.placeholder.sisterName}"
-                                 th:data-status-select="#{dropdown.marital.select}"
-                                 th:data-married="#{dropdown.marital.married}"
-                                 th:data-unmarried="#{dropdown.marital.unmarried}">
-                            </div>
-                            <div id="prefixMessages"
-                                 th:data-select="#{editor.prefix.select}"
-                                 th:data-mr="#{editor.prefix.mr}"
-                                 th:data-chi="#{editor.prefix.chi}"
-                                 th:data-kun="#{editor.prefix.kun}"
-                                 th:data-miss="#{editor.prefix.miss}"
-                                 th:data-mrs="#{editor.prefix.mrs}"
-                                 th:data-shreemati="#{editor.prefix.shreemati}">
-                            </div>
+
                         </div>
                     </div>
                     <!-- ================= RELATIVES / CUSTOM SECTION ================= -->
@@ -1185,19 +1204,20 @@
 
                             <!-- Mobile -->
                             <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                   focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                    th:field="*{mobile}"
                                    th:placeholder="#{editor.instruction.mobile}"/>
-
+                            <div th:replace="~{::fieldError('error-mobile', #{validation.msg.required.mobile})}"></div>
                             <!-- Address -->
                             <div class="ime-wrapper relative mb-4">
 
                                 <textarea rows="3"
                                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 
-                                          focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                          focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                           th:field="*{address}"
                                           th:placeholder="#{editor.instruction.address}">
                                 </textarea>
+                                <div th:replace="~{::fieldError('error-address', #{validation.msg.required.address})}"></div>
 
                                 <!-- Inline Suggestions Dropdown -->
                                 <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
@@ -1210,11 +1230,26 @@
 
 
                     <!-- ================= SUBMIT ================= -->
-                    <div class="sticky bottom-0 bg-white pt-4 pb-2 border-t mt-6">
-                        <button type="button" id="submitBtn"
-                                class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-3 mt-6 rounded-lg shadow-lg font-semibold text-lg transition"
-                                th:text="#{editor.form.submit}">
-                        </button>
+                    <div class="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg z-50">
+                        <div class="max-w-md mx-auto px-4 py-3 space-y-2">
+
+                            <!-- Primary Submit -->
+                            <button type="button" id="submitBtn"
+                                    class="w-full bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg shadow-md font-semibold text-lg transition"
+                                    th:text="#{editor.form.submit}">
+                            </button>
+
+                            <!-- Secondary Clear Draft -->
+                            <!-- Secondary Clear Draft -->
+                            <button type="button"
+                                    onclick="clearDraft()"
+                                    class="w-full text-sm text-gray-500 hover:text-red-600 transition"
+                                    th:text="#{editor.form.clearDraft}">
+                                Clear Saved Draft
+                            </button>
+
+
+                        </div>
                     </div>
                 </form>
             </div>

@@ -60,33 +60,53 @@ function toggleFaq(id) {
 }
 //Detect draft on Dashboard page
 function getDraftTemplates() {
-  const drafts = [];
+    const drafts = [];
 
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith("biodata_draft_")) {
-      const templateId = key.replace("biodata_draft_", "");
-      drafts.push(templateId);
-    }
-  });
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("biodata_draft_")) {
+            const templateId = key.replace("biodata_draft_", "");
+            drafts.push(templateId);
+        }
+    });
 
-  return drafts;
+    return drafts;
 }
 
 const drafts = getDraftTemplates();
 const container = document.getElementById("resumeContainer");
 
 if (drafts.length > 0) {
-  drafts.forEach(templateId => {
-    const btn = document.createElement("button");
 
-    btn.innerText = `Resume Biodata (${templateId})`;
-    btn.className = "resume-btn";
+    const msgBox = document.getElementById("draftMessages");
 
-    btn.onclick = () => {
-      // redirect to form page with templateId
-      window.location.href = `/form?templateId=${templateId}&resume=true`;
-    };
+    const title = msgBox.dataset.title;
+    const subtitle = msgBox.dataset.subtitle;
+    const resumeText = msgBox.dataset.resume;
 
-    container.appendChild(btn);
-  });
+    drafts.forEach(templateId => {
+
+        const card = document.createElement("div");
+
+        card.className =
+                "bg-white rounded-2xl shadow-md p-6 mb-8    flex flex-col sm:flex-row sm:items-center sm:justify-between    gap-4 border border-gray-100 hover:shadow-lg transition";
+
+        const left = document.createElement("div");
+        left.innerHTML = `
+  <h4 class="font-semibold text-gray-800">📝 ${title}</h4>
+  <p class="text-sm text-gray-500">${subtitle}</p>
+`;
+
+        const right = document.createElement("button");
+        right.innerText = resumeText;
+        right.className =
+                "bg-gradient-to-r from-red-600 to-pink-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition";
+
+        card.onclick = () => {
+            window.location.href = `/editor/${templateId}?resume=true`;
+        };
+
+        card.appendChild(left);
+        card.appendChild(right);
+        container.appendChild(card);
+    });
 }
