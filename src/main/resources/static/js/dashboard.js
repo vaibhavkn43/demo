@@ -77,36 +77,36 @@ const container = document.getElementById("resumeContainer");
 
 if (drafts.length > 0) {
 
+    const templateId = drafts[0];   // just take first one
+
     const msgBox = document.getElementById("draftMessages");
 
     const title = msgBox.dataset.title;
     const subtitle = msgBox.dataset.subtitle;
     const resumeText = msgBox.dataset.resume;
 
-    drafts.forEach(templateId => {
+    const card = document.createElement("div");
 
-        const card = document.createElement("div");
+    card.className =
+            "bg-white rounded-2xl shadow-md p-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-gray-100 hover:shadow-lg transition";
 
-        card.className =
-                "bg-white rounded-2xl shadow-md p-6 mb-8    flex flex-col sm:flex-row sm:items-center sm:justify-between    gap-4 border border-gray-100 hover:shadow-lg transition";
+    const left = document.createElement("div");
+    left.innerHTML = `
+        <h4 class="font-semibold text-gray-800">📝 ${title}</h4>
+        <p class="text-sm text-gray-500">${subtitle}</p>
+    `;
 
-        const left = document.createElement("div");
-        left.innerHTML = `
-  <h4 class="font-semibold text-gray-800">📝 ${title}</h4>
-  <p class="text-sm text-gray-500">${subtitle}</p>
-`;
+    const right = document.createElement("button");
+    right.innerText = resumeText;
+    right.className =
+            "bg-gradient-to-r from-red-600 to-pink-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition";
 
-        const right = document.createElement("button");
-        right.innerText = resumeText;
-        right.className =
-                "bg-gradient-to-r from-red-600 to-pink-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition";
+    right.onclick = () => {
+        window.location.href = `/editor/${templateId}?resume=true`;
+    };
 
-        card.onclick = () => {
-            window.location.href = `/editor/${templateId}?resume=true`;
-        };
+    card.appendChild(left);
+    card.appendChild(right);
 
-        card.appendChild(left);
-        card.appendChild(right);
-        container.appendChild(card);
-    });
+    document.getElementById("resumeContainer").appendChild(card);
 }
