@@ -199,3 +199,36 @@ function scrollToPayment(){
         setTimeout(()=> el.classList.remove("highlight"),2000);
     }
 }
+
+
+let templates = window.allTemplates || [];
+let currentIndex = 0;
+
+function renderTemplate() {
+
+    if (!templates.length) return;
+
+    const tpl = templates[currentIndex];
+
+    document.getElementById("templateFrame").src =
+        "/preview/" + tpl.id;
+
+    document.getElementById("templateName").innerText =
+        tpl.name;
+
+    document.getElementById("switchLink").href =
+        "/preview/" + tpl.id;
+}
+
+function nextTemplate() {
+    currentIndex = (currentIndex + 1) % templates.length;
+    renderTemplate();
+}
+
+function prevTemplate() {
+    currentIndex =
+        (currentIndex - 1 + templates.length) % templates.length;
+    renderTemplate();
+}
+
+document.addEventListener("DOMContentLoaded", renderTemplate);

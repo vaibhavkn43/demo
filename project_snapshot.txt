@@ -1,6 +1,6 @@
 =============================== 
 PROJECT SNAPSHOT 
-Generated on Tue 03/03/2026 17:44:11.06 
+Generated on Tue 03/10/2026 19:50:55.65 
 =============================== 
  
  
@@ -261,12 +261,13 @@ public class DashboardController {
     }
 
     @PostMapping("/preview")
-    public String preview(BiodataRequest form, Model model, Locale locale,
+    public String preview(BiodataRequest form,
+            Model model,
+            Locale locale,
             HttpSession session) {
 
         ValidationResult result = biodataValidationService.validate(form);
 
-        // 🔥 NORMALIZE DATA HERE
         form = biodataUtil.normalize(form);
 
         if (form.getBirthTime() != null && !form.getBirthTime().isEmpty()) {
@@ -282,6 +283,9 @@ public class DashboardController {
             form.setMantra("|| श्री गणेशाय नमः ||");
         }
 
+        // ✅ store preview data for switching templates
+        session.setAttribute("PREVIEW_DATA", form);
+
         if (!result.isValid()) {
             model.addAttribute("missingKeys", result.getMissingKeys());
             model.addAttribute("invalidValues", result.getInvalidKeys());
@@ -290,15 +294,44 @@ public class DashboardController {
             return "layout/base";
         }
 
-        model.addAttribute("data", form);
-
-        // 🔥 use template object directly
         Template template = templatesService.getById(form.getTemplateId());
+
+        model.addAttribute("data", form);
         model.addAttribute("template", template);
+        model.addAttribute("allTemplates", templatesService.getAllTemplates());
+
         Boolean isPaid = (Boolean) session.getAttribute("PAID");
         model.addAttribute("isPaid", isPaid != null && isPaid);
+
         model.addAttribute("content", "preview");
+
         return "layout/base";
+    }
+
+    @GetMapping("/preview/{templateId}")
+    public String previewOtherTemplate(@PathVariable String templateId,
+            HttpSession session,
+            Model model) {
+
+        BiodataRequest data
+                = (BiodataRequest) session.getAttribute("PREVIEW_DATA");
+
+        if (data == null) {
+            return "redirect:/";
+        }
+
+        Template template = templatesService.getById(templateId);
+
+        model.addAttribute("data", data);
+        model.addAttribute("template", template);
+        model.addAttribute("allTemplates", templatesService.getAllTemplates());
+
+        Boolean isPaid = (Boolean) session.getAttribute("PAID");
+        model.addAttribute("isPaid", isPaid != null && isPaid);
+
+        model.addAttribute("content", "preview");
+
+        return "layout/base";   // ✅ same as POST
     }
 
     @GetMapping("/about")
@@ -634,14 +667,6 @@ public class BiodataValidationService {
         if (isEmpty(form.getReligion()))
             result.addMissing("validation.required.religion");
 
-        if (isEmpty(form.getCaste()))
-            result.addMissing("validation.required.caste");
-
-        if (isEmpty(form.getComplexion()))
-            result.addMissing("validation.required.complexion");
-
-        if (isEmpty(form.getHeight()))
-            result.addMissing("validation.required.height");
 
         if (isEmpty(form.getEducation()))
             result.addMissing("validation.required.education");
@@ -652,8 +677,6 @@ public class BiodataValidationService {
         if (isEmpty(form.getMotherName()))
             result.addMissing("validation.required.motherName");
 
-        if (isEmpty(form.getRelatives()))
-            result.addMissing("validation.required.relatives");
 
         if (isEmpty(form.getMobile()))
             result.addMissing("validation.required.mobile");
@@ -669,10 +692,6 @@ public class BiodataValidationService {
 
         if (!isEmpty(form.getMobile()) && !form.getMobile().matches("^[6-9]\\d{9}$")) {
             result.addInvalid("validation.invalid.mobile");
-        }
-
-        if (!isEmpty(form.getHeight()) && !form.getHeight().matches("^\\d{2,3}\\s?(cm|ft|in)?$")) {
-            result.addInvalid("validation.invalid.height");
         }
 
         if (!isEmpty(form.getBirthDate()) && !form.getBirthDate().matches("^\\d{2}/\\d{2}/\\d{4}$")) {
@@ -4289,16 +4308,1118 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\te
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\templates\t3.css" 
 -------------------------------------------------- 
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
-*/
-/* 
-    Created on : Mar 1, 2026, 6:26:34 PM
-    Author     : admin
-*/
+/* ===============================
+   🎨 TEMPLATE T2 (ROYAL RED FRAME)
+================================= */
 
- 
+.template-t3 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: #3a2a2a;
+}
+
+/* ===== Container inner spacing ===== */
+.template-t3 .inner-content {
+    padding-left: 155px;   /* was 140px */
+    padding-right: 140px;
+    padding-top: 90px;
+    padding-bottom: 80px;
+}
+.template-t3 .label {
+    padding-left: 5px;   /* small inner spacing */
+}
+/* ===== Headings ===== */
+.template-t3 .section-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 26px;
+    color: #7a1f1f;
+    text-decoration: underline;
+    margin-bottom: 14px;
+}
+
+/* ===== God Image ===== */
+.template-t3 .god-img {
+    height: 160px;
+    margin: 0 auto 6px auto;
+}
+
+/* ===== Mantra ===== */
+.template-t3 .mantra {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #7a1f1f;
+    margin-bottom: 8px;
+}
+
+/* ===== Rows ===== */
+.template-t3 .row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 7fr;
+    align-items: baseline;
+    font-size: 22px;
+    margin-bottom: 4px;
+    padding-left: 10px;
+}
+
+/* label */
+.template-t3 .label {
+    font-weight: 600;
+    color: #3d2c2c;
+}
+
+/* colon */
+.template-t3 .colon {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* value */
+.template-t3 .value {
+    font-weight: 500;
+    color: #222;
+}
+
+/* strong name */
+.template-t3 .value.name {
+    font-weight: 700;
+}
+
+/* ===== FAMILY SECTION SPACING ===== */
+.template-t3 .family-section {
+    margin-top: 18px;
+}
+
+/* ===== CONTACT SECTION ===== */
+.template-t3 .contact-section {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.template-t3 .contact-item {
+    margin-bottom: 4px;
+}
+
+/* ===== MULTI LINE RELATIVES ===== */
+.template-t3 .multi-line span {
+    display: block;
+    line-height: 1.3;
+}
+
+/* ===== PROFILE IMAGE ===== */
+.template-t3 .profile-box {
+    width: 210px;
+    height: 300px;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.template-t3 .profile-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== WATERMARK FIX ===== */
+.template-t3 .watermark-text {
+    font-size: 90px;
+    color: rgba(0,0,0,0.05);
+    transform: rotate(-35deg);
+    font-weight: 900;
+    letter-spacing: 6px;
+}
+
+/* ===== IMPORTANT FIXES ===== */
+
+/* prevent external css breaking spacing */
+.template-t3 .space-y-2 > * {
+    margin-top: 4px !important;
+}
+
+.template-t3 .space-y-10 {
+    margin-top: 16px !important;
+}
+
+/* fix line height override */
+.template-t3 {
+    line-height: 1.4 !important;
+}
+
+/* when profile image exists */
+.template-t3.has-photo .inner-content {
+    padding-right: 260px; /* create space for photo */
+}
+
+/* reduce gap between label & value */
+.template-t3.has-photo .row {
+    grid-template-columns: 3.5fr 0.8fr 7.7fr;
+}
+
+.template-t3 .photo-wrapper {
+    position: absolute;
+    top: 120px;
+    right: 110px;
+}
+
+.template-t3 .profile-box {
+    width: 200px;
+    height: 260px;
+}
+
+
+
+/* blur unpaid content */
+.preview-blur{
+    filter: blur(1.8px);
+    user-select: none;
+}
+
+/* ribbon */
+.preview-ribbon{
+    position:absolute;
+    top:0;
+    left:0;
+    background:#b91c1c;
+    color:#fff;
+    padding:8px 40px;
+    transform:rotate(-45deg) translate(-30px,20px);
+    font-size:14px;
+    font-weight:bold;
+    z-index:60;
+}
+
+/* tiled watermark */
+.watermark-tiles::before{
+    content:"WeddingBio.in   WeddingBio.in   WeddingBio.in";
+    position:absolute;
+    inset:0;
+    font-size:48px;
+    color:rgba(0,0,0,0.06);
+    transform:rotate(-30deg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+}
+
+
+.pay-highlight{
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+    color:#065f46;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    padding:10px 16px;
+    border-radius:8px;
+    width:fit-content;
+    margin:10px auto;
+    animation:blinkOnce 1.5s ease-in-out;
+}
+
+/* blink only once */
+@keyframes blinkOnce{
+    0%{opacity:0;}
+    40%{opacity:1;}
+    70%{opacity:0.3;}
+    100%{opacity:1;}
+} 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\templates\t4.css" 
+-------------------------------------------------- 
+/* ===============================
+   🎨 TEMPLATE T2 (ROYAL RED FRAME)
+================================= */
+
+.template-t4 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: #3a2a2a;
+}
+
+/* ===== Container inner spacing ===== */
+.template-t4 .inner-content {
+    padding-left: 155px;   /* was 140px */
+    padding-right: 140px;
+    padding-top: 90px;
+    padding-bottom: 80px;
+}
+.template-t4 .label {
+    padding-left: 5px;   /* small inner spacing */
+}
+/* ===== Headings ===== */
+.template-t4 .section-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 26px;
+    color: #7a1f1f;
+    text-decoration: underline;
+    margin-bottom: 14px;
+}
+
+/* ===== God Image ===== */
+.template-t4 .god-img {
+    height: 160px;
+    margin: 0 auto 6px auto;
+}
+
+/* ===== Mantra ===== */
+.template-t4 .mantra {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #7a1f1f;
+    margin-bottom: 8px;
+}
+
+/* ===== Rows ===== */
+.template-t4 .row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 7fr;
+    align-items: baseline;
+    font-size: 22px;
+    margin-bottom: 4px;
+    padding-left: 10px;
+}
+
+/* label */
+.template-t4 .label {
+    font-weight: 600;
+    color: #3d2c2c;
+}
+
+/* colon */
+.template-t4 .colon {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* value */
+.template-t4 .value {
+    font-weight: 500;
+    color: #222;
+}
+
+/* strong name */
+.template-t4 .value.name {
+    font-weight: 700;
+}
+
+/* ===== FAMILY SECTION SPACING ===== */
+.template-t4 .family-section {
+    margin-top: 18px;
+}
+
+/* ===== CONTACT SECTION ===== */
+.template-t4 .contact-section {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.template-t4 .contact-item {
+    margin-bottom: 4px;
+}
+
+/* ===== MULTI LINE RELATIVES ===== */
+.template-t4 .multi-line span {
+    display: block;
+    line-height: 1.3;
+}
+
+/* ===== PROFILE IMAGE ===== */
+.template-t4 .profile-box {
+    width: 210px;
+    height: 300px;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.template-t4 .profile-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== WATERMARK FIX ===== */
+.template-t4 .watermark-text {
+    font-size: 90px;
+    color: rgba(0,0,0,0.05);
+    transform: rotate(-35deg);
+    font-weight: 900;
+    letter-spacing: 6px;
+}
+
+/* ===== IMPORTANT FIXES ===== */
+
+/* prevent external css breaking spacing */
+.template-t4 .space-y-2 > * {
+    margin-top: 4px !important;
+}
+
+.template-t4 .space-y-10 {
+    margin-top: 16px !important;
+}
+
+/* fix line height override */
+.template-t4 {
+    line-height: 1.4 !important;
+}
+
+/* when profile image exists */
+.template-t4.has-photo .inner-content {
+    padding-right: 260px; /* create space for photo */
+}
+
+/* reduce gap between label & value */
+.template-t4.has-photo .row {
+    grid-template-columns: 3.5fr 0.8fr 7.7fr;
+}
+
+.template-t4 .photo-wrapper {
+    position: absolute;
+    top: 120px;
+    right: 110px;
+}
+
+.template-t4 .profile-box {
+    width: 200px;
+    height: 260px;
+}
+
+
+
+/* blur unpaid content */
+.preview-blur{
+    filter: blur(1.8px);
+    user-select: none;
+}
+
+/* ribbon */
+.preview-ribbon{
+    position:absolute;
+    top:0;
+    left:0;
+    background:#b91c1c;
+    color:#fff;
+    padding:8px 40px;
+    transform:rotate(-45deg) translate(-30px,20px);
+    font-size:14px;
+    font-weight:bold;
+    z-index:60;
+}
+
+/* tiled watermark */
+.watermark-tiles::before{
+    content:"WeddingBio.in   WeddingBio.in   WeddingBio.in";
+    position:absolute;
+    inset:0;
+    font-size:48px;
+    color:rgba(0,0,0,0.06);
+    transform:rotate(-30deg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+}
+
+
+.pay-highlight{
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+    color:#065f46;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    padding:10px 16px;
+    border-radius:8px;
+    width:fit-content;
+    margin:10px auto;
+    animation:blinkOnce 1.5s ease-in-out;
+}
+
+/* blink only once */
+@keyframes blinkOnce{
+    0%{opacity:0;}
+    40%{opacity:1;}
+    70%{opacity:0.3;}
+    100%{opacity:1;}
+} 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\templates\t5.css" 
+-------------------------------------------------- 
+/* ===============================
+   🎨 TEMPLATE T2 (ROYAL RED FRAME)
+================================= */
+
+.template-t5 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: #3a2a2a;
+}
+
+/* ===== Container inner spacing ===== */
+.template-t5 .inner-content {
+    padding-left: 155px;   /* was 140px */
+    padding-right: 140px;
+    padding-top: 90px;
+    padding-bottom: 80px;
+}
+.template-t5 .label {
+    padding-left: 5px;   /* small inner spacing */
+}
+/* ===== Headings ===== */
+.template-t5 .section-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 26px;
+    color: #7a1f1f;
+    text-decoration: underline;
+    margin-bottom: 14px;
+}
+
+/* ===== God Image ===== */
+.template-t5 .god-img {
+    height: 160px;
+    margin: 0 auto 6px auto;
+}
+
+/* ===== Mantra ===== */
+.template-t5 .mantra {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #7a1f1f;
+    margin-bottom: 8px;
+}
+
+/* ===== Rows ===== */
+.template-t5 .row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 7fr;
+    align-items: baseline;
+    font-size: 22px;
+    margin-bottom: 4px;
+    padding-left: 10px;
+}
+
+/* label */
+.template-t5 .label {
+    font-weight: 600;
+    color: #3d2c2c;
+}
+
+/* colon */
+.template-t5 .colon {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* value */
+.template-t5 .value {
+    font-weight: 500;
+    color: #222;
+}
+
+/* strong name */
+.template-t5 .value.name {
+    font-weight: 700;
+}
+
+/* ===== FAMILY SECTION SPACING ===== */
+.template-t5 .family-section {
+    margin-top: 18px;
+}
+
+/* ===== CONTACT SECTION ===== */
+.template-t5 .contact-section {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.template-t5 .contact-item {
+    margin-bottom: 4px;
+}
+
+/* ===== MULTI LINE RELATIVES ===== */
+.template-t5 .multi-line span {
+    display: block;
+    line-height: 1.3;
+}
+
+/* ===== PROFILE IMAGE ===== */
+.template-t5 .profile-box {
+    width: 210px;
+    height: 300px;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.template-t5 .profile-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== WATERMARK FIX ===== */
+.template-t5 .watermark-text {
+    font-size: 90px;
+    color: rgba(0,0,0,0.05);
+    transform: rotate(-35deg);
+    font-weight: 900;
+    letter-spacing: 6px;
+}
+
+/* ===== IMPORTANT FIXES ===== */
+
+/* prevent external css breaking spacing */
+.template-t5 .space-y-2 > * {
+    margin-top: 4px !important;
+}
+
+.template-t5 .space-y-10 {
+    margin-top: 16px !important;
+}
+
+/* fix line height override */
+.template-t5 {
+    line-height: 1.4 !important;
+}
+
+/* when profile image exists */
+.template-t5.has-photo .inner-content {
+    padding-right: 260px; /* create space for photo */
+}
+
+/* reduce gap between label & value */
+.template-t5.has-photo .row {
+    grid-template-columns: 3.5fr 0.8fr 7.7fr;
+}
+
+.template-t5 .photo-wrapper {
+    position: absolute;
+    top: 120px;
+    right: 110px;
+}
+
+.template-t5 .profile-box {
+    width: 200px;
+    height: 260px;
+}
+
+
+
+/* blur unpaid content */
+.preview-blur{
+    filter: blur(1.8px);
+    user-select: none;
+}
+
+/* ribbon */
+.preview-ribbon{
+    position:absolute;
+    top:0;
+    left:0;
+    background:#b91c1c;
+    color:#fff;
+    padding:8px 40px;
+    transform:rotate(-45deg) translate(-30px,20px);
+    font-size:14px;
+    font-weight:bold;
+    z-index:60;
+}
+
+/* tiled watermark */
+.watermark-tiles::before{
+    content:"WeddingBio.in   WeddingBio.in   WeddingBio.in";
+    position:absolute;
+    inset:0;
+    font-size:48px;
+    color:rgba(0,0,0,0.06);
+    transform:rotate(-30deg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+}
+
+
+.pay-highlight{
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+    color:#065f46;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    padding:10px 16px;
+    border-radius:8px;
+    width:fit-content;
+    margin:10px auto;
+    animation:blinkOnce 1.5s ease-in-out;
+}
+
+/* blink only once */
+@keyframes blinkOnce{
+    0%{opacity:0;}
+    40%{opacity:1;}
+    70%{opacity:0.3;}
+    100%{opacity:1;}
+} 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\templates\t6.css" 
+-------------------------------------------------- 
+/* ===============================
+   🎨 TEMPLATE T2 (ROYAL RED FRAME)
+================================= */
+
+.template-t6 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: #3a2a2a;
+}
+
+/* ===== Container inner spacing ===== */
+.template-t6 .inner-content {
+    padding-left: 155px;   /* was 140px */
+    padding-right: 140px;
+    padding-top: 90px;
+    padding-bottom: 80px;
+}
+.template-t6 .label {
+    padding-left: 5px;   /* small inner spacing */
+}
+/* ===== Headings ===== */
+.template-t6 .section-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 26px;
+    color: #7a1f1f;
+    text-decoration: underline;
+    margin-bottom: 14px;
+}
+
+/* ===== God Image ===== */
+.template-t6 .god-img {
+    height: 160px;
+    margin: 0 auto 6px auto;
+}
+
+/* ===== Mantra ===== */
+.template-t6 .mantra {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #7a1f1f;
+    margin-bottom: 8px;
+}
+
+/* ===== Rows ===== */
+.template-t6 .row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 7fr;
+    align-items: baseline;
+    font-size: 22px;
+    margin-bottom: 4px;
+    padding-left: 10px;
+}
+
+/* label */
+.template-t6 .label {
+    font-weight: 600;
+    color: #3d2c2c;
+}
+
+/* colon */
+.template-t6 .colon {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* value */
+.template-t6 .value {
+    font-weight: 500;
+    color: #222;
+}
+
+/* strong name */
+.template-t6 .value.name {
+    font-weight: 700;
+}
+
+/* ===== FAMILY SECTION SPACING ===== */
+.template-t6 .family-section {
+    margin-top: 18px;
+}
+
+/* ===== CONTACT SECTION ===== */
+.template-t6 .contact-section {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.template-t6 .contact-item {
+    margin-bottom: 4px;
+}
+
+/* ===== MULTI LINE RELATIVES ===== */
+.template-t6 .multi-line span {
+    display: block;
+    line-height: 1.3;
+}
+
+/* ===== PROFILE IMAGE ===== */
+.template-t6 .profile-box {
+    width: 210px;
+    height: 300px;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.template-t6 .profile-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== WATERMARK FIX ===== */
+.template-t6 .watermark-text {
+    font-size: 90px;
+    color: rgba(0,0,0,0.05);
+    transform: rotate(-35deg);
+    font-weight: 900;
+    letter-spacing: 6px;
+}
+
+/* ===== IMPORTANT FIXES ===== */
+
+/* prevent external css breaking spacing */
+.template-t6 .space-y-2 > * {
+    margin-top: 4px !important;
+}
+
+.template-t6 .space-y-10 {
+    margin-top: 16px !important;
+}
+
+/* fix line height override */
+.template-t6 {
+    line-height: 1.4 !important;
+}
+
+/* when profile image exists */
+.template-t6.has-photo .inner-content {
+    padding-right: 260px; /* create space for photo */
+}
+
+/* reduce gap between label & value */
+.template-t6.has-photo .row {
+    grid-template-columns: 3.5fr 0.8fr 7.7fr;
+}
+
+.template-t6 .photo-wrapper {
+    position: absolute;
+    top: 120px;
+    right: 110px;
+}
+
+.template-t6 .profile-box {
+    width: 200px;
+    height: 260px;
+}
+
+
+
+/* blur unpaid content */
+.preview-blur{
+    filter: blur(1.8px);
+    user-select: none;
+}
+
+/* ribbon */
+.preview-ribbon{
+    position:absolute;
+    top:0;
+    left:0;
+    background:#b91c1c;
+    color:#fff;
+    padding:8px 40px;
+    transform:rotate(-45deg) translate(-30px,20px);
+    font-size:14px;
+    font-weight:bold;
+    z-index:60;
+}
+
+/* tiled watermark */
+.watermark-tiles::before{
+    content:"WeddingBio.in   WeddingBio.in   WeddingBio.in";
+    position:absolute;
+    inset:0;
+    font-size:48px;
+    color:rgba(0,0,0,0.06);
+    transform:rotate(-30deg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+}
+
+
+.pay-highlight{
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+    color:#065f46;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    padding:10px 16px;
+    border-radius:8px;
+    width:fit-content;
+    margin:10px auto;
+    animation:blinkOnce 1.5s ease-in-out;
+}
+
+/* blink only once */
+@keyframes blinkOnce{
+    0%{opacity:0;}
+    40%{opacity:1;}
+    70%{opacity:0.3;}
+    100%{opacity:1;}
+} 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\css\templates\t7.css" 
+-------------------------------------------------- 
+/* ===============================
+   🎨 TEMPLATE T2 (ROYAL RED FRAME)
+================================= */
+
+.template-t7 {
+    font-family: 'Noto Sans Devanagari', sans-serif;
+    color: #3a2a2a;
+}
+
+/* ===== Container inner spacing ===== */
+.template-t7 .inner-content {
+    padding-left: 155px;   /* was 140px */
+    padding-right: 140px;
+    padding-top: 90px;
+    padding-bottom: 80px;
+}
+.template-t7 .label {
+    padding-left: 5px;   /* small inner spacing */
+}
+/* ===== Headings ===== */
+.template-t7 .section-title {
+    text-align: center;
+    font-weight: 700;
+    font-size: 26px;
+    color: #7a1f1f;
+    text-decoration: underline;
+    margin-bottom: 14px;
+}
+
+/* ===== God Image ===== */
+.template-t7 .god-img {
+    height: 160px;
+    margin: 0 auto 6px auto;
+}
+
+/* ===== Mantra ===== */
+.template-t7 .mantra {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    color: #7a1f1f;
+    margin-bottom: 8px;
+}
+
+/* ===== Rows ===== */
+.template-t7 .row {
+    display: grid;
+    grid-template-columns: 4fr 1fr 7fr;
+    align-items: baseline;
+    font-size: 22px;
+    margin-bottom: 4px;
+    padding-left: 10px;
+}
+
+/* label */
+.template-t7 .label {
+    font-weight: 600;
+    color: #3d2c2c;
+}
+
+/* colon */
+.template-t7 .colon {
+    text-align: center;
+    font-weight: bold;
+}
+
+/* value */
+.template-t7 .value {
+    font-weight: 500;
+    color: #222;
+}
+
+/* strong name */
+.template-t7 .value.name {
+    font-weight: 700;
+}
+
+/* ===== FAMILY SECTION SPACING ===== */
+.template-t7 .family-section {
+    margin-top: 18px;
+}
+
+/* ===== CONTACT SECTION ===== */
+.template-t7 .contact-section {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.template-t7 .contact-item {
+    margin-bottom: 4px;
+}
+
+/* ===== MULTI LINE RELATIVES ===== */
+.template-t7 .multi-line span {
+    display: block;
+    line-height: 1.3;
+}
+
+/* ===== PROFILE IMAGE ===== */
+.template-t7 .profile-box {
+    width: 210px;
+    height: 300px;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.template-t7 .profile-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ===== WATERMARK FIX ===== */
+.template-t7 .watermark-text {
+    font-size: 90px;
+    color: rgba(0,0,0,0.05);
+    transform: rotate(-35deg);
+    font-weight: 900;
+    letter-spacing: 6px;
+}
+
+/* ===== IMPORTANT FIXES ===== */
+
+/* prevent external css breaking spacing */
+.template-t7 .space-y-2 > * {
+    margin-top: 4px !important;
+}
+
+.template-t7 .space-y-10 {
+    margin-top: 16px !important;
+}
+
+/* fix line height override */
+.template-t7 {
+    line-height: 1.4 !important;
+}
+
+/* when profile image exists */
+.template-t7.has-photo .inner-content {
+    padding-right: 260px; /* create space for photo */
+}
+
+/* reduce gap between label & value */
+.template-t7.has-photo .row {
+    grid-template-columns: 3.5fr 0.8fr 7.7fr;
+}
+
+.template-t7 .photo-wrapper {
+    position: absolute;
+    top: 120px;
+    right: 110px;
+}
+
+.template-t7 .profile-box {
+    width: 200px;
+    height: 260px;
+}
+
+
+
+/* blur unpaid content */
+.preview-blur{
+    filter: blur(1.8px);
+    user-select: none;
+}
+
+/* ribbon */
+.preview-ribbon{
+    position:absolute;
+    top:0;
+    left:0;
+    background:#b91c1c;
+    color:#fff;
+    padding:8px 40px;
+    transform:rotate(-45deg) translate(-30px,20px);
+    font-size:14px;
+    font-weight:bold;
+    z-index:60;
+}
+
+/* tiled watermark */
+.watermark-tiles::before{
+    content:"WeddingBio.in   WeddingBio.in   WeddingBio.in";
+    position:absolute;
+    inset:0;
+    font-size:48px;
+    color:rgba(0,0,0,0.06);
+    transform:rotate(-30deg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    pointer-events:none;
+}
+
+
+.pay-highlight{
+    text-align:center;
+    font-size:17px;
+    font-weight:600;
+    color:#065f46;
+    background:#ecfdf5;
+    border:1px solid #bbf7d0;
+    padding:10px 16px;
+    border-radius:8px;
+    width:fit-content;
+    margin:10px auto;
+    animation:blinkOnce 1.5s ease-in-out;
+}
+
+/* blink only once */
+@keyframes blinkOnce{
+    0%{opacity:0;}
+    40%{opacity:1;}
+    70%{opacity:0.3;}
+    100%{opacity:1;}
+} 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\base.js" 
 -------------------------------------------------- 
@@ -4542,7 +5663,40 @@ function scrollToPayment(){
         el.classList.add("highlight");
         setTimeout(()=> el.classList.remove("highlight"),2000);
     }
-} 
+}
+
+
+let templates = window.allTemplates || [];
+let currentIndex = 0;
+
+function renderTemplate() {
+
+    if (!templates.length) return;
+
+    const tpl = templates[currentIndex];
+
+    document.getElementById("templateFrame").src =
+        "/preview/" + tpl.id;
+
+    document.getElementById("templateName").innerText =
+        tpl.name;
+
+    document.getElementById("switchLink").href =
+        "/preview/" + tpl.id;
+}
+
+function nextTemplate() {
+    currentIndex = (currentIndex + 1) % templates.length;
+    renderTemplate();
+}
+
+function prevTemplate() {
+    currentIndex =
+        (currentIndex - 1 + templates.length) % templates.length;
+    renderTemplate();
+}
+
+document.addEventListener("DOMContentLoaded", renderTemplate); 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\biodata-editor.js" 
 -------------------------------------------------- 
@@ -4583,35 +5737,57 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* ================= SUBMIT ================= */
-    document.getElementById("submitBtn")?.addEventListener("click", function () {
+    document.getElementById("submitBtn")?.addEventListener("click", function (e) {
 
-        // 🔴 run validation first
         if (!runValidation()) {
             e.preventDefault();
 
-            // scroll to first error
             const firstError = document.querySelector(".border-red-500");
-            firstError?.scrollIntoView({behavior: "smooth", block: "center"});
+
+            if (firstError) {
+
+                // 🔥 Find nearest section body (personalSection, birthSection etc.)
+                const sectionBody = firstError.closest("div[id$='Section']");
+
+                if (sectionBody && sectionBody.classList.contains("hidden")) {
+
+                    sectionBody.classList.remove("hidden");
+
+                    // 🔥 Find corresponding icon
+                    const sectionId = sectionBody.id; // birthSection
+                    const iconId = "icon" + sectionId.replace("Section", "");
+
+                    const icon = document.getElementById(iconId);
+                    if (icon) {
+                        icon.textContent = "−";
+                    }
+                }
+
+                // 🔥 Scroll smoothly
+                sectionBody?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+                // 🔥 Focus invalid field
+                setTimeout(() => {
+                    firstError.focus();
+                }, 400);
+            }
 
             return;
         }
 
+        // ===== Normal Submit Flow =====
         mergePrefixWithNames();
-
         updateFamily("brothers", msgBrotherLabel, "brotherInputs");
         updateFamily("sisters", msgSisterLabel, "sisterInputs");
 
-
-
         const mamaCombined = collectMultiValues("mamaName", "mamaExtra");
-        console.log(mamaCombined, "mamaCombined")
         document.querySelector('[name="mama"]').value = mamaCombined;
 
         const kakaCombined = collectMultiValues("kakaName", "kakaExtra");
-        console.log(kakaCombined, "kakaCombined")
         document.querySelector('[name="kaka"]').value = kakaCombined;
-
-
 
         document.getElementById("biodataForm").submit();
     });
@@ -4633,37 +5809,43 @@ document.addEventListener("DOMContentLoaded", function () {
         renderPersonInputs(e.target.value, "sisterInputs", false);
     });
 
+    document.addEventListener("input", clearErrorOnChange);
+    document.addEventListener("change", clearErrorOnChange);
+
 });
 
 /* =========================================================
  VALIDATION
  ========================================================= */
 
-["name","birthDate","birthPlace","religion","caste","complexion","height",
- "education","fatherName","motherName","relatives","mobile","address"]
-.forEach(id => {
-    document.getElementById(id)?.addEventListener("blur", () => {
-        validateField(id, "error-" + id);
-    });
-});
 
 function validateField(inputId, errorId) {
     const input = document.getElementById(inputId);
     const error = document.getElementById(errorId);
 
-    if (!input) return true;
+    if (!input)
+        return true;
 
     const value = input.value ? input.value.trim() : "";
-
     if (!value) {
         error?.classList.remove("hidden");
-        input.classList.add("border-red-500");
+        input.classList.remove( "bg-amber-50", "border-amber-300");
+        input.classList.add("border-red-500","ring-1","ring-red-300");
         return false;
     } else {
         error?.classList.add("hidden");
-        input.classList.remove("border-red-500");
+        input.classList.remove(
+                "border-red-500",
+                "ring-1",
+                "ring-red-300"
+                );
+        input.classList.add(
+                "bg-amber-50",
+                "border-amber-300"
+                );
         return true;
     }
+
 }
 
 
@@ -4674,17 +5856,34 @@ function runValidation() {
     valid &= validateField("birthDate", "error-birthDate");
     valid &= validateField("birthPlace", "error-birthPlace");
     valid &= validateField("religion", "error-religion");
-    valid &= validateField("caste", "error-caste");
-    valid &= validateField("complexion", "error-complexion");
-    valid &= validateField("height", "error-height");
     valid &= validateField("education", "error-education");
     valid &= validateField("fatherName", "error-fatherName");
     valid &= validateField("motherName", "error-motherName");
-    valid &= validateField("relatives", "error-relatives");
     valid &= validateField("mobile", "error-mobile");
     valid &= validateField("address", "error-address");
 
     return !!valid;
+}
+
+function clearErrorOnChange(e) {
+
+    const field = e.target;
+
+    if (!field.name)
+        return;
+
+    if (field.value && field.value.trim() !== "") {
+
+        // remove red border
+        field.classList.remove("border-red-500", "ring-1", "ring-red-300");
+
+        // find correct error element
+        const error = document.getElementById("error-" + field.name);
+
+        if (error) {
+            error.classList.add("hidden");
+        }
+    }
 }
 
 /* =========================================================
@@ -5187,7 +6386,8 @@ form.addEventListener("input", () => {
 window.addEventListener("DOMContentLoaded", () => {
 
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return;
+    if (!saved)
+        return;
 
     const urlParams = new URLSearchParams(window.location.search);
     const isResume = urlParams.get("resume") === "true";
@@ -5237,7 +6437,7 @@ function clearDraft() {
     document.getElementById("biodataForm").reset();
 
     document.querySelectorAll(".border-red-500")
-        .forEach(el => el.classList.remove("border-red-500"));
+            .forEach(el => el.classList.remove("border-red-500"));
 
     alert(successMsg);
 } 
@@ -5496,37 +6696,38 @@ const container = document.getElementById("resumeContainer");
 
 if (drafts.length > 0) {
 
+    const templateId = drafts[0];   // just take first one
+
     const msgBox = document.getElementById("draftMessages");
 
     const title = msgBox.dataset.title;
     const subtitle = msgBox.dataset.subtitle;
     const resumeText = msgBox.dataset.resume;
 
-    drafts.forEach(templateId => {
+    const card = document.createElement("div");
 
-        const card = document.createElement("div");
-        card.className =
-                "bg-white border rounded-xl shadow-md p-4 mb-6 flex justify-between items-center hover:shadow-lg transition";
+    card.className =
+            "bg-white rounded-2xl shadow-md p-6 mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border border-gray-100 hover:shadow-lg transition";
 
-        const left = document.createElement("div");
-        left.innerHTML = `
-  <h4 class="font-semibold text-gray-800">📝 ${title}</h4>
-  <p class="text-sm text-gray-500">${subtitle}</p>
-`;
+    const left = document.createElement("div");
+    left.innerHTML = `
+        <h4 class="font-semibold text-gray-800">📝 ${title}</h4>
+        <p class="text-sm text-gray-500">${subtitle}</p>
+    `;
 
-        const right = document.createElement("button");
-        right.innerText = resumeText;
-        right.className =
-                "bg-gradient-to-r from-red-600 to-pink-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition";
+    const right = document.createElement("button");
+    right.innerText = resumeText;
+    right.className =
+            "bg-gradient-to-r from-red-600 to-pink-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition";
 
-        card.onclick = () => {
-            window.location.href = `/editor/${templateId}?resume=true`;
-        };
+    right.onclick = () => {
+        window.location.href = `/editor/${templateId}?resume=true`;
+    };
 
-        card.appendChild(left);
-        card.appendChild(right);
-        container.appendChild(card);
-    });
+    card.appendChild(left);
+    card.appendChild(right);
+
+    document.getElementById("resumeContainer").appendChild(card);
 } 
 -------------------------------------------------- 
 FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\static\js\html-to-image.min.js" 
@@ -5839,7 +7040,11 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\das
          th:data-subtitle="#{dashboard.draft.subtitle}"
          th:data-resume="#{dashboard.draft.resume}">
     </div>
-    <div id="resumeContainer" class="max-w-7xl mx-auto px-4 mt-4"></div>
+    <div class="bg-gray-50">
+        <div id="resumeContainer"
+             class="max-w-4xl mx-auto px-6 pt-8 pb-2">
+        </div>
+    </div>
     <section class="bg-gradient-to-r from-red-600 to-pink-600 text-white overflow-hidden">
 
         <div class="max-w-7xl mx-auto px-6 py-14 md:py-16 
@@ -6319,6 +7524,27 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
         </ul>
     </div>
 
+    <!-- dataset for JS -->
+    <div id="familyMessages"
+         th:data-brother-name="#{editor.placeholder.brotherName}"
+         th:data-sister-name="#{editor.placeholder.sisterName}"
+         th:data-status-select="#{dropdown.marital.select}"
+         th:data-married="#{dropdown.marital.married}"
+         th:data-unmarried="#{dropdown.marital.unmarried}">
+    </div>
+    <div id="prefixMessages"
+         th:data-select="#{editor.prefix.select}"
+         th:data-mr="#{editor.prefix.mr}"
+         th:data-chi="#{editor.prefix.chi}"
+         th:data-kun="#{editor.prefix.kun}"
+         th:data-miss="#{editor.prefix.miss}"
+         th:data-mrs="#{editor.prefix.mrs}"
+         th:data-shreemati="#{editor.prefix.shreemati}">
+    </div>
+    <div id="draftMessages"
+         th:data-confirm="#{editor.form.clearDraft.confirm}"
+         th:data-success="#{editor.form.clearDraft.success}">
+    </div>
 
 
     <section class="max-w-6xl mx-auto px-4 md:px-6 py-8">
@@ -6649,7 +7875,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             <div class="ime-wrapper relative mb-6">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{name}"
                                        th:placeholder="#{editor.instruction.name}"/>
 
@@ -6667,7 +7893,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                             <div>
                                 <!-- Religion -->
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3 
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{religion}">
                                     <option value="" th:text="#{dropdown.religion.select}"></option>
 
@@ -6688,7 +7914,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{caste}"
                                        th:placeholder="#{editor.instruction.caste}"/>
 
@@ -6704,7 +7930,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{subCaste}"
                                        th:placeholder="#{editor.instruction.subCaste}"/>
 
@@ -6721,7 +7947,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{gotra}"
                                        th:placeholder="#{editor.instruction.gotra}"/>
 
@@ -6737,7 +7963,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{kuldaivat}"
                                        th:placeholder="#{editor.instruction.kuldaivat}" />
 
@@ -6781,7 +8007,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                                 <select id="birthDay"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none">
                                     <option value="" th:text="#{dropdown.date.select}" >Day</option>
                                     <option th:each="d : ${#numbers.sequence(1,31)}"
                                             th:value="${d}"
@@ -6791,7 +8017,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 <!-- Month -->
                                 <select id="birthMonth"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none">
 
                                     <option value="" th:text="#{dropdown.month.select}"></option>
                                     <option value="01" th:text="#{dropdown.month.01}"></option>
@@ -6811,7 +8037,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 <!-- Year -->
                                 <select id="birthYear"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none">
 
                                     <option value="" th:text="#{dropdown.year.select}" >Year</option>
                                     <option th:each="y : ${#numbers.sequence(1960,2010)}"
@@ -6830,7 +8056,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                             <!-- Birth Time -->
                             <input type="time"
                                    class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
-                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                   focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                    th:field="*{birthTime}"
                                    th:placeholder="#{editor.instruction.birthTime}" />
 
@@ -6841,7 +8067,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             <div class="ime-wrapper relative mb-4">
                                 <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                       focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                       focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                        th:field="*{birthPlace}"
                                        th:placeholder="#{editor.instruction.birthPlace}"/>
 
@@ -6860,7 +8086,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             <!-- Rashi -->
                             <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                    focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                    focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                     th:field="*{rashi}">
 
                                 <option value="" th:text="#{dropdown.rashi.select}"></option>
@@ -6885,7 +8111,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 </label>
                                 <!-- Nakshatra -->
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{nakshatra}">
 
                                     <option value="" th:text="#{dropdown.nakshatra.select}"></option>
@@ -7021,7 +8247,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 </label>
                                 <!-- Height -->
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-4
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{height}">
 
                                     <option value="" th:text="#{dropdown.height.select}"></option>
@@ -7044,7 +8270,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 </label>
                                 <!-- Blood Group -->
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{bloodGroup}">
                                     <option value="" th:text="#{dropdown.blood.select}"></option>
                                     <option th:value="#{dropdown.blood.a_pos}" th:text="#{dropdown.blood.a_pos}"></option>
@@ -7063,7 +8289,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                        th:text="#{editor.form.complexion}">
                                 </label>
                                 <select class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                         th:field="*{complexion}">
                                     <option value="" th:text="#{dropdown.complexion.select}"></option>
                                     <option th:value="#{dropdown.complexion.veryFair}" th:text="#{dropdown.complexion.veryFair}"></option>
@@ -7096,9 +8322,10 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                     <label class="block text-sm font-medium text-gray-800 mb-1"
                                            th:text="#{editor.form.education}"></label>
                                     <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                           focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                            th:field="*{education}"
                                            th:placeholder="#{editor.instruction.education}"/>
+                                    <div th:replace="~{::fieldError('error-education', #{validation.msg.required.education})}"></div>
                                 </div>
                                 <!-- Profession -->
                                 <div>
@@ -7106,7 +8333,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                            th:text="#{editor.form.profession}"></label>
 
                                     <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                           focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                            th:field="*{profession}"
                                            th:placeholder="#{editor.instruction.profession}"/>
 
@@ -7131,26 +8358,38 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                         <div id="familySection" class="hidden px-4 py-4 bg-white space-y-5">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-800 mb-1"
-                                           th:text="#{editor.form.fatherName}"></label>
+                                    <!-- Father -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-800 mb-1"
+                                               th:text="#{editor.form.fatherName}">
+                                        </label>
 
-                                    <div class="ime-wrapper relative mb-4 flex gap-2">
-                                        <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
-                                            <option value="" th:text="#{editor.prefix.select}"></option>
-                                            <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
-                                            <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
-                                            <option th:value="#{editor.prefix.adv}" th:text="#{editor.prefix.adv}"></option>
-                                            <option th:value="#{editor.prefix.late_short}" th:text="#{editor.prefix.late_short}"></option>
-                                            <option th:value="#{editor.prefix.late_full}" th:text="#{editor.prefix.late_full}"></option>
-                                        </select>
-                                        <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
-                                               th:field="*{fatherName}"
-                                               th:placeholder="#{editor.instruction.fatherName}"/>
-                                        <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
-                                             bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
+                                        <div class="ime-wrapper relative mb-4 flex gap-2">
+
+                                            <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
+                                                    focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none bg-white">
+                                                <option value="" th:text="#{editor.prefix.select}"></option>
+                                                <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
+                                                <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
+                                                <option th:value="#{editor.prefix.adv}" th:text="#{editor.prefix.adv}"></option>
+                                                <option th:value="#{editor.prefix.late_short}" th:text="#{editor.prefix.late_short}"></option>
+                                                <option th:value="#{editor.prefix.late_full}" th:text="#{editor.prefix.late_full}"></option>
+                                            </select>
+
+                                            <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
+                                                   focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
+                                                   th:field="*{fatherName}"
+                                                   th:placeholder="#{editor.instruction.fatherName}"/>
+
+                                            <!-- Suggestions -->
+                                            <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
+                                                 bg-white border border-gray-200 rounded-lg shadow-md z-50 max-h-48 overflow-auto">
+                                            </div>
+
                                         </div>
+
+                                        <!-- ✅ Error message moved OUTSIDE flex (like mother) -->
+                                        <div th:replace="~{::fieldError('error-fatherName', #{validation.msg.required.fatherName})}"></div>
 
                                     </div>
                                 </div>
@@ -7161,7 +8400,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                                     <div class="ime-wrapper relative">
                                         <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                                th:field="*{fatherOccupation}"
                                                th:placeholder="#{editor.instruction.fatherOccupation}"/>
 
@@ -7182,7 +8421,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                     <div class="ime-wrapper relative mb-4 flex gap-2"> 
 
                                         <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                                focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none bg-white">
 
                                             <!-- default -->
                                             <option value="" th:text="#{editor.prefix.select}"></option>
@@ -7204,7 +8443,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
 
                                         <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                                th:field="*{motherName}"
                                                th:placeholder="#{editor.instruction.motherName}"/>
 
@@ -7213,6 +8452,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                              bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-48 overflow-auto">
                                         </div>
                                     </div>
+                                    <div th:replace="~{::fieldError('error-motherName', #{validation.msg.required.motherName})}"></div>
                                 </div>
 
                                 <div>
@@ -7221,7 +8461,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                                     <div class="ime-wrapper relative">
                                         <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                                th:field="*{motherOccupation}"
                                                th:placeholder="#{editor.instruction.motherOccupation}"/>
 
@@ -7237,7 +8477,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                        th:text="#{editor.form.brothers}"></label>
                                 <select id="brotherCount"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition">
                                     <option value="" th:text="#{dropdown.count.select}"></option>
                                     <option th:each="n : ${#numbers.sequence(0,5)}"
                                             th:value="${n}" th:text="${n}"></option>
@@ -7252,7 +8492,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                        th:text="#{editor.form.sisters}"></label>
                                 <select id="sisterCount"
                                         class="w-full rounded-lg border border-gray-300 px-4 py-2.5 mb-3
-                                        focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition">
+                                        focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition">
                                     <option value="" th:text="#{dropdown.count.select}"></option>
                                     <option th:each="n : ${#numbers.sequence(0,5)}"
                                             th:value="${n}" th:text="${n}"></option>
@@ -7277,7 +8517,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                     <!-- Name -->
                                     <div class="ime-wrapper relative flex gap-2"> 
                                         <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                                focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none bg-white">
                                             <option value="" th:text="#{editor.prefix.select}"></option>
                                             <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
                                             <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
@@ -7288,7 +8528,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                         <input type="text"
                                                name="mamaName"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                                th:placeholder="#{editor.instruction.mamaName}" />
 
                                         <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
@@ -7301,7 +8541,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                         <input type="text"
                                                name="mamaExtra"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                                th:placeholder="#{editor.instruction.mamaExtra}" />
 
                                         <!-- Remove Button -->
@@ -7342,7 +8582,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                     <!-- Kaka Name -->
                                     <div class="ime-wrapper relative flex gap-2">
                                         <select class="prefix-select w-28 min-w-[90px] rounded-lg border border-gray-300 px-3 py-2
-                                                focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none bg-white">
+                                                focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none bg-white">
                                             <option value="" th:text="#{editor.prefix.select}"></option>
                                             <option th:value="#{editor.prefix.mr}" th:text="#{editor.prefix.mr}"></option>
                                             <option th:value="#{editor.prefix.dr}" th:text="#{editor.prefix.dr}"></option>
@@ -7354,7 +8594,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                         <input type="text"
                                                name="kakaName"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                                th:placeholder="#{editor.instruction.kakaName}" />
 
                                         <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
@@ -7367,7 +8607,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                         <input type="text"
                                                name="kakaExtra"
                                                class="w-full rounded-lg border border-gray-300 px-4 py-2.5 ime-marathi
-                                               focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                               focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                                th:placeholder="#{editor.instruction.kakaExtra}" />
 
                                         <!-- Remove -->
@@ -7405,7 +8645,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 <div class="ime-wrapper relative mb-4">
 
                                     <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                           focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                           focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                            th:field="*{relatives}"
                                            th:placeholder="#{editor.instruction.relatives}"/>
 
@@ -7418,27 +8658,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             </div>
 
-                            <!-- dataset for JS -->
-                            <div id="familyMessages"
-                                 th:data-brother-name="#{editor.placeholder.brotherName}"
-                                 th:data-sister-name="#{editor.placeholder.sisterName}"
-                                 th:data-status-select="#{dropdown.marital.select}"
-                                 th:data-married="#{dropdown.marital.married}"
-                                 th:data-unmarried="#{dropdown.marital.unmarried}">
-                            </div>
-                            <div id="prefixMessages"
-                                 th:data-select="#{editor.prefix.select}"
-                                 th:data-mr="#{editor.prefix.mr}"
-                                 th:data-chi="#{editor.prefix.chi}"
-                                 th:data-kun="#{editor.prefix.kun}"
-                                 th:data-miss="#{editor.prefix.miss}"
-                                 th:data-mrs="#{editor.prefix.mrs}"
-                                 th:data-shreemati="#{editor.prefix.shreemati}">
-                            </div>
-                              <div id="draftMessages"
-                                 th:data-confirm="#{editor.form.clearDraft.confirm}"
-                                 th:data-success="#{editor.form.clearDraft.success}">
-                            </div>
+
                         </div>
                     </div>
                     <!-- ================= RELATIVES / CUSTOM SECTION ================= -->
@@ -7494,19 +8714,20 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
 
                             <!-- Mobile -->
                             <input class="w-full rounded-lg border border-gray-300 px-4 py-2.5
-                                   focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition"
+                                   focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition"
                                    th:field="*{mobile}"
                                    th:placeholder="#{editor.instruction.mobile}"/>
-
+                            <div th:replace="~{::fieldError('error-mobile', #{validation.msg.required.mobile})}"></div>
                             <!-- Address -->
                             <div class="ime-wrapper relative mb-4">
 
                                 <textarea rows="3"
                                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 
-                                          focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none transition ime-marathi"
+                                          focus:ring-2 focus:ring-blue-400 focus:border-amber-400 outline-none transition ime-marathi"
                                           th:field="*{address}"
                                           th:placeholder="#{editor.instruction.address}">
                                 </textarea>
+                                <div th:replace="~{::fieldError('error-address', #{validation.msg.required.address})}"></div>
 
                                 <!-- Inline Suggestions Dropdown -->
                                 <div class="suggestion-dropdown hidden absolute left-0 right-0 top-full mt-1
@@ -7537,7 +8758,7 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\for
                                 Clear Saved Draft
                             </button>
 
-                          
+
                         </div>
                     </div>
                 </form>
@@ -7755,6 +8976,46 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\pre
             </div>
         </div>
     </div>
+    <div class="mt-12 text-center">
+        <h3 class="text-xl font-semibold mb-6">
+            ✨ See Your Biodata in Other Designs
+        </h3>
+
+        <div class="flex items-center justify-center gap-6">
+
+            <!-- LEFT ARROW -->
+            <button onclick="prevTemplate()" 
+                    class="text-2xl px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">
+                ◀
+            </button>
+
+            <!-- SINGLE CARD -->
+            <div id="templatePreviewContainer"
+                 class="w-[280px] bg-white shadow-md rounded-xl p-4">
+
+                <iframe id="templateFrame"
+                        class="w-full h-[400px] rounded-lg border"
+                        src=""></iframe>
+
+                <div class="mt-3">
+                    <h4 id="templateName"
+                        class="font-semibold text-gray-800"></h4>
+
+                    <a id="switchLink"
+                       class="text-red-600 text-sm font-medium block mt-1">
+                        Switch to this design
+                    </a>
+                </div>
+            </div>
+
+            <!-- RIGHT ARROW -->
+            <button onclick="nextTemplate()"
+                    class="text-2xl px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300">
+                ▶
+            </button>
+
+        </div>
+    </div>
     <!-- ================= MOBILE STICKY PAY BAR ================= -->
     <div id="mobilePayBar" th:if="${!isPaid}">
         <div class="paybar-content">
@@ -7765,7 +9026,12 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\pre
             </button>
         </div>
     </div>
-
+    <div id="templateData"
+         th:attr="data-templates=${allTemplates}">
+    </div>
+    <script th:inline="javascript">
+        window.allTemplates = [[${allTemplates}]];
+    </script>
     <!-- ================= JS FILES ================= -->
     <script th:src="@{/js/biodata-download.js}"></script>
     <script th:src="@{/js/html-to-image.min.js}"></script>
@@ -9237,11 +10503,511 @@ FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\tem
         </div>
 
         <!-- MAIN CONTENT -->
-        <div class="absolute inset-0 inner-content flex flex-col items-center text-[#3a2a2a]">
+        <div class="absolute inset-0 inner-content flex flex-col text-[#3a2a2a]">
 
             <!-- GOD + MANTRA -->
             <div class="text-center mb-4">
-                <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-40 mx-auto mb-2"/>
+                <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-32 mx-auto mb-2"/>
+                <div class="mantra" th:text="${data.mantra}"></div>
+            </div>
+
+            <!-- PERSONAL -->
+            <h3 class="section-title" th:text="#{editor.section.personal}"></h3>
+
+            <div th:class="'w-full text-[22px] leading-relaxed space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.name}"></div><div class="colon">:</div><div class="value name" th:text="${data.name}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthDate}"></div><div class="colon">:</div><div class="value" th:text="${data.birthDate}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthPlace}"></div><div class="colon">:</div><div class="value" th:text="${data.birthPlace}"></div></div>
+
+                <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}" class="row"><div class="label" th:text="#{editor.form.birthTime}"></div><div class="colon">:</div><div class="value" th:text="${data.birthTime}"></div></div>
+                <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="row"><div class="label" th:text="#{editor.form.religion}"></div><div class="colon">:</div><div class="value" th:text="${data.religion}"></div></div>
+                <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="row"><div class="label" th:text="#{editor.form.caste}"></div><div class="colon">:</div><div class="value" th:text="${data.caste}"></div></div>
+                <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="row"><div class="label" th:text="#{editor.form.gotra}"></div><div class="colon">:</div><div class="value" th:text="${data.gotra}"></div></div>
+                <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="row"><div class="label" th:text="#{editor.form.kuldaivat}"></div><div class="colon">:</div><div class="value" th:text="${data.kuldaivat}"></div></div>
+
+                <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}" class="row"><div class="label" th:text="#{editor.form.rashi}"></div><div class="colon">:</div><div class="value" th:text="${data.rashi}"></div></div>
+                <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}" class="row"><div class="label" th:text="#{editor.form.nakshatra}"></div><div class="colon">:</div><div class="value" th:text="${data.nakshatra}"></div></div>
+                <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}" class="row"><div class="label" th:text="#{editor.form.gan}"></div><div class="colon">:</div><div class="value" th:text="${data.gan}"></div></div>
+                <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}" class="row"><div class="label" th:text="#{editor.form.nadi}"></div><div class="colon">:</div><div class="value" th:text="${data.nadi}"></div></div>
+                <div th:if="${data.mangal != null and !#strings.isEmpty(#strings.trim(data.mangal))}" class="row"><div class="label" th:text="#{editor.form.mangal}"></div><div class="colon">:</div><div class="value" th:text="${data.mangal}"></div></div>
+
+                <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="row"><div class="label" th:text="#{editor.form.height}"></div><div class="colon">:</div><div class="value" th:text="${data.height}"></div></div>
+                <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="row"><div class="label" th:text="#{editor.form.complexion}"></div><div class="colon">:</div><div class="value" th:text="${data.complexion}"></div></div>
+                <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="row"><div class="label" th:text="#{editor.form.bloodGroup}"></div><div class="colon">:</div><div class="value" th:text="${data.bloodGroup}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.education}"></div><div class="colon">:</div><div class="value" th:text="${data.education}"></div></div>
+                <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="row"><div class="label" th:text="#{editor.form.profession}"></div><div class="colon">:</div><div class="value" th:text="${data.profession}"></div></div>
+                <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="row"><div class="label" th:text="#{editor.form.income}"></div><div class="colon">:</div><div class="value" th:text="${data.income}"></div></div>
+
+            </div>
+
+            <!-- FAMILY -->
+            <h3 class="section-title mt-6" th:text="#{editor.section.family}"></h3>
+
+            <div th:class="'w-full text-[22px] space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.fatherName}"></div><div class="colon">:</div><div class="value" th:text="${data.fatherName}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.motherName}"></div><div class="colon">:</div><div class="value" th:text="${data.motherName}"></div></div>
+
+                <div th:if="${data.brothers != null and !#strings.isEmpty(#strings.trim(data.brothers))}" class="row"><div class="label" th:text="#{editor.form.brothers}"></div><div class="colon">:</div><div class="value" th:text="${data.brothers}"></div></div>
+
+                <div th:if="${data.sisters != null and !#strings.isEmpty(#strings.trim(data.sisters))}" class="row"><div class="label" th:text="#{editor.form.sisters}"></div><div class="colon">:</div><div class="value" th:text="${data.sisters}"></div></div>
+
+                <div th:if="${data.relatives != null and !#strings.isEmpty(#strings.trim(data.relatives))}" class="row"><div class="label" th:text="#{editor.form.relatives}"></div><div class="colon">:</div><div class="value" th:text="${data.relatives}"></div></div>
+
+                <div th:if="${data.mama != null and !#strings.isEmpty(#strings.trim(data.mama))}" class="row">
+                    <div class="label" th:text="#{editor.form.mamaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="m : ${#strings.arraySplit(data.mama, ',')}" th:text="${m}"></span>
+                    </div>
+                </div>
+
+                <div th:if="${data.kaka != null and !#strings.isEmpty(#strings.trim(data.kaka))}" class="row">
+                    <div class="label" th:text="#{editor.form.kakaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="k : ${#strings.arraySplit(data.kaka, ',')}" th:text="${k}"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CONTACT -->
+            <div class="contact-section">
+
+                <div class="contact-item">
+                    📞 <span th:text="${isPaid ? data.mobile : (data.mobile != null and !#strings.isEmpty(#strings.trim(data.mobile)) ? #strings.substring(data.mobile,0,5) + 'XXXXX' : '99999XXXXX')}"></span>
+                </div>
+
+                <div th:if="${data.alternateMobile != null and !#strings.isEmpty(#strings.trim(data.alternateMobile))}"
+                     class="contact-item">
+                    📞 <span th:text="${isPaid ? data.alternateMobile : #strings.substring(data.alternateMobile,0,5) + 'XXXXX'}"></span>
+                </div>
+
+                <div th:if="${data.email != null and !#strings.isEmpty(#strings.trim(data.email))}" class="contact-item">
+                    ✉️ <span th:text="${isPaid ? data.email : 'vaibhav@weddingbio.in'}"></span>
+                </div>
+
+                <div  class="contact-item">
+                    📍 <span th:text="${isPaid ? data.address : 'Pune, Maharashtra'}"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div> 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\templates\t4.html" 
+-------------------------------------------------- 
+<div th:fragment="content">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/templates/t4.css}">
+
+    <div id="biodata-preview"
+         th:class="'template-t4 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
+         style="width:1033px;height:1540px;font-family:'Noto Sans Devanagari',sans-serif;"
+         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:100% 100%; width:1033px;height:1540px;font-family:\'Noto Sans Devanagari\',sans-serif;'">
+
+        <!-- PREVIEW RIBBON -->
+        <div th:if="${!isPaid}" class="preview-ribbon">PREVIEW</div>
+
+        <!-- CENTER WATERMARK -->
+        <div th:if="${!isPaid}" class="watermark-text flex justify-center items-center absolute inset-0 pointer-events-none z-40">
+            Weddingbio.in
+        </div>
+
+        <!-- PROFILE IMAGE -->
+        <div th:if="${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))}" class="photo-wrapper">
+            <div class="profile-box">
+                <img th:src="@{'/generated/' + ${data.profileImagePath}}" />
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="absolute inset-0 inner-content flex flex-col text-[#3a2a2a]">
+
+            <!-- GOD + MANTRA -->
+            <div class="text-center mb-4">
+                <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-32 mx-auto mb-2"/>
+                <div class="mantra" th:text="${data.mantra}"></div>
+            </div>
+
+            <!-- PERSONAL -->
+            <h3 class="section-title" th:text="#{editor.section.personal}"></h3>
+
+            <div th:class="'w-full text-[22px] leading-relaxed space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.name}"></div><div class="colon">:</div><div class="value name" th:text="${data.name}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthDate}"></div><div class="colon">:</div><div class="value" th:text="${data.birthDate}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthPlace}"></div><div class="colon">:</div><div class="value" th:text="${data.birthPlace}"></div></div>
+
+                <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}" class="row"><div class="label" th:text="#{editor.form.birthTime}"></div><div class="colon">:</div><div class="value" th:text="${data.birthTime}"></div></div>
+                <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="row"><div class="label" th:text="#{editor.form.religion}"></div><div class="colon">:</div><div class="value" th:text="${data.religion}"></div></div>
+                <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="row"><div class="label" th:text="#{editor.form.caste}"></div><div class="colon">:</div><div class="value" th:text="${data.caste}"></div></div>
+                <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="row"><div class="label" th:text="#{editor.form.gotra}"></div><div class="colon">:</div><div class="value" th:text="${data.gotra}"></div></div>
+                <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="row"><div class="label" th:text="#{editor.form.kuldaivat}"></div><div class="colon">:</div><div class="value" th:text="${data.kuldaivat}"></div></div>
+
+                <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}" class="row"><div class="label" th:text="#{editor.form.rashi}"></div><div class="colon">:</div><div class="value" th:text="${data.rashi}"></div></div>
+                <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}" class="row"><div class="label" th:text="#{editor.form.nakshatra}"></div><div class="colon">:</div><div class="value" th:text="${data.nakshatra}"></div></div>
+                <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}" class="row"><div class="label" th:text="#{editor.form.gan}"></div><div class="colon">:</div><div class="value" th:text="${data.gan}"></div></div>
+                <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}" class="row"><div class="label" th:text="#{editor.form.nadi}"></div><div class="colon">:</div><div class="value" th:text="${data.nadi}"></div></div>
+                <div th:if="${data.mangal != null and !#strings.isEmpty(#strings.trim(data.mangal))}" class="row"><div class="label" th:text="#{editor.form.mangal}"></div><div class="colon">:</div><div class="value" th:text="${data.mangal}"></div></div>
+
+                <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="row"><div class="label" th:text="#{editor.form.height}"></div><div class="colon">:</div><div class="value" th:text="${data.height}"></div></div>
+                <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="row"><div class="label" th:text="#{editor.form.complexion}"></div><div class="colon">:</div><div class="value" th:text="${data.complexion}"></div></div>
+                <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="row"><div class="label" th:text="#{editor.form.bloodGroup}"></div><div class="colon">:</div><div class="value" th:text="${data.bloodGroup}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.education}"></div><div class="colon">:</div><div class="value" th:text="${data.education}"></div></div>
+                <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="row"><div class="label" th:text="#{editor.form.profession}"></div><div class="colon">:</div><div class="value" th:text="${data.profession}"></div></div>
+                <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="row"><div class="label" th:text="#{editor.form.income}"></div><div class="colon">:</div><div class="value" th:text="${data.income}"></div></div>
+
+            </div>
+
+            <!-- FAMILY -->
+            <h3 class="section-title mt-6" th:text="#{editor.section.family}"></h3>
+
+            <div th:class="'w-full text-[22px] space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.fatherName}"></div><div class="colon">:</div><div class="value" th:text="${data.fatherName}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.motherName}"></div><div class="colon">:</div><div class="value" th:text="${data.motherName}"></div></div>
+
+                <div th:if="${data.brothers != null and !#strings.isEmpty(#strings.trim(data.brothers))}" class="row"><div class="label" th:text="#{editor.form.brothers}"></div><div class="colon">:</div><div class="value" th:text="${data.brothers}"></div></div>
+
+                <div th:if="${data.sisters != null and !#strings.isEmpty(#strings.trim(data.sisters))}" class="row"><div class="label" th:text="#{editor.form.sisters}"></div><div class="colon">:</div><div class="value" th:text="${data.sisters}"></div></div>
+
+                <div th:if="${data.relatives != null and !#strings.isEmpty(#strings.trim(data.relatives))}" class="row"><div class="label" th:text="#{editor.form.relatives}"></div><div class="colon">:</div><div class="value" th:text="${data.relatives}"></div></div>
+
+                <div th:if="${data.mama != null and !#strings.isEmpty(#strings.trim(data.mama))}" class="row">
+                    <div class="label" th:text="#{editor.form.mamaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="m : ${#strings.arraySplit(data.mama, ',')}" th:text="${m}"></span>
+                    </div>
+                </div>
+
+                <div th:if="${data.kaka != null and !#strings.isEmpty(#strings.trim(data.kaka))}" class="row">
+                    <div class="label" th:text="#{editor.form.kakaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="k : ${#strings.arraySplit(data.kaka, ',')}" th:text="${k}"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CONTACT -->
+            <div class="contact-section">
+
+                <div class="contact-item">
+                    📞 <span th:text="${isPaid ? data.mobile : (data.mobile != null and !#strings.isEmpty(#strings.trim(data.mobile)) ? #strings.substring(data.mobile,0,5) + 'XXXXX' : '99999XXXXX')}"></span>
+                </div>
+
+                <div th:if="${data.alternateMobile != null and !#strings.isEmpty(#strings.trim(data.alternateMobile))}"
+                     class="contact-item">
+                    📞 <span th:text="${isPaid ? data.alternateMobile : #strings.substring(data.alternateMobile,0,5) + 'XXXXX'}"></span>
+                </div>
+
+                <div th:if="${data.email != null and !#strings.isEmpty(#strings.trim(data.email))}" class="contact-item">
+                    ✉️ <span th:text="${isPaid ? data.email : 'vaibhav@weddingbio.in'}"></span>
+                </div>
+
+                <div  class="contact-item">
+                    📍 <span th:text="${isPaid ? data.address : 'Pune, Maharashtra'}"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div> 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\templates\t5.html" 
+-------------------------------------------------- 
+<div th:fragment="content">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/templates/t5.css}">
+
+    <div id="biodata-preview"
+         th:class="'template-t5 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
+         style="width:1033px;height:1540px;font-family:'Noto Sans Devanagari',sans-serif;"
+         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:100% 100%; width:1033px;height:1540px;font-family:\'Noto Sans Devanagari\',sans-serif;'">
+
+        <!-- PREVIEW RIBBON -->
+        <div th:if="${!isPaid}" class="preview-ribbon">PREVIEW</div>
+
+        <!-- CENTER WATERMARK -->
+        <div th:if="${!isPaid}" class="watermark-text flex justify-center items-center absolute inset-0 pointer-events-none z-40">
+            Weddingbio.in
+        </div>
+
+        <!-- PROFILE IMAGE -->
+        <div th:if="${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))}" class="photo-wrapper">
+            <div class="profile-box">
+                <img th:src="@{'/generated/' + ${data.profileImagePath}}" />
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="absolute inset-0 inner-content flex flex-col text-[#3a2a2a]">
+
+            <!-- GOD + MANTRA -->
+            <div class="text-center mb-4">
+                <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-32 mx-auto mb-2"/>
+                <div class="mantra" th:text="${data.mantra}"></div>
+            </div>
+
+            <!-- PERSONAL -->
+            <h3 class="section-title" th:text="#{editor.section.personal}"></h3>
+
+            <div th:class="'w-full text-[22px] leading-relaxed space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.name}"></div><div class="colon">:</div><div class="value name" th:text="${data.name}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthDate}"></div><div class="colon">:</div><div class="value" th:text="${data.birthDate}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthPlace}"></div><div class="colon">:</div><div class="value" th:text="${data.birthPlace}"></div></div>
+
+                <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}" class="row"><div class="label" th:text="#{editor.form.birthTime}"></div><div class="colon">:</div><div class="value" th:text="${data.birthTime}"></div></div>
+                <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="row"><div class="label" th:text="#{editor.form.religion}"></div><div class="colon">:</div><div class="value" th:text="${data.religion}"></div></div>
+                <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="row"><div class="label" th:text="#{editor.form.caste}"></div><div class="colon">:</div><div class="value" th:text="${data.caste}"></div></div>
+                <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="row"><div class="label" th:text="#{editor.form.gotra}"></div><div class="colon">:</div><div class="value" th:text="${data.gotra}"></div></div>
+                <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="row"><div class="label" th:text="#{editor.form.kuldaivat}"></div><div class="colon">:</div><div class="value" th:text="${data.kuldaivat}"></div></div>
+
+                <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}" class="row"><div class="label" th:text="#{editor.form.rashi}"></div><div class="colon">:</div><div class="value" th:text="${data.rashi}"></div></div>
+                <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}" class="row"><div class="label" th:text="#{editor.form.nakshatra}"></div><div class="colon">:</div><div class="value" th:text="${data.nakshatra}"></div></div>
+                <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}" class="row"><div class="label" th:text="#{editor.form.gan}"></div><div class="colon">:</div><div class="value" th:text="${data.gan}"></div></div>
+                <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}" class="row"><div class="label" th:text="#{editor.form.nadi}"></div><div class="colon">:</div><div class="value" th:text="${data.nadi}"></div></div>
+                <div th:if="${data.mangal != null and !#strings.isEmpty(#strings.trim(data.mangal))}" class="row"><div class="label" th:text="#{editor.form.mangal}"></div><div class="colon">:</div><div class="value" th:text="${data.mangal}"></div></div>
+
+                <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="row"><div class="label" th:text="#{editor.form.height}"></div><div class="colon">:</div><div class="value" th:text="${data.height}"></div></div>
+                <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="row"><div class="label" th:text="#{editor.form.complexion}"></div><div class="colon">:</div><div class="value" th:text="${data.complexion}"></div></div>
+                <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="row"><div class="label" th:text="#{editor.form.bloodGroup}"></div><div class="colon">:</div><div class="value" th:text="${data.bloodGroup}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.education}"></div><div class="colon">:</div><div class="value" th:text="${data.education}"></div></div>
+                <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="row"><div class="label" th:text="#{editor.form.profession}"></div><div class="colon">:</div><div class="value" th:text="${data.profession}"></div></div>
+                <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="row"><div class="label" th:text="#{editor.form.income}"></div><div class="colon">:</div><div class="value" th:text="${data.income}"></div></div>
+
+            </div>
+
+            <!-- FAMILY -->
+            <h3 class="section-title mt-6" th:text="#{editor.section.family}"></h3>
+
+            <div th:class="'w-full text-[22px] space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.fatherName}"></div><div class="colon">:</div><div class="value" th:text="${data.fatherName}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.motherName}"></div><div class="colon">:</div><div class="value" th:text="${data.motherName}"></div></div>
+
+                <div th:if="${data.brothers != null and !#strings.isEmpty(#strings.trim(data.brothers))}" class="row"><div class="label" th:text="#{editor.form.brothers}"></div><div class="colon">:</div><div class="value" th:text="${data.brothers}"></div></div>
+
+                <div th:if="${data.sisters != null and !#strings.isEmpty(#strings.trim(data.sisters))}" class="row"><div class="label" th:text="#{editor.form.sisters}"></div><div class="colon">:</div><div class="value" th:text="${data.sisters}"></div></div>
+
+                <div th:if="${data.relatives != null and !#strings.isEmpty(#strings.trim(data.relatives))}" class="row"><div class="label" th:text="#{editor.form.relatives}"></div><div class="colon">:</div><div class="value" th:text="${data.relatives}"></div></div>
+
+                <div th:if="${data.mama != null and !#strings.isEmpty(#strings.trim(data.mama))}" class="row">
+                    <div class="label" th:text="#{editor.form.mamaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="m : ${#strings.arraySplit(data.mama, ',')}" th:text="${m}"></span>
+                    </div>
+                </div>
+
+                <div th:if="${data.kaka != null and !#strings.isEmpty(#strings.trim(data.kaka))}" class="row">
+                    <div class="label" th:text="#{editor.form.kakaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="k : ${#strings.arraySplit(data.kaka, ',')}" th:text="${k}"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CONTACT -->
+            <div class="contact-section">
+
+                <div class="contact-item">
+                    📞 <span th:text="${isPaid ? data.mobile : (data.mobile != null and !#strings.isEmpty(#strings.trim(data.mobile)) ? #strings.substring(data.mobile,0,5) + 'XXXXX' : '99999XXXXX')}"></span>
+                </div>
+
+                <div th:if="${data.alternateMobile != null and !#strings.isEmpty(#strings.trim(data.alternateMobile))}"
+                     class="contact-item">
+                    📞 <span th:text="${isPaid ? data.alternateMobile : #strings.substring(data.alternateMobile,0,5) + 'XXXXX'}"></span>
+                </div>
+
+                <div th:if="${data.email != null and !#strings.isEmpty(#strings.trim(data.email))}" class="contact-item">
+                    ✉️ <span th:text="${isPaid ? data.email : 'vaibhav@weddingbio.in'}"></span>
+                </div>
+
+                <div  class="contact-item">
+                    📍 <span th:text="${isPaid ? data.address : 'Pune, Maharashtra'}"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div> 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\templates\t6.html" 
+-------------------------------------------------- 
+<div th:fragment="content">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/templates/t6.css}">
+
+    <div id="biodata-preview"
+         th:class="'template-t6 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
+         style="width:1033px;height:1540px;font-family:'Noto Sans Devanagari',sans-serif;"
+         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:100% 100%; width:1033px;height:1540px;font-family:\'Noto Sans Devanagari\',sans-serif;'">
+
+        <!-- PREVIEW RIBBON -->
+        <div th:if="${!isPaid}" class="preview-ribbon">PREVIEW</div>
+
+        <!-- CENTER WATERMARK -->
+        <div th:if="${!isPaid}" class="watermark-text flex justify-center items-center absolute inset-0 pointer-events-none z-40">
+            Weddingbio.in
+        </div>
+
+        <!-- PROFILE IMAGE -->
+        <div th:if="${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))}" class="photo-wrapper">
+            <div class="profile-box">
+                <img th:src="@{'/generated/' + ${data.profileImagePath}}" />
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="absolute inset-0 inner-content flex flex-col text-[#3a2a2a]">
+
+            <!-- GOD + MANTRA -->
+            <div class="text-center mb-4">
+                <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-32 mx-auto mb-2"/>
+                <div class="mantra" th:text="${data.mantra}"></div>
+            </div>
+
+            <!-- PERSONAL -->
+            <h3 class="section-title" th:text="#{editor.section.personal}"></h3>
+
+            <div th:class="'w-full text-[22px] leading-relaxed space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.name}"></div><div class="colon">:</div><div class="value name" th:text="${data.name}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthDate}"></div><div class="colon">:</div><div class="value" th:text="${data.birthDate}"></div></div>
+                <div class="row"><div class="label" th:text="#{editor.form.birthPlace}"></div><div class="colon">:</div><div class="value" th:text="${data.birthPlace}"></div></div>
+
+                <div th:if="${data.birthTime != null and !#strings.isEmpty(#strings.trim(data.birthTime))}" class="row"><div class="label" th:text="#{editor.form.birthTime}"></div><div class="colon">:</div><div class="value" th:text="${data.birthTime}"></div></div>
+                <div th:if="${data.religion != null and !#strings.isEmpty(#strings.trim(data.religion))}" class="row"><div class="label" th:text="#{editor.form.religion}"></div><div class="colon">:</div><div class="value" th:text="${data.religion}"></div></div>
+                <div th:if="${data.caste != null and !#strings.isEmpty(#strings.trim(data.caste))}" class="row"><div class="label" th:text="#{editor.form.caste}"></div><div class="colon">:</div><div class="value" th:text="${data.caste}"></div></div>
+                <div th:if="${data.gotra != null and !#strings.isEmpty(#strings.trim(data.gotra))}" class="row"><div class="label" th:text="#{editor.form.gotra}"></div><div class="colon">:</div><div class="value" th:text="${data.gotra}"></div></div>
+                <div th:if="${data.kuldaivat != null and !#strings.isEmpty(#strings.trim(data.kuldaivat))}" class="row"><div class="label" th:text="#{editor.form.kuldaivat}"></div><div class="colon">:</div><div class="value" th:text="${data.kuldaivat}"></div></div>
+
+                <div th:if="${data.rashi != null and !#strings.isEmpty(#strings.trim(data.rashi))}" class="row"><div class="label" th:text="#{editor.form.rashi}"></div><div class="colon">:</div><div class="value" th:text="${data.rashi}"></div></div>
+                <div th:if="${data.nakshatra != null and !#strings.isEmpty(#strings.trim(data.nakshatra))}" class="row"><div class="label" th:text="#{editor.form.nakshatra}"></div><div class="colon">:</div><div class="value" th:text="${data.nakshatra}"></div></div>
+                <div th:if="${data.gan != null and !#strings.isEmpty(#strings.trim(data.gan))}" class="row"><div class="label" th:text="#{editor.form.gan}"></div><div class="colon">:</div><div class="value" th:text="${data.gan}"></div></div>
+                <div th:if="${data.nadi != null and !#strings.isEmpty(#strings.trim(data.nadi))}" class="row"><div class="label" th:text="#{editor.form.nadi}"></div><div class="colon">:</div><div class="value" th:text="${data.nadi}"></div></div>
+                <div th:if="${data.mangal != null and !#strings.isEmpty(#strings.trim(data.mangal))}" class="row"><div class="label" th:text="#{editor.form.mangal}"></div><div class="colon">:</div><div class="value" th:text="${data.mangal}"></div></div>
+
+                <div th:if="${data.height != null and !#strings.isEmpty(#strings.trim(data.height))}" class="row"><div class="label" th:text="#{editor.form.height}"></div><div class="colon">:</div><div class="value" th:text="${data.height}"></div></div>
+                <div th:if="${data.complexion != null and !#strings.isEmpty(#strings.trim(data.complexion))}" class="row"><div class="label" th:text="#{editor.form.complexion}"></div><div class="colon">:</div><div class="value" th:text="${data.complexion}"></div></div>
+                <div th:if="${data.bloodGroup != null and !#strings.isEmpty(#strings.trim(data.bloodGroup))}" class="row"><div class="label" th:text="#{editor.form.bloodGroup}"></div><div class="colon">:</div><div class="value" th:text="${data.bloodGroup}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.education}"></div><div class="colon">:</div><div class="value" th:text="${data.education}"></div></div>
+                <div th:if="${data.profession != null and !#strings.isEmpty(#strings.trim(data.profession))}" class="row"><div class="label" th:text="#{editor.form.profession}"></div><div class="colon">:</div><div class="value" th:text="${data.profession}"></div></div>
+                <div th:if="${data.income != null and !#strings.isEmpty(#strings.trim(data.income))}" class="row"><div class="label" th:text="#{editor.form.income}"></div><div class="colon">:</div><div class="value" th:text="${data.income}"></div></div>
+
+            </div>
+
+            <!-- FAMILY -->
+            <h3 class="section-title mt-6" th:text="#{editor.section.family}"></h3>
+
+            <div th:class="'w-full text-[22px] space-y-2 ' + (${!isPaid} ? 'preview-blur' : '')">
+
+                <div class="row"><div class="label" th:text="#{editor.form.fatherName}"></div><div class="colon">:</div><div class="value" th:text="${data.fatherName}"></div></div>
+
+                <div class="row"><div class="label" th:text="#{editor.form.motherName}"></div><div class="colon">:</div><div class="value" th:text="${data.motherName}"></div></div>
+
+                <div th:if="${data.brothers != null and !#strings.isEmpty(#strings.trim(data.brothers))}" class="row"><div class="label" th:text="#{editor.form.brothers}"></div><div class="colon">:</div><div class="value" th:text="${data.brothers}"></div></div>
+
+                <div th:if="${data.sisters != null and !#strings.isEmpty(#strings.trim(data.sisters))}" class="row"><div class="label" th:text="#{editor.form.sisters}"></div><div class="colon">:</div><div class="value" th:text="${data.sisters}"></div></div>
+
+                <div th:if="${data.relatives != null and !#strings.isEmpty(#strings.trim(data.relatives))}" class="row"><div class="label" th:text="#{editor.form.relatives}"></div><div class="colon">:</div><div class="value" th:text="${data.relatives}"></div></div>
+
+                <div th:if="${data.mama != null and !#strings.isEmpty(#strings.trim(data.mama))}" class="row">
+                    <div class="label" th:text="#{editor.form.mamaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="m : ${#strings.arraySplit(data.mama, ',')}" th:text="${m}"></span>
+                    </div>
+                </div>
+
+                <div th:if="${data.kaka != null and !#strings.isEmpty(#strings.trim(data.kaka))}" class="row">
+                    <div class="label" th:text="#{editor.form.kakaName}"></div>
+                    <div class="colon">:</div>
+                    <div class="value flex flex-col">
+                        <span th:each="k : ${#strings.arraySplit(data.kaka, ',')}" th:text="${k}"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CONTACT -->
+            <div class="contact-section">
+
+                <div class="contact-item">
+                    📞 <span th:text="${isPaid ? data.mobile : (data.mobile != null and !#strings.isEmpty(#strings.trim(data.mobile)) ? #strings.substring(data.mobile,0,5) + 'XXXXX' : '99999XXXXX')}"></span>
+                </div>
+
+                <div th:if="${data.alternateMobile != null and !#strings.isEmpty(#strings.trim(data.alternateMobile))}"
+                     class="contact-item">
+                    📞 <span th:text="${isPaid ? data.alternateMobile : #strings.substring(data.alternateMobile,0,5) + 'XXXXX'}"></span>
+                </div>
+
+                <div th:if="${data.email != null and !#strings.isEmpty(#strings.trim(data.email))}" class="contact-item">
+                    ✉️ <span th:text="${isPaid ? data.email : 'vaibhav@weddingbio.in'}"></span>
+                </div>
+
+                <div  class="contact-item">
+                    📍 <span th:text="${isPaid ? data.address : 'Pune, Maharashtra'}"></span>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div> 
+-------------------------------------------------- 
+FILE: "C:\Users\admin\Vaibhav\My-Workspace\demo\src\main\resources\templates\templates\t7.html" 
+-------------------------------------------------- 
+<div th:fragment="content">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/templates/t7.css}">
+
+    <div id="biodata-preview"
+         th:class="'template-t7 watermark-tiles mx-auto relative shadow-2xl overflow-hidden ' + (${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))} ? 'has-photo' : '')"
+         style="width:1033px;height:1540px;font-family:'Noto Sans Devanagari',sans-serif;"
+         th:style="'background-image:url(' + @{${template.emptyTemplateLocation}} + '); background-size:100% 100%; width:1033px;height:1540px;font-family:\'Noto Sans Devanagari\',sans-serif;'">
+
+        <!-- PREVIEW RIBBON -->
+        <div th:if="${!isPaid}" class="preview-ribbon">PREVIEW</div>
+
+        <!-- CENTER WATERMARK -->
+        <div th:if="${!isPaid}" class="watermark-text flex justify-center items-center absolute inset-0 pointer-events-none z-40">
+            Weddingbio.in
+        </div>
+
+        <!-- PROFILE IMAGE -->
+        <div th:if="${data.profileImagePath != null and !#strings.isEmpty(#strings.trim(data.profileImagePath))}" class="photo-wrapper">
+            <div class="profile-box">
+                <img th:src="@{'/generated/' + ${data.profileImagePath}}" />
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="absolute inset-0 inner-content flex flex-col text-[#3a2a2a]">
+
+            <!-- GOD + MANTRA -->
+            <div class="text-center mb-4">
+                <img th:src="@{'/images/gods/' + ${data.godImage} + '.png'}" class="h-32 mx-auto mb-2"/>
                 <div class="mantra" th:text="${data.mantra}"></div>
             </div>
 
