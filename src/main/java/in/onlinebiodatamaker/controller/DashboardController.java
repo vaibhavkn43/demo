@@ -2,12 +2,15 @@ package in.onlinebiodatamaker.controller;
 
 import in.onlinebiodatamaker.model.BiodataRequest;
 import in.onlinebiodatamaker.model.Template;
+import in.onlinebiodatamaker.repo.PaymentRepository;
 import in.onlinebiodatamaker.service.BiodataValidationService;
 import in.onlinebiodatamaker.service.GodImageService;
 import in.onlinebiodatamaker.service.TemplatesService;
 import in.onlinebiodatamaker.util.BiodataUtil;
+import in.onlinebiodatamaker.util.PaymentUtil;
 import in.onlinebiodatamaker.util.TimeHandlerUtil;
 import in.onlinebiodatamaker.util.ValidationResult;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +46,24 @@ public class DashboardController {
     private TemplatesService templatesService;
     @Autowired
     private BiodataUtil biodataUtil;
+
+    @Value("${razorpay.key.id}")
+    private String razorpayKeyId;
+
+    @Value("${biodata.price.base}")
+    private int basePrice;
+
+    @Value("${biodata.price.couponDiscount}")
+    private int couponDiscount;
+
+    @Value("${biodata.price.couponCode}")
+    private String couponCode;
+
+    @Autowired
+    private PaymentUtil paymentUtil;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
@@ -86,7 +108,6 @@ public class DashboardController {
             form.setMantra("|| श्री गणेशाय नमः ||");
         }
 
-        // ✅ store preview data for switching templates
         session.setAttribute("PREVIEW_DATA", form);
 
         if (!result.isValid()) {
@@ -105,6 +126,12 @@ public class DashboardController {
 
         Boolean isPaid = (Boolean) session.getAttribute("PAID");
         model.addAttribute("isPaid", isPaid != null && isPaid);
+
+        // 🔹 payment info
+        model.addAttribute("razorpayKey", razorpayKeyId);
+        model.addAttribute("basePrice", basePrice);
+        model.addAttribute("couponDiscount", couponDiscount);
+        model.addAttribute("couponCode", couponCode);
 
         model.addAttribute("content", "preview");
 
