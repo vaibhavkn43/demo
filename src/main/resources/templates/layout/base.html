@@ -8,31 +8,28 @@
 
         <!-- ================= SEO ================= -->
 
-        <!-- Title -->
-        <title th:text="${pageTitle ?: 'VivahPatra – Free Marriage Biodata Maker (Marathi & English)'}">
+        <title th:text="${pageTitle ?: 'VivahPatra – Free Marriage Biodata Maker (Marathi, Hindi & English)'}">
             VivahPatra – Free Marriage Biodata Maker
         </title>
 
-        <!-- Description -->
         <meta name="description"
-              th:content="${pageDescription ?: 'Create beautiful marriage biodata online in Marathi and English. Free printable biodata templates. No login required.'}"/>
+              th:content="${pageDescription ?: 'Create beautiful marriage biodata online in Marathi, Hindi and English. Free printable biodata templates. No login required.'}"/>
 
-        <!-- Canonical -->
         <link rel="canonical" href="https://vivahpatra.com"/>
 
-        <!-- Open Graph -->
         <meta property="og:title"
               th:content="${pageTitle ?: 'VivahPatra Biodata Maker'}"/>
 
         <meta property="og:description"
-              th:content="${pageDescription ?: 'Free Marathi marriage biodata maker with modern templates and PDF download.'}"/>
+              th:content="${pageDescription ?: 'Free Marathi, Hindi & English marriage biodata maker with modern templates and PDF download.'}"/>
 
         <meta property="og:type" content="website"/>
         <meta property="og:url" content="https://vivahpatra.com"/>
 
         <!-- Multilingual SEO -->
-        <link rel="alternate" hreflang="en" href="https://vivahpatra.com/about?lang=en"/>
-        <link rel="alternate" hreflang="mr" href="https://vivahpatra.com/about?lang=mr"/>
+        <link rel="alternate" hreflang="en" href="https://vivahpatra.com?lang=en"/>
+        <link rel="alternate" hreflang="mr" href="https://vivahpatra.com?lang=mr"/>
+        <link rel="alternate" hreflang="hi" href="https://vivahpatra.com?lang=hi"/>
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -42,13 +39,16 @@
             "name": "VivahPatra Biodata Maker",
             "url": "https://vivahpatra.com",
             "logo": "https://vivahpatra.com/images/logo.png",
-            "description": "Free online Marathi marriage biodata maker with PDF download and modern templates."
+            "description": "Free online Marathi, Hindi and English marriage biodata maker with PDF download and modern templates."
             }
         </script>
 
         <!-- ================= STYLES ================= -->
         <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+
+        <!-- Google Fonts - Multilingual -->
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;600;700&family=Hind:wght@400;500;600&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
         <link rel="stylesheet" th:href="@{/css/base.css}">
     </head>
 
@@ -83,20 +83,37 @@
                         <button onclick="toggleLangDropdown()"
                                 class="flex items-center gap-2 text-sm md:text-base font-medium text-red-700 border-b-2 border-red-700 pb-1">
                             🌐
-                            <span th:text="${#locale.language == 'mr'} ? 'मराठी' : 'English'"></span>
+                            <span th:text="
+                                  ${#locale.language == 'mr'} ? 'मराठी' :
+                                  (${#locale.language == 'hi'} ? 'हिंदी' : 'English')
+                                  "></span>
                             ▾
                         </button>
 
                         <div id="langMenu"
                              class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg border z-50">
 
-                            <div onclick="changeLanguage('en')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            <!-- English -->
+                            <a th:href="@{''(lang='en')}"
+                               class="block px-4 py-2 hover:bg-gray-100"
+                               th:classappend="${#locale.language == 'en'} ? 'bg-gray-100 font-semibold'">
                                 English
-                            </div>
+                            </a>
 
-                            <div onclick="changeLanguage('mr')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                            <!-- Marathi -->
+                            <a th:href="@{''(lang='mr')}"
+                               class="block px-4 py-2 hover:bg-gray-100"
+                               th:classappend="${#locale.language == 'mr'} ? 'bg-gray-100 font-semibold'">
                                 मराठी
-                            </div>
+                            </a>
+
+                            <!-- Hindi -->
+                            <a th:href="@{''(lang='hi')}"
+                               class="block px-4 py-2 hover:bg-gray-100"
+                               th:classappend="${#locale.language == 'hi'} ? 'bg-gray-100 font-semibold'">
+                                हिंदी
+                            </a>
+
                         </div>
                     </div>
 

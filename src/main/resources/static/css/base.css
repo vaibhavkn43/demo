@@ -7,14 +7,34 @@
    🅰️ FONT DEFINITIONS
 ===================================================== */
 
-@font-face {
-    font-family: 'NotoDevanagari';
-    src: url('/fonts/NotoSerifDevanagari-Regular.ttf') format('truetype');
+/* ===== Default (Marathi as default in your config) ===== */
+body {
+    font-family: 'Noto Serif Devanagari', serif;
 }
 
-@font-face {
-    font-family: 'Mangal';
-    src: url('/fonts/mangal.ttf') format('truetype');
+/* Marathi */
+.lang-mr {
+    font-family: 'Noto Serif Devanagari', serif;
+}
+
+/* Hindi */
+.lang-hi {
+    font-family: 'Hind', sans-serif;
+}
+
+/* English */
+.lang-en {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Biodata Titles (Premium Look) */
+.lang-en .biodata-title {
+    font-family: 'Playfair Display', serif;
+}
+
+.lang-mr .biodata-title,
+.lang-hi .biodata-title {
+    font-weight: 700;
 }
 
 
@@ -23,9 +43,6 @@
 ===================================================== */
 
 body {
-     font-family: 'Poppins', 'Mukta', 'Noto Sans Devanagari', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    font-kerning: normal;
     margin: 0;
     padding: 0;
     overflow-x: hidden;

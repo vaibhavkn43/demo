@@ -64,12 +64,13 @@ public class DashboardController {
     }
 
     @PostMapping("/preview")
-    public String preview(BiodataRequest form, Model model, Locale locale,
+    public String preview(BiodataRequest form,
+            Model model,
+            Locale locale,
             HttpSession session) {
 
         ValidationResult result = biodataValidationService.validate(form);
 
-        // 🔥 NORMALIZE DATA HERE
         form = biodataUtil.normalize(form);
 
         if (form.getBirthTime() != null && !form.getBirthTime().isEmpty()) {
@@ -85,6 +86,9 @@ public class DashboardController {
             form.setMantra("|| श्री गणेशाय नमः ||");
         }
 
+        // ✅ store preview data for switching templates
+        session.setAttribute("PREVIEW_DATA", form);
+
         if (!result.isValid()) {
             model.addAttribute("missingKeys", result.getMissingKeys());
             model.addAttribute("invalidValues", result.getInvalidKeys());
@@ -93,15 +97,44 @@ public class DashboardController {
             return "layout/base";
         }
 
-        model.addAttribute("data", form);
-
-        // 🔥 use template object directly
         Template template = templatesService.getById(form.getTemplateId());
+
+        model.addAttribute("data", form);
         model.addAttribute("template", template);
+        model.addAttribute("allTemplates", templatesService.getAllTemplates());
+
         Boolean isPaid = (Boolean) session.getAttribute("PAID");
         model.addAttribute("isPaid", isPaid != null && isPaid);
+
         model.addAttribute("content", "preview");
+
         return "layout/base";
+    }
+
+    @GetMapping("/preview/{templateId}")
+    public String previewOtherTemplate(@PathVariable String templateId,
+            HttpSession session,
+            Model model) {
+
+        BiodataRequest data
+                = (BiodataRequest) session.getAttribute("PREVIEW_DATA");
+
+        if (data == null) {
+            return "redirect:/";
+        }
+
+        Template template = templatesService.getById(templateId);
+
+        model.addAttribute("data", data);
+        model.addAttribute("template", template);
+        model.addAttribute("allTemplates", templatesService.getAllTemplates());
+
+        Boolean isPaid = (Boolean) session.getAttribute("PAID");
+        model.addAttribute("isPaid", isPaid != null && isPaid);
+
+        model.addAttribute("content", "preview");
+
+        return "layout/base";   // ✅ same as POST
     }
 
     @GetMapping("/about")

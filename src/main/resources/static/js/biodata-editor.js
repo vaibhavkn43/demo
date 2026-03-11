@@ -35,35 +35,57 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     /* ================= SUBMIT ================= */
-    document.getElementById("submitBtn")?.addEventListener("click", function () {
+    document.getElementById("submitBtn")?.addEventListener("click", function (e) {
 
-        // 🔴 run validation first
         if (!runValidation()) {
             e.preventDefault();
 
-            // scroll to first error
             const firstError = document.querySelector(".border-red-500");
-            firstError?.scrollIntoView({behavior: "smooth", block: "center"});
+
+            if (firstError) {
+
+                // 🔥 Find nearest section body (personalSection, birthSection etc.)
+                const sectionBody = firstError.closest("div[id$='Section']");
+
+                if (sectionBody && sectionBody.classList.contains("hidden")) {
+
+                    sectionBody.classList.remove("hidden");
+
+                    // 🔥 Find corresponding icon
+                    const sectionId = sectionBody.id; // birthSection
+                    const iconId = "icon" + sectionId.replace("Section", "");
+
+                    const icon = document.getElementById(iconId);
+                    if (icon) {
+                        icon.textContent = "−";
+                    }
+                }
+
+                // 🔥 Scroll smoothly
+                sectionBody?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+                // 🔥 Focus invalid field
+                setTimeout(() => {
+                    firstError.focus();
+                }, 400);
+            }
 
             return;
         }
 
+        // ===== Normal Submit Flow =====
         mergePrefixWithNames();
-
         updateFamily("brothers", msgBrotherLabel, "brotherInputs");
         updateFamily("sisters", msgSisterLabel, "sisterInputs");
 
-
-
         const mamaCombined = collectMultiValues("mamaName", "mamaExtra");
-        console.log(mamaCombined, "mamaCombined")
         document.querySelector('[name="mama"]').value = mamaCombined;
 
         const kakaCombined = collectMultiValues("kakaName", "kakaExtra");
-        console.log(kakaCombined, "kakaCombined")
         document.querySelector('[name="kaka"]').value = kakaCombined;
-
-
 
         document.getElementById("biodataForm").submit();
     });
@@ -85,37 +107,43 @@ document.addEventListener("DOMContentLoaded", function () {
         renderPersonInputs(e.target.value, "sisterInputs", false);
     });
 
+    document.addEventListener("input", clearErrorOnChange);
+    document.addEventListener("change", clearErrorOnChange);
+
 });
 
 /* =========================================================
  VALIDATION
  ========================================================= */
 
-["name","birthDate","birthPlace","religion","caste","complexion","height",
- "education","fatherName","motherName","relatives","mobile","address"]
-.forEach(id => {
-    document.getElementById(id)?.addEventListener("blur", () => {
-        validateField(id, "error-" + id);
-    });
-});
 
 function validateField(inputId, errorId) {
     const input = document.getElementById(inputId);
     const error = document.getElementById(errorId);
 
-    if (!input) return true;
+    if (!input)
+        return true;
 
     const value = input.value ? input.value.trim() : "";
-
     if (!value) {
         error?.classList.remove("hidden");
-        input.classList.add("border-red-500");
+        input.classList.remove( "bg-amber-50", "border-amber-300");
+        input.classList.add("border-red-500","ring-1","ring-red-300");
         return false;
     } else {
         error?.classList.add("hidden");
-        input.classList.remove("border-red-500");
+        input.classList.remove(
+                "border-red-500",
+                "ring-1",
+                "ring-red-300"
+                );
+        input.classList.add(
+                "bg-amber-50",
+                "border-amber-300"
+                );
         return true;
     }
+
 }
 
 
@@ -126,17 +154,34 @@ function runValidation() {
     valid &= validateField("birthDate", "error-birthDate");
     valid &= validateField("birthPlace", "error-birthPlace");
     valid &= validateField("religion", "error-religion");
-    valid &= validateField("caste", "error-caste");
-    valid &= validateField("complexion", "error-complexion");
-    valid &= validateField("height", "error-height");
     valid &= validateField("education", "error-education");
     valid &= validateField("fatherName", "error-fatherName");
     valid &= validateField("motherName", "error-motherName");
-    valid &= validateField("relatives", "error-relatives");
     valid &= validateField("mobile", "error-mobile");
     valid &= validateField("address", "error-address");
 
     return !!valid;
+}
+
+function clearErrorOnChange(e) {
+
+    const field = e.target;
+
+    if (!field.name)
+        return;
+
+    if (field.value && field.value.trim() !== "") {
+
+        // remove red border
+        field.classList.remove("border-red-500", "ring-1", "ring-red-300");
+
+        // find correct error element
+        const error = document.getElementById("error-" + field.name);
+
+        if (error) {
+            error.classList.add("hidden");
+        }
+    }
 }
 
 /* =========================================================
@@ -635,16 +680,28 @@ form.addEventListener("input", () => {
 });
 
 // ===== RESTORE ON LOAD =====
+// ===== SMART RESTORE LOGIC =====
 window.addEventListener("DOMContentLoaded", () => {
+
     const saved = localStorage.getItem(STORAGE_KEY);
+    if (!saved)
+        return;
 
-    if (saved) {
-        const data = JSON.parse(saved);
+    const urlParams = new URLSearchParams(window.location.search);
+    const isResume = urlParams.get("resume") === "true";
 
-        const shouldRestore = confirm("Resume your previous biodata draft?");
-        if (shouldRestore) {
-            restoreFormData(form, data);
-        }
+    const data = JSON.parse(saved);
+
+    // If coming from dashboard resume → auto restore
+    if (isResume) {
+        restoreFormData(form, data);
+        return;
+    }
+
+    // Otherwise ask user
+    const shouldRestore = confirm("Resume your previous biodata draft?");
+    if (shouldRestore) {
+        restoreFormData(form, data);
     }
 });
 
@@ -664,3 +721,21 @@ if (isResume === "true") {
 }
 
 
+function clearDraft() {
+
+    const msgBox = document.getElementById("draftMessages");
+    const confirmMsg = msgBox?.dataset.confirm;
+    const successMsg = msgBox?.dataset.success;
+
+    if (!confirm(confirmMsg)) {
+        return;
+    }
+
+    localStorage.removeItem(STORAGE_KEY);
+    document.getElementById("biodataForm").reset();
+
+    document.querySelectorAll(".border-red-500")
+            .forEach(el => el.classList.remove("border-red-500"));
+
+    alert(successMsg);
+}

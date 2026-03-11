@@ -28,14 +28,6 @@ public class BiodataValidationService {
         if (isEmpty(form.getReligion()))
             result.addMissing("validation.required.religion");
 
-        if (isEmpty(form.getCaste()))
-            result.addMissing("validation.required.caste");
-
-        if (isEmpty(form.getComplexion()))
-            result.addMissing("validation.required.complexion");
-
-        if (isEmpty(form.getHeight()))
-            result.addMissing("validation.required.height");
 
         if (isEmpty(form.getEducation()))
             result.addMissing("validation.required.education");
@@ -46,8 +38,6 @@ public class BiodataValidationService {
         if (isEmpty(form.getMotherName()))
             result.addMissing("validation.required.motherName");
 
-        if (isEmpty(form.getRelatives()))
-            result.addMissing("validation.required.relatives");
 
         if (isEmpty(form.getMobile()))
             result.addMissing("validation.required.mobile");
@@ -63,10 +53,6 @@ public class BiodataValidationService {
 
         if (!isEmpty(form.getMobile()) && !form.getMobile().matches("^[6-9]\\d{9}$")) {
             result.addInvalid("validation.invalid.mobile");
-        }
-
-        if (!isEmpty(form.getHeight()) && !form.getHeight().matches("^\\d{2,3}\\s?(cm|ft|in)?$")) {
-            result.addInvalid("validation.invalid.height");
         }
 
         if (!isEmpty(form.getBirthDate()) && !form.getBirthDate().matches("^\\d{2}/\\d{2}/\\d{4}$")) {
