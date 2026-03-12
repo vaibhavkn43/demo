@@ -7,14 +7,11 @@ import in.onlinebiodatamaker.service.BiodataValidationService;
 import in.onlinebiodatamaker.service.GodImageService;
 import in.onlinebiodatamaker.service.TemplatesService;
 import in.onlinebiodatamaker.util.BiodataUtil;
+import in.onlinebiodatamaker.util.LogUtil;
 import in.onlinebiodatamaker.util.PaymentUtil;
 import in.onlinebiodatamaker.util.TimeHandlerUtil;
 import in.onlinebiodatamaker.util.ValidationResult;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
@@ -28,13 +25,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import in.onlinebiodatamaker.model.AppUsageLog;
+import jakarta.servlet.http.HttpServletRequest;
+import in.onlinebiodatamaker.repo.AppUsageLogRepository;
 
 /**
  *
  * @author Vaibhav
  */
 @Controller
-public class DashboardController {
+public class BaseController {
 
     @Autowired
     private BiodataValidationService biodataValidationService;
@@ -46,6 +46,9 @@ public class DashboardController {
     private TemplatesService templatesService;
     @Autowired
     private BiodataUtil biodataUtil;
+
+    @Autowired
+    private LogUtil logUtil;
 
     @Value("${razorpay.key.id}")
     private String razorpayKeyId;
@@ -64,6 +67,8 @@ public class DashboardController {
 
     @Autowired
     private PaymentRepository paymentRepository;
+    @Autowired
+    private AppUsageLogRepository appUsageLogRepository;
 
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
@@ -74,12 +79,29 @@ public class DashboardController {
     }
 
     @GetMapping("/editor/{templateId}")
-    public String openForm(@PathVariable String templateId, Model model, Locale locale) {
+    public String openForm(@PathVariable String templateId, Model model, Locale locale,HttpServletRequest request) {
         model.addAttribute("templateId", templateId);
         model.addAttribute("form", new BiodataRequest());
         model.addAttribute("godImages", godImageService.getGodImages());
         String list = messageSource.getMessage("mantra.list", null, locale);
         List<String> keys = Arrays.asList(list.split(","));
+
+        String ip = paymentUtil.getClientIp(request);
+        String userAgent = request.getHeader("User-Agent");
+
+        AppUsageLog log = new AppUsageLog();
+
+        log.setIpAddress(ip);
+        log.setCountry(logUtil.getCountry(ip));
+        log.setSessionId(request.getSession().getId());
+        log.setUserAgent(userAgent);
+        log.setDeviceType(logUtil.getDeviceType(userAgent));
+
+        log.setAction("form_opened");
+        log.setTemplateId(templateId);
+
+        appUsageLogRepository.save(log);
+
         model.addAttribute("mantraKeys", keys);
         model.addAttribute("content", "form");
         return "layout/base";
@@ -89,7 +111,7 @@ public class DashboardController {
     public String preview(BiodataRequest form,
             Model model,
             Locale locale,
-            HttpSession session) {
+            HttpSession session, HttpServletRequest request) {
 
         ValidationResult result = biodataValidationService.validate(form);
 
@@ -120,6 +142,22 @@ public class DashboardController {
 
         Template template = templatesService.getById(form.getTemplateId());
 
+        String ip = paymentUtil.getClientIp(request);
+        String userAgent = request.getHeader("User-Agent");
+
+        AppUsageLog log = new AppUsageLog();
+
+        log.setIpAddress(ip);
+        log.setCountry(logUtil.getCountry(ip));
+        log.setSessionId(request.getSession().getId());
+        log.setUserAgent(userAgent);
+        log.setDeviceType(logUtil.getDeviceType(userAgent));
+
+        log.setAction("preview");
+        log.setTemplateId(String.valueOf(template.getId()));
+
+        appUsageLogRepository.save(log);
+
         model.addAttribute("data", form);
         model.addAttribute("template", template);
         model.addAttribute("allTemplates", templatesService.getAllTemplates());
@@ -138,31 +176,6 @@ public class DashboardController {
         return "layout/base";
     }
 
-    @GetMapping("/preview/{templateId}")
-    public String previewOtherTemplate(@PathVariable String templateId,
-            HttpSession session,
-            Model model) {
-
-        BiodataRequest data
-                = (BiodataRequest) session.getAttribute("PREVIEW_DATA");
-
-        if (data == null) {
-            return "redirect:/";
-        }
-
-        Template template = templatesService.getById(templateId);
-
-        model.addAttribute("data", data);
-        model.addAttribute("template", template);
-        model.addAttribute("allTemplates", templatesService.getAllTemplates());
-
-        Boolean isPaid = (Boolean) session.getAttribute("PAID");
-        model.addAttribute("isPaid", isPaid != null && isPaid);
-
-        model.addAttribute("content", "preview");
-
-        return "layout/base";   // ✅ same as POST
-    }
 
     @GetMapping("/about")
     public String about(Model model) {
