@@ -166,7 +166,6 @@ public class PaymentController {
         log.setSessionId(session.getId());
         log.setUserAgent(userAgent);
         log.setDeviceType(logUtil.getDeviceType(userAgent));
-        log.setTemplateId(payment.getTemplateId());
 
         if (isValid) {
 
