@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import in.onlinebiodatamaker.model.AppUsageLog;
 import jakarta.servlet.http.HttpServletRequest;
 import in.onlinebiodatamaker.repo.AppUsageLogRepository;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -70,6 +71,12 @@ public class BaseController {
     @Autowired
     private AppUsageLogRepository appUsageLogRepository;
 
+    @GetMapping("/health")
+    @ResponseBody
+    public String health() {
+        return "OK";
+    }
+
     @GetMapping({"/", "/dashboard"})
     public String dashboard(Model model) {
 
@@ -79,7 +86,7 @@ public class BaseController {
     }
 
     @GetMapping("/editor/{templateId}")
-    public String openForm(@PathVariable String templateId, Model model, Locale locale,HttpServletRequest request) {
+    public String openForm(@PathVariable String templateId, Model model, Locale locale, HttpServletRequest request) {
         model.addAttribute("templateId", templateId);
         model.addAttribute("form", new BiodataRequest());
         model.addAttribute("godImages", godImageService.getGodImages());
@@ -175,7 +182,6 @@ public class BaseController {
 
         return "layout/base";
     }
-
 
     @GetMapping("/about")
     public String about(Model model) {
