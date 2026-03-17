@@ -13,7 +13,7 @@ async function downloadImage() {
         const dataUrl = await htmlToImage.toPng(node, {
             cacheBust: true,
             // 🚀 QUALITY BOOST: Makes the image 2x sharper (Perfect for WhatsApp sharing)
-            pixelRatio: 2, 
+            pixelRatio: 2,
             width: 1033,
             height: 1540,
             style: {
@@ -45,22 +45,22 @@ async function downloadImage() {
 }
 async function downloadPDF() {
     const element = document.getElementById("biodata-preview");
-    
+
     const options = {
         margin: 0,
         filename: 'wedding-biodata.pdf',
-        image: { type: 'jpeg', quality: 1.0 },
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true, 
-            width: 1033, 
+        image: {type: 'jpeg', quality: 1.0},
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            width: 1033,
             height: 1540,
             scrollY: 0
         },
-        jsPDF: { 
-            unit: 'mm', 
-            format: 'a4', 
-            orientation: 'portrait' 
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
         }
     };
 
@@ -136,7 +136,10 @@ function adjustPreviewScale() {
     scaleWrapper.style.transformOrigin = "top center";
 }
 
-window.addEventListener("load", adjustPreviewScale);
+window.addEventListener("load", () => {
+    adjustLayout();
+    adjustPreviewScale();
+});
 window.addEventListener("resize", adjustPreviewScale);
 
 
@@ -169,7 +172,8 @@ function adjustLayout() {
 
     const maxHeight = 1540;
     const currentHeight = content.scrollHeight;
-
+    console.log("Content height:", currentHeight);
+    console.log("Max allowed:", maxHeight);
     if (currentHeight > maxHeight) {
         container.classList.add("compact-mode");
 
@@ -187,15 +191,13 @@ function adjustLayout() {
     }
 }
 
-window.onload = adjustLayout;
 
-
-function scrollToPayment(){
+function scrollToPayment() {
     const el = document.getElementById("paymentBox");
-    if(el){
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (el) {
+        el.scrollIntoView({behavior: "smooth", block: "center"});
 
         el.classList.add("highlight");
-        setTimeout(()=> el.classList.remove("highlight"),2000);
+        setTimeout(() => el.classList.remove("highlight"), 2000);
     }
 }

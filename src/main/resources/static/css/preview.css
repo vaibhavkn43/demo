@@ -347,3 +347,35 @@ body{
     }
 }
 
+/* NORMAL MODE */
+#biodata-preview.normal-mode .text-\[23px\]{
+    font-size:23px;
+}
+
+/* MEDIUM MODE */
+#biodata-preview.medium-mode .text-\[23px\]{
+    font-size:21px;
+}
+
+#biodata-preview.medium-mode h3{
+    font-size:26px;
+}
+
+/* COMPACT MODE */
+#biodata-preview.compact-mode .text-\[23px\]{
+    font-size:19px;
+}
+
+#biodata-preview.compact-mode h3{
+    font-size:24px;
+}
+
+#biodata-preview.compact-mode img{
+    height:180px !important;
+}
+
+/* LAST RESORT SCALE */
+#biodata-preview.scale-down{
+    transform:scale(0.92);
+    transform-origin:top center;
+}

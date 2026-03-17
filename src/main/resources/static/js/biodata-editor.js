@@ -167,20 +167,21 @@ function clearErrorOnChange(e) {
 
     const field = e.target;
 
-    if (!field.name)
+    if (!field.value || field.value.trim() === "") return;
+
+    field.classList.remove("border-red-500", "ring-1", "ring-red-300");
+
+    // handle DOB group
+    if (field.name === "birthDay" || field.name === "birthMonth" || field.name === "birthYear") {
+        const error = document.getElementById("error-birthDate");
+        if (error) error.classList.add("hidden");
         return;
+    }
 
-    if (field.value && field.value.trim() !== "") {
+    const error = document.getElementById("error-" + field.name);
 
-        // remove red border
-        field.classList.remove("border-red-500", "ring-1", "ring-red-300");
-
-        // find correct error element
-        const error = document.getElementById("error-" + field.name);
-
-        if (error) {
-            error.classList.add("hidden");
-        }
+    if (error) {
+        error.classList.add("hidden");
     }
 }
 
