@@ -168,27 +168,53 @@ function adjustLayout() {
     const container = document.getElementById("biodata-preview");
     const content = container.querySelector(".absolute.inset-0");
 
+    if (!container || !content) return;
+
+    // reset everything
     container.classList.remove("normal-mode", "medium-mode", "compact-mode", "scale-down");
+    container.style.transform = ""; // reset dynamic scale
 
     const maxHeight = 1540;
-    const currentHeight = content.scrollHeight;
-    console.log("Content height:", currentHeight);
-    console.log("Max allowed:", maxHeight);
-    if (currentHeight > maxHeight) {
-        container.classList.add("compact-mode");
 
-        // re-check after compact applied
-        setTimeout(() => {
-            if (content.scrollHeight > maxHeight) {
-                container.classList.add("scale-down");
-            }
-        }, 50);
+    // 👉 IMPORTANT: measure BEFORE changes
+    let currentHeight = content.scrollHeight;
 
-    } else if (currentHeight > maxHeight * 0.85) {
-        container.classList.add("medium-mode");
-    } else {
+    console.log("Initial height:", currentHeight);
+
+    // ================= NORMAL =================
+    if (currentHeight <= maxHeight * 0.85) {
         container.classList.add("normal-mode");
+        return;
     }
+
+    // ================= MEDIUM =================
+    if (currentHeight <= maxHeight) {
+        container.classList.add("medium-mode");
+        return;
+    }
+
+    // ================= COMPACT =================
+    container.classList.add("compact-mode");
+
+    // wait for CSS to apply
+    setTimeout(() => {
+
+        let newHeight = content.scrollHeight;
+
+        console.log("After compact:", newHeight);
+
+        // ================= SCALE DOWN (DYNAMIC) =================
+        if (newHeight > maxHeight) {
+
+            const scale = maxHeight / newHeight;
+
+            console.log("Applying dynamic scale:", scale);
+
+            container.style.transform = `scale(${scale})`;
+            container.style.transformOrigin = "top center";
+        }
+
+    }, 80);
 }
 
 
