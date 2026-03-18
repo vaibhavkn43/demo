@@ -13,7 +13,7 @@ async function downloadImage() {
         const dataUrl = await htmlToImage.toPng(node, {
             cacheBust: true,
             // 🚀 QUALITY BOOST: Makes the image 2x sharper (Perfect for WhatsApp sharing)
-            pixelRatio: 2, 
+            pixelRatio: 2,
             width: 1033,
             height: 1540,
             style: {
@@ -45,22 +45,22 @@ async function downloadImage() {
 }
 async function downloadPDF() {
     const element = document.getElementById("biodata-preview");
-    
+
     const options = {
         margin: 0,
         filename: 'wedding-biodata.pdf',
-        image: { type: 'jpeg', quality: 1.0 },
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true, 
-            width: 1033, 
+        image: {type: 'jpeg', quality: 1.0},
+        html2canvas: {
+            scale: 2,
+            useCORS: true,
+            width: 1033,
             height: 1540,
             scrollY: 0
         },
-        jsPDF: { 
-            unit: 'mm', 
-            format: 'a4', 
-            orientation: 'portrait' 
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
         }
     };
 
@@ -136,7 +136,10 @@ function adjustPreviewScale() {
     scaleWrapper.style.transformOrigin = "top center";
 }
 
-window.addEventListener("load", adjustPreviewScale);
+window.addEventListener("load", () => {
+    adjustLayout();
+    adjustPreviewScale();
+});
 window.addEventListener("resize", adjustPreviewScale);
 
 
@@ -164,38 +167,66 @@ function adjustLayout() {
 
     const container = document.getElementById("biodata-preview");
     const content = container.querySelector(".absolute.inset-0");
+    const wrapper = document.querySelector(".preview-wrapper");
 
+    if (wrapper) {
+        wrapper.style.transform = "";
+    }
+
+    if (!container || !content)
+        return;
+
+    // reset everything
     container.classList.remove("normal-mode", "medium-mode", "compact-mode", "scale-down");
+    container.style.transform = ""; // reset dynamic scale
 
     const maxHeight = 1540;
-    const currentHeight = content.scrollHeight;
 
-    if (currentHeight > maxHeight) {
-        container.classList.add("compact-mode");
+    // 👉 IMPORTANT: measure BEFORE changes
+    let currentHeight = content.scrollHeight;
 
-        // re-check after compact applied
-        setTimeout(() => {
-            if (content.scrollHeight > maxHeight) {
-                container.classList.add("scale-down");
-            }
-        }, 50);
+    console.log("Initial height:", currentHeight);
 
-    } else if (currentHeight > maxHeight * 0.85) {
-        container.classList.add("medium-mode");
-    } else {
+    // ================= NORMAL =================
+    if (currentHeight <= maxHeight * 0.85) {
         container.classList.add("normal-mode");
+        return;
     }
+
+    // ================= MEDIUM =================
+    if (currentHeight <= maxHeight) {
+        container.classList.add("medium-mode");
+        return;
+    }
+
+    // ================= COMPACT =================
+    container.classList.add("compact-mode");
+
+    // wait for CSS to apply
+    setTimeout(() => {
+
+        let newHeight = content.scrollHeight;
+
+        if (newHeight > maxHeight) {
+
+            const scale = maxHeight / newHeight;
+
+            if (wrapper) {
+                wrapper.style.transform = `scale(${scale})`;
+                wrapper.style.transformOrigin = "top center";
+            }
+        }
+
+    }, 80);
 }
 
-window.onload = adjustLayout;
 
-
-function scrollToPayment(){
+function scrollToPayment() {
     const el = document.getElementById("paymentBox");
-    if(el){
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (el) {
+        el.scrollIntoView({behavior: "smooth", block: "center"});
 
         el.classList.add("highlight");
-        setTimeout(()=> el.classList.remove("highlight"),2000);
+        setTimeout(() => el.classList.remove("highlight"), 2000);
     }
 }

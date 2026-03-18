@@ -3,9 +3,12 @@ package in.onlinebiodatamaker.controller;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.Utils;
+import in.onlinebiodatamaker.model.AppUsageLog;
 import in.onlinebiodatamaker.model.Payment;
+import in.onlinebiodatamaker.repo.AppUsageLogRepository;
 import in.onlinebiodatamaker.repo.PaymentRepository;
 import in.onlinebiodatamaker.service.PricingService;
+import in.onlinebiodatamaker.util.LogUtil;
 import in.onlinebiodatamaker.util.PaymentUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -34,6 +37,9 @@ public class PaymentController {
     private String webhookSecret;
 
     @Autowired
+    private LogUtil logUtil;
+
+    @Autowired
     private PaymentUtil paymentUtil;
 
     @Autowired
@@ -41,6 +47,9 @@ public class PaymentController {
 
     @Autowired
     private PaymentRepository paymentRepository;
+
+    @Autowired
+    private AppUsageLogRepository appUsageLogRepository;
 
     @PostMapping("/webhook")
     public String webhook(@RequestBody String payload,
@@ -97,6 +106,20 @@ public class PaymentController {
         payment.setUserIp(ip);
         paymentRepository.save(payment);
 
+        String userAgent = request.getHeader("User-Agent");
+
+        AppUsageLog log = new AppUsageLog();
+
+        log.setIpAddress(ip);
+        log.setCountry(logUtil.getCountry(ip));
+        log.setSessionId(request.getSession().getId());
+        log.setUserAgent(userAgent);
+        log.setDeviceType(logUtil.getDeviceType(userAgent));
+
+        log.setAction("payment_attempt");
+
+        appUsageLogRepository.save(log);
+
         Map<String, Object> response = new HashMap<>();
         response.put("orderId", order.get("id"));
 
@@ -106,16 +129,16 @@ public class PaymentController {
     @PostMapping("/verify-payment")
     @ResponseBody
     public String verifyPayment(@RequestBody Map<String, String> data,
-            HttpSession session) throws Exception {
+            HttpSession session,
+            HttpServletRequest request) throws Exception {
 
         String orderId = data.get("razorpay_order_id");
         String paymentId = data.get("razorpay_payment_id");
         String signature = data.get("razorpay_signature");
 
-        // ⭐ Get session order id
+        // ⭐ Validate order belongs to this session
         String sessionOrderId = (String) session.getAttribute("ORDER_ID");
 
-        // Security check
         if (sessionOrderId == null || !sessionOrderId.equals(orderId)) {
             return "invalid-order";
         }
@@ -130,6 +153,20 @@ public class PaymentController {
                 .findByRazorpayOrderId(orderId)
                 .orElseThrow(() -> new RuntimeException("Payment record not found"));
 
+        // ⭐ Capture request info once
+        String ip = paymentUtil.getClientIp(request);
+        String userAgent = request.getHeader("User-Agent");
+
+        payment.setUserIp(ip);
+
+        // ⭐ Prepare usage log
+        AppUsageLog log = new AppUsageLog();
+        log.setIpAddress(ip);
+        log.setCountry(logUtil.getCountry(ip));
+        log.setSessionId(session.getId());
+        log.setUserAgent(userAgent);
+        log.setDeviceType(logUtil.getDeviceType(userAgent));
+
         if (isValid) {
 
             payment.setRazorpayPaymentId(paymentId);
@@ -137,19 +174,21 @@ public class PaymentController {
             payment.setStatus("SUCCESS");
             payment.setPaidAt(LocalDateTime.now());
 
-            paymentRepository.save(payment);
+            log.setAction("payment_success");
 
-            // ⭐ mark session paid
             session.setAttribute("PAID", true);
-
-            return "success";
 
         } else {
 
             payment.setStatus("FAILED");
-            paymentRepository.save(payment);
 
-            return "fail";
+            log.setAction("payment_failed");
         }
+
+        // ⭐ Save once
+        paymentRepository.save(payment);
+        appUsageLogRepository.save(log);
+
+        return isValid ? "success" : "fail";
     }
 }

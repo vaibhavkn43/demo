@@ -54,6 +54,7 @@ body{
     justify-content:center;
     width:100%;
     margin-top:15px;
+    transform-origin:top center;
 }
 
 /* =====================================================
@@ -347,3 +348,76 @@ body{
     }
 }
 
+/* =====================================================
+   🧠 AUTO LAYOUT MODES (FINAL CLEAN VERSION)
+===================================================== */
+
+/* ================= NORMAL MODE ================= */
+#biodata-preview.normal-mode .text-\[23px\]{
+    font-size:23px !important;
+}
+
+/* ================= MEDIUM MODE ================= */
+#biodata-preview.medium-mode .text-\[23px\]{
+    font-size:21px !important;
+}
+
+#biodata-preview.medium-mode h3{
+    font-size:26px !important;
+}
+
+/* ================= COMPACT MODE ================= */
+#biodata-preview.compact-mode .text-\[23px\]{
+    font-size:18px !important;
+}
+
+#biodata-preview.compact-mode h3{
+    font-size:22px !important;
+}
+
+/* shrink god image */
+#biodata-preview.compact-mode img{
+    height:150px !important;
+}
+
+/* reduce vertical spacing */
+#biodata-preview.compact-mode .space-y-10{
+    gap:12px !important;
+}
+
+#biodata-preview.compact-mode .space-y-3{
+    gap:4px !important;
+}
+
+/* reduce padding */
+#biodata-preview.compact-mode .px-28{
+    padding-left:50px !important;
+    padding-right:50px !important;
+}
+
+#biodata-preview.compact-mode .pb-20{
+    padding-bottom:20px !important;
+}
+
+/* ================= FINAL SCALE DOWN ================= */
+#biodata-preview.scale-down{
+    transform:scale(0.82);
+    transform-origin:top center;
+}
+#biodata-preview .absolute.inset-0{
+    height:100% !important;
+    overflow:hidden !important;
+}
+#biodata-preview .absolute.inset-0{
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+
+#biodata-preview section{
+    flex-shrink:1;
+}
+#biodata-preview .col-span-7{
+    word-break:break-word;
+    overflow-wrap:break-word;
+}

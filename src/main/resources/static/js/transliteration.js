@@ -37,9 +37,12 @@ document.addEventListener("click", function (e) {
 document.addEventListener("keyup", async function (e) {
 
     const input = e.target;
-    if (!input.classList.contains("ime-marathi")) return;
-    if (!marathiEnabled) return;
-    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key)) return;
+    if (!input.classList.contains("ime-marathi"))
+        return;
+    if (!marathiEnabled)
+        return;
+    if (["ArrowDown", "ArrowUp", "Enter", " "].includes(e.key))
+        return;
 
     const cursor = input.selectionStart;
     const text = input.value || "";
@@ -57,7 +60,7 @@ document.addEventListener("keyup", async function (e) {
     const end = start + word.length;
 
     activeInput = input;
-    activeWordRange = { start, end };
+    activeWordRange = {start, end};
     activeSuggestionIndex = -1;
 
     const normalized = normalizeSpecialCases(word);
@@ -72,38 +75,37 @@ document.addEventListener("keyup", async function (e) {
 
 document.addEventListener("keydown", function (e) {
 
-    if (!activeInput) return;
+    if (!activeInput)
+        return;
 
     const wrapper = activeInput.closest(".ime-wrapper");
     const dropdown = wrapper.querySelector(".suggestion-dropdown");
-    if (!dropdown) return;
+    if (!dropdown)
+        return;
 
     const items = dropdown.querySelectorAll("div");
-    if (!items.length) return;
+    if (!items.length)
+        return;
 
     if (e.key === "ArrowDown") {
         e.preventDefault();
         activeSuggestionIndex =
-            (activeSuggestionIndex + 1) % items.length;
+                (activeSuggestionIndex + 1) % items.length;
         updateHighlight(items);
-    }
-
-    else if (e.key === "ArrowUp") {
+    } else if (e.key === "ArrowUp") {
         e.preventDefault();
         activeSuggestionIndex =
-            (activeSuggestionIndex - 1 + items.length) % items.length;
+                (activeSuggestionIndex - 1 + items.length) % items.length;
         updateHighlight(items);
-    }
-
-    else if (e.key === "Enter" || e.key === " ") {
+    } else if (e.key === "Enter" || e.key === " ") {
         if (activeSuggestionIndex >= 0) {
             e.preventDefault();
             items[activeSuggestionIndex].click();
 
             const pos = activeInput.selectionStart;
             activeInput.value =
-                activeInput.value.slice(0, pos) + " " +
-                activeInput.value.slice(pos);
+                    activeInput.value.slice(0, pos) + " " +
+                    activeInput.value.slice(pos);
 
             activeInput.setSelectionRange(pos + 1, pos + 1);
             hideSuggestions();
@@ -118,8 +120,10 @@ document.addEventListener("keydown", function (e) {
 document.addEventListener("input", async function (e) {
 
     const input = e.target;
-    if (!input.classList.contains("ime-marathi")) return;
-    if (!marathiEnabled) return;
+    if (!input.classList.contains("ime-marathi"))
+        return;
+    if (!marathiEnabled)
+        return;
 
     const text = input.value.trim();
 
@@ -158,14 +162,15 @@ async function fetchSuggestions(word) {
     }
 
     const currentLang = document.documentElement.lang || "mr";
-    if (currentLang === "en") return [];
+    if (currentLang === "en")
+        return [];
 
     const itcCode = currentLang === "hi"
-        ? "hi-t-i0-und"
-        : "mr-t-i0-und";
+            ? "hi-t-i0-und"
+            : "mr-t-i0-und";
 
     const url =
-        `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=${itcCode}&num=6`;
+            `https://inputtools.google.com/request?text=${encodeURIComponent(word)}&itc=${itcCode}&num=6`;
 
     try {
         const res = await fetch(url);
@@ -206,13 +211,13 @@ function showInlineSuggestions(input, suggestions) {
 
             activeSuggestionIndex = index;
 
-            const { start, end } = activeWordRange;
+            const {start, end} = activeWordRange;
             const text = input.value;
 
             input.value =
-                text.slice(0, start) + word + text.slice(end);
+                    text.slice(0, start) + word + " " + text.slice(end);
 
-            const pos = start + word.length;
+            const pos = start + word.length + 1; // +1 for space
             input.setSelectionRange(pos, pos);
             input.focus();
 
@@ -234,7 +239,7 @@ function showInlineSuggestions(input, suggestions) {
 
 function hideSuggestions() {
     document.querySelectorAll(".suggestion-dropdown")
-        .forEach(d => d.classList.add("hidden"));
+            .forEach(d => d.classList.add("hidden"));
     activeSuggestionIndex = -1;
 }
 
@@ -249,7 +254,7 @@ function updateHighlight(items) {
 
 function normalizeSpecialCases(text) {
     return text
-        .replace(/x/g, "ksh")
-        .replace(/Ksh/g, "Ksh")
-        .replace(/kSh/g, "ksh");
+            .replace(/x/g, "ksh")
+            .replace(/Ksh/g, "Ksh")
+            .replace(/kSh/g, "ksh");
 }
