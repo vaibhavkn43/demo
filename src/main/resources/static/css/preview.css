@@ -54,6 +54,7 @@ body{
     justify-content:center;
     width:100%;
     margin-top:15px;
+    transform-origin:top center;
 }
 
 /* =====================================================

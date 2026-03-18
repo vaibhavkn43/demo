@@ -167,8 +167,14 @@ function adjustLayout() {
 
     const container = document.getElementById("biodata-preview");
     const content = container.querySelector(".absolute.inset-0");
+    const wrapper = document.querySelector(".preview-wrapper");
 
-    if (!container || !content) return;
+    if (wrapper) {
+        wrapper.style.transform = "";
+    }
+
+    if (!container || !content)
+        return;
 
     // reset everything
     container.classList.remove("normal-mode", "medium-mode", "compact-mode", "scale-down");
@@ -201,17 +207,14 @@ function adjustLayout() {
 
         let newHeight = content.scrollHeight;
 
-        console.log("After compact:", newHeight);
-
-        // ================= SCALE DOWN (DYNAMIC) =================
         if (newHeight > maxHeight) {
 
             const scale = maxHeight / newHeight;
 
-            console.log("Applying dynamic scale:", scale);
-
-            container.style.transform = `scale(${scale})`;
-            container.style.transformOrigin = "top center";
+            if (wrapper) {
+                wrapper.style.transform = `scale(${scale})`;
+                wrapper.style.transformOrigin = "top center";
+            }
         }
 
     }, 80);
