@@ -137,11 +137,8 @@ function adjustPreviewScale() {
 }
 
 window.addEventListener("load", () => {
-    adjustLayout();
-    adjustPreviewScale();
+   // adjustLayout();
 });
-window.addEventListener("resize", adjustPreviewScale);
-
 
 
 function showStatus(msg) {

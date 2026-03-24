@@ -93,6 +93,9 @@ body{
         width:100%;
         height:100%;
     }
+    .preview-wrapper > #biodata-preview{
+        margin:0 auto;
+    }
 
     /* fake viewport */
     .preview-wrapper::before{
@@ -103,14 +106,6 @@ body{
         margin:0 auto;
     }
 
-    /* scaled biodata */
-    .preview-wrapper > div{
-        position:absolute;
-        top:0;
-        left:50%;
-        transform:translateX(-50%) scale(0.30);
-        transform-origin:top center;
-    }
 
     #biodata-preview{
         width:1033px !important;
@@ -403,15 +398,6 @@ body{
 #biodata-preview.scale-down{
     transform:scale(0.82);
     transform-origin:top center;
-}
-#biodata-preview .absolute.inset-0{
-    height:100% !important;
-    overflow:hidden !important;
-}
-#biodata-preview .absolute.inset-0{
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
 }
 
 #biodata-preview section{
